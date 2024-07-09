@@ -1,3 +1,39 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">Sổ thu chi</string>
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+    <string name="home">Trang chủ</string>
+    <string name="report">Báo cáo</string>
+    <string name="chart">Biểu đồ</string>
+    <string name="me">Tôi</string>
+    <string name="add">Thêm</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="search">Tìm kiếm</string>
+    <string name="calendar">Lịch</string>
+    <string name="sothuchi">Sổ thu chi</string>
+    <string name="year">năm</string>
+    <string name="cost">Chi phí</string>
+    <string name="Income">Thu nhập</string>
+    <string name="totalBalance">Tổng số dư</string>
+    <string name="money">5000000000</string>
+    <string name="title_pop_up">tháng 6 năm 2024</string>
+    <string name="confirm">Xác nhận</string>
+    <string name="delete">Hủy</string>
+    <string name="Expense">Chi phí</string>
+    <string name="Income2">Thu nhập</string>
+    <string name="Transfer">Chuyển khoản</string>
+    <string name="name_category">Tên danh mục</string>
+    <string name="setting">Cài đặt</string>
+    <string name="setting_category">Cài đặt danh mục</string>
+    <string name="add_category">Thêm danh mục</string>
+    <string name="title_edit_text_category">Vui lòng nhập tên danh mục</string>
+    <string name="group_title">Group Title</string>
+    <string name="confirm_delete">Bạn có chắc muốn xóa không ?</string>
+    <string name="_0">0</string>
+    <string name="node">Ghi chú:</string>
+    <string name="nh_p_ghi_ch">Nhập ghi chú...</string>
+    <string name="day">Hôm nay</string>
 </resources>

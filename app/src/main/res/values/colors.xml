@@ -1,5 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <color name="yellow">#ffd946</color>
+    <color name="yellow2">#2d2924</color>
+    <color name="black2">#66000000</color>
+    <color name="gray">#BE464646</color>
+    <color name="gray1">#696969</color>
+    <color name="gray2">#f4f5f7</color>
+    <color name="gray3">#464646</color>
+    <!--    text color-->
+    <color name="white">#fcfcff</color>
+    <color name="white1">#8DFCFCFF</color>
+    <color name="deep_red">#dd0706</color>
+    <color name="blue">#082af0</color>
+    <color name="bright_pink">#ff17e0</color>
+    <color name="lavender">#8692f7</color>
+    <color name="red_orange">#ff5723</color>
+    <color name="royal_purple">#6f28ed</color>
+    <!--    background text color-->
+    <color name="black1">#171717</color>
+    <color name="bright_yellow">#f9ff01</color>
+    <color name="dark_red">#a51a1b</color>
+    <color name="candy_pink">#f378f4</color>
+    <color name="bright_lime">#10ff00</color>
+    <color name="carnation_pink">#f7a5ec</color>
+    <color name="medium_turquoise">#68ecfa</color>
+
+    <color name="background_night">#1d1d1d</color>
+    <color name="background_day">#ABFCFCFF</color>
+
 </resources>
