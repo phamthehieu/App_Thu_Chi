@@ -15,6 +15,7 @@ import com.example.myapplication.adapter.CategoryAdapter
 import com.example.myapplication.data.CombinedCategoryIcon
 import com.example.myapplication.databinding.FragmentIncomeBinding
 import com.example.myapplication.view.category.SettingCategoryActivity
+import com.example.myapplication.view.component.KeyBoardBottomSheetFragment
 import com.example.myapplication.viewModel.CategoryViewModel
 import com.example.myapplication.viewModel.CategoryViewModelFactory
 
@@ -77,7 +78,9 @@ class IncomeFragment : Fragment(), CategoryAdapter.OnItemClickListener {
     }
 
     override fun onItemClick(category: CombinedCategoryIcon) {
-        Log.d("IncomeFragment", "Item clicked: ${category.categoryName}")
+        val keyboard = KeyBoardBottomSheetFragment()
+        keyboard.categoryData(category)
+        keyboard.show(childFragmentManager, "keyboard")
     }
 
     override fun onSettingsClick() {

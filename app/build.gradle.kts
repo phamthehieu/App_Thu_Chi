@@ -52,6 +52,7 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
+    implementation(libs.glide)
 
     implementation("com.airbnb.android:lottie:5.2.0")
     implementation("com.kizitonwose.calendar:view:2.4.0")
@@ -62,4 +63,5 @@ dependencies {
     implementation("androidx.room:room-ktx:2.6.1")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.8.3")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.3")
+
 }

@@ -101,9 +101,6 @@ class AddNewCategoryActivity : AppCompatActivity(), IconListAdapter.OnIconSelect
                     binding.imageIconSelected.setImageResource(category.iconResource)
                     binding.nameCategoryEt.setText(category.categoryName)
                     binding.recyclerViewIconAddCategory.adapter = adapter
-
-
-                    println("Số lượng nhóm đã đi qua: $groupsPassed")
                 }
             } else {
                 adapter = IconListAdapter(groupedIcons, this, 1)

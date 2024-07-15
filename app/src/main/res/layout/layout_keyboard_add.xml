@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -9,8 +10,8 @@
         android:id="@+id/data"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:layout_marginTop="20dp"
         android:layout_marginStart="10dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="10dp"
         tools:ignore="UselessParent">
 
@@ -41,10 +42,10 @@
     <RelativeLayout
         android:id="@+id/note"
         android:layout_width="match_parent"
-        android:layout_marginStart="5dp"
-        android:layout_marginEnd="5dp"
         android:layout_height="50dp"
         android:layout_below="@+id/data"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
         android:background="@drawable/background_gray">
 
         <TextView
@@ -58,12 +59,13 @@
 
         <EditText
             android:id="@+id/nameCategoryEt"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentBottom="true"
             android:layout_gravity="center"
             android:layout_marginStart="0dp"
             android:layout_marginBottom="0dp"
+            android:layout_toStartOf="@+id/selectedImageBtn"
             android:layout_toEndOf="@+id/title"
             android:autofillHints=""
             android:background="@android:color/transparent"
@@ -75,6 +77,43 @@
             android:textColor="@color/white"
             android:textColorHint="@color/white1"
             android:textSize="16sp" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/selectedImageBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center">
+
+            <ImageView
+                android:id="@+id/imageArtists"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/background_item_image"
+                android:contentDescription="@string/app_name"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_camera_24"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+            <TextView
+                android:id="@+id/totalPhotoEt"
+                android:layout_width="15dp"
+                android:layout_height="20dp"
+                android:background="@drawable/background_button_yellow"
+               android:text="1"
+                android:textColor="@color/white"
+                android:gravity="center"
+                app:layout_constraintEnd_toEndOf="@id/imageArtists"
+                app:layout_constraintTop_toTopOf="@id/imageArtists" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </RelativeLayout>
 
@@ -151,9 +190,9 @@
 
         <LinearLayout
             android:id="@+id/rowTwo"
-            android:layout_below="@+id/rowOne"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/rowOne"
             android:gravity="center"
             android:orientation="horizontal"
             tools:ignore="UselessParent">
@@ -214,9 +253,9 @@
 
         <LinearLayout
             android:id="@+id/rowThree"
-            android:layout_below="@+id/rowTwo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/rowTwo"
             android:gravity="center"
             android:orientation="horizontal"
             tools:ignore="UselessParent">
@@ -277,9 +316,9 @@
 
         <LinearLayout
             android:id="@+id/rowFour"
-            android:layout_below="@+id/rowThree"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/rowThree"
             android:gravity="center"
             android:orientation="horizontal"
             tools:ignore="UselessParent">
@@ -318,17 +357,17 @@
                 android:layout_weight="1"
                 android:background="@drawable/background_gray"
                 android:contentDescription="@string/app_name"
-                android:src="@drawable/ic_clear_35"/>
+                android:src="@drawable/ic_clear_35" />
 
-                <ImageButton
-                    android:id="@+id/successKeyBoardBtn"
-                    android:layout_width="0dp"
-                    android:layout_height="60dp"
-                    android:layout_margin="5dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/background_gray"
-                    android:contentDescription="@string/app_name"
-                    android:src="@drawable/ic_tick_30"/>
+            <ImageButton
+                android:id="@+id/successKeyBoardBtn"
+                android:layout_width="0dp"
+                android:layout_height="60dp"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/background_gray"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/ic_tick_30" />
 
         </LinearLayout>
 

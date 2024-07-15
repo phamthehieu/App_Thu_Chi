@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/backgroundStyle"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context=".view.component.BottomSheetSelectedImageFragment">
+
+    <TextView
+        android:id="@+id/albumBtn"
+        style="@style/TextViewStyle"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="0dp"
+        android:gravity="center"
+        android:text="@string/album"
+        android:textSize="20sp" />
+
+    <View
+        android:id="@+id/line1"
+        android:layout_below="@+id/albumBtn"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/gray"/>
+
+    <TextView
+        android:layout_below="@+id/line1"
+        android:id="@+id/cameraBtn"
+        style="@style/TextViewStyle"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:gravity="center"
+        android:text="@string/camera"
+        android:textSize="20sp" />
+
+</RelativeLayout>

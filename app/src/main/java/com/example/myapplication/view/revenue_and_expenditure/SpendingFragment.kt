@@ -2,7 +2,6 @@ package com.example.myapplication.view.revenue_and_expenditure
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -14,7 +13,7 @@ import com.example.myapplication.R
 import com.example.myapplication.adapter.CategoryAdapter
 import com.example.myapplication.data.CombinedCategoryIcon
 import com.example.myapplication.databinding.FragmentSpendingBinding
-import com.example.myapplication.view.KeyBoardBottomSheetFragment
+import com.example.myapplication.view.component.KeyBoardBottomSheetFragment
 import com.example.myapplication.view.category.SettingCategoryActivity
 import com.example.myapplication.viewModel.CategoryViewModel
 import com.example.myapplication.viewModel.CategoryViewModelFactory

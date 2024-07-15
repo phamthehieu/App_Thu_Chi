@@ -16,11 +16,16 @@ import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.viewModels
 import androidx.viewpager2.widget.ViewPager2
 import com.example.myapplication.R
 import com.example.myapplication.adapter.MonthPagerAdapter
 import com.example.myapplication.databinding.FragmentHomeBinding
+import com.example.myapplication.entity.Icon
+import com.example.myapplication.entity.IncomeExpenseList
 import com.example.myapplication.interfaces.OnMonthSelectedListener
+import com.example.myapplication.viewModel.IncomeExpenseListFactory
+import com.example.myapplication.viewModel.IncomeExpenseListModel
 import java.util.Calendar
 
 class HomeFragment : Fragment(), OnMonthSelectedListener {
@@ -32,16 +37,20 @@ class HomeFragment : Fragment(), OnMonthSelectedListener {
 
     private var check = true
 
+    private val incomeExpenseListModel: IncomeExpenseListModel by viewModels {
+        IncomeExpenseListFactory(requireActivity().application)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
 
     override fun onMonthSelected(month: Int) {
-       if (!check) {
-           yearSearch = month
-       } else {
-           monthSearch = month + 1
-       }
+        if (!check) {
+            yearSearch = month
+        } else {
+            monthSearch = month + 1
+        }
     }
 
     @SuppressLint("SetTextI18n")
@@ -67,7 +76,12 @@ class HomeFragment : Fragment(), OnMonthSelectedListener {
                         R.color.black1
                     )
                 )
-                binding.titleBackground.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.yellow))
+                binding.titleBackground.setBackgroundColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.yellow
+                    )
+                )
                 val color = ContextCompat.getColor(requireContext(), R.color.yellow)
                 requireActivity().window.statusBarColor = color
             }
@@ -86,6 +100,7 @@ class HomeFragment : Fragment(), OnMonthSelectedListener {
                     )
                 )
             }
+
             Configuration.UI_MODE_NIGHT_UNDEFINED -> {
 
             }
@@ -97,7 +112,37 @@ class HomeFragment : Fragment(), OnMonthSelectedListener {
 
         binding.monthTv.text = "Thg $monthSearch"
 
+        setupBackground()
+
         return binding.root;
+    }
+
+    private fun setupBackground() {
+        incomeExpenseListModel.allIncomeExpense.observe(viewLifecycleOwner) { incomeExpenseList ->
+            val groupedIncomeExpenseList = groupIconsByType(incomeExpenseList)
+        }
+    }
+
+    private fun calculateTotalAmounts(groupedIncomeExpenseList: Map<String, List<IncomeExpenseList>>): Map<String, Map<String, Double>> {
+        val totalAmounts = mutableMapOf<String, MutableMap<String, Double>>()
+
+        for ((date, incomeExpenseList) in groupedIncomeExpenseList) {
+            val typeAmounts = mutableMapOf<String, Double>()
+
+            for (item in incomeExpenseList) {
+                val currentAmount = item.amount.replace(",", ".").toDoubleOrNull() ?: 0.0
+                val type = item.type
+                typeAmounts[type] = (typeAmounts[type] ?: 0.0) + currentAmount
+            }
+
+            totalAmounts[date] = typeAmounts
+        }
+
+        return totalAmounts
+    }
+
+    private fun groupIconsByType(data: List<IncomeExpenseList>): Map<String, List<IncomeExpenseList>> {
+        return data.groupBy { it.date }
     }
 
     @SuppressLint("SetTextI18n")

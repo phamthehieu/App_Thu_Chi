@@ -1,4 +1,4 @@
-package com.example.myapplication.view.calender
+package com.example.myapplication.view.component
 
 import android.annotation.SuppressLint
 import android.app.Dialog
@@ -34,16 +34,15 @@ import java.util.*
 import com.example.myapplication.R
 import com.example.myapplication.databinding.Example3CalendarDayBinding
 import com.example.myapplication.databinding.Example3CalendarHeaderBinding
-import com.example.myapplication.view.KeyBoardBottomSheetFragment
 
 @SuppressLint("RestrictedApi")
 class CalendarDialogFragment : DialogFragment() {
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private var selectedDate: LocalDate? = LocalDate.now()
+    private var selectedDate = LocalDate.now()
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private val today = LocalDate.now()
+    private var today = LocalDate.now()
 
     @RequiresApi(Build.VERSION_CODES.O)
     private val titleSameYearFormatter = DateTimeFormatter.ofPattern("yyyy")
@@ -63,6 +62,10 @@ class CalendarDialogFragment : DialogFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         AndroidThreeTen.init(requireContext())
         binding = ActivityCalendarBinding.inflate(inflater, container, false)
+        arguments?.let {
+            val dateString = it.getString("selectedDate")
+            today = LocalDate.parse(dateString)
+        }
         return binding.root
     }
 

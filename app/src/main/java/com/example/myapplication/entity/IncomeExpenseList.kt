@@ -18,9 +18,11 @@ import androidx.room.PrimaryKey
 data class IncomeExpenseList (
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val note: String,
-    val amount: Int,
+    val amount: String,
     val date: String,
     val categoryId: Int,
     val type: String,
-    val image: String
+    val image: String,
+    val categoryName: String,
+    val iconResource: Int,
 )

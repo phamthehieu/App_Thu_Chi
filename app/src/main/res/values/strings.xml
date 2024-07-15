@@ -36,4 +36,7 @@
     <string name="node">Ghi chú:</string>
     <string name="nh_p_ghi_ch">Nhập ghi chú...</string>
     <string name="day">Hôm nay</string>
+    <string name="album">Album</string>
+    <string name="camera">Camera</string>
+    <string name="photo">Ảnh</string>
 </resources>

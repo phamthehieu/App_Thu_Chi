@@ -1,0 +1,6 @@
+<!-- round_top_right.xml -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/dark_red" />
+    <corners android:topRightRadius="12dp" />
+</shape>

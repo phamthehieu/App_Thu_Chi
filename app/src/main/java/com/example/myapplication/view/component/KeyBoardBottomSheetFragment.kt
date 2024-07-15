@@ -1,27 +1,44 @@
-package com.example.myapplication.view
+package com.example.myapplication.view.component
 
 import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import androidx.fragment.app.viewModels
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
+import androidx.annotation.RequiresApi
+import androidx.core.widget.addTextChangedListener
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
+import androidx.lifecycle.viewModelScope
+import androidx.navigation.fragment.findNavController
+import com.example.myapplication.MainActivity
 import com.example.myapplication.R
 import com.example.myapplication.data.CombinedCategoryIcon
 import com.example.myapplication.databinding.LayoutKeyboardAddBinding
-import com.example.myapplication.view.calender.CalendarDialogFragment
+import com.example.myapplication.entity.IncomeExpenseList
+import com.example.myapplication.viewModel.ImageViewModel
 import com.example.myapplication.viewModel.IncomeExpenseListFactory
 import com.example.myapplication.viewModel.IncomeExpenseListModel
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.math.BigDecimal
 import java.text.DecimalFormat
+import java.time.LocalDate
 import java.util.Calendar
 
 class KeyBoardBottomSheetFragment : BottomSheetDialogFragment() {
@@ -32,11 +49,18 @@ class KeyBoardBottomSheetFragment : BottomSheetDialogFragment() {
     private val numberSequence2 = StringBuilder()
     private var total: BigDecimal = BigDecimal.ZERO
 
-    private var selectedDate: String = ""
+    @RequiresApi(Build.VERSION_CODES.O)
+    private var selectedDate = LocalDate.now()
+
     private var categoryData: CombinedCategoryIcon? = null
+    private var nameCategory: String = ""
+
+    private var listImage: MutableList<Uri> = mutableListOf()
+
+    private val imageViewModel: ImageViewModel by activityViewModels()
 
     private val incomeExpenseListModel: IncomeExpenseListModel by viewModels {
-        IncomeExpenseListFactory(requireContext())
+        IncomeExpenseListFactory(requireActivity().application)
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -62,6 +86,7 @@ class KeyBoardBottomSheetFragment : BottomSheetDialogFragment() {
         return dialog
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -74,15 +99,52 @@ class KeyBoardBottomSheetFragment : BottomSheetDialogFragment() {
             }
         }
 
+        binding.nameCategoryEt.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                nameCategory = s.toString()
+            }
+
+        })
+
         binding.nameCategoryEt.setOnClickListener {
             showDefaultKeyboard()
         }
+
+
+        binding.selectedImageBtn.setOnClickListener {
+            if (listImage.size >= 1) {
+                val keyboard = CustomListPhotoFragment()
+                keyboard.show(childFragmentManager, "customListPhoto")
+            } else {
+                val keyboard = BottomSheetSelectedImageFragment()
+                keyboard.show(childFragmentManager, "bottomSheetSelectedImage")
+            }
+
+        }
+
+        imageViewModel.imageUris.observe(viewLifecycleOwner, Observer { uris ->
+            listImage.clear()
+            listImage.addAll(uris)
+            if (uris.size >= 1) {
+                binding.totalPhotoEt.visibility = View.VISIBLE
+                binding.totalPhotoEt.text = uris.size.toString()
+            } else {
+                binding.totalPhotoEt.visibility = View.GONE
+            }
+        })
 
         setupNumberButtons()
 
         return binding.root
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun setupNumberButtons() {
         val buttonIds = listOf(
             binding.buttonZero, binding.buttonOne, binding.buttonTwo,
@@ -100,6 +162,7 @@ class KeyBoardBottomSheetFragment : BottomSheetDialogFragment() {
 
     private var calculationMark = ""
     private var calculation = false
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun onNumberButtonClick(view: View) {
         var mark = ""
         var displayText = ""
@@ -284,8 +347,50 @@ class KeyBoardBottomSheetFragment : BottomSheetDialogFragment() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun saveDataToServer(type: Int) {
-        Log.d("Hieu", "284")
+        if (type == 1) {
+            val incomeExpenseList = IncomeExpenseList(
+                note = nameCategory,
+                amount = numberSequence.toString(),
+                date = selectedDate.toString(),
+                categoryId = categoryData!!.idCategory,
+                type = categoryData!!.source,
+                image = listImage.toString(),
+                categoryName = categoryData!!.categoryName,
+                iconResource = categoryData!!.iconResource,
+            )
+            incomeExpenseListModel.insert(incomeExpenseList).observe(viewLifecycleOwner) { isSuccess ->
+                if (isSuccess) {
+                    val intent = Intent(requireContext(), MainActivity::class.java)
+                    startActivity(intent)
+                    dismiss()
+                } else {
+                    Toast.makeText(requireContext(), "Thêm không thành công!", Toast.LENGTH_SHORT).show()
+                }
+            }
+        } else {
+            val incomeExpenseList = IncomeExpenseList(
+                note = nameCategory,
+                amount = numberSequence2.toString(),
+                date = selectedDate.toString(),
+                categoryId = categoryData!!.idCategory,
+                type = categoryData!!.source,
+                image = listImage.toString(),
+                categoryName = categoryData!!.categoryName,
+                iconResource = categoryData!!.iconResource,
+            )
+            incomeExpenseListModel.insert(incomeExpenseList).observe(viewLifecycleOwner) { isSuccess ->
+                if (isSuccess) {
+                    val intent = Intent(requireContext(), MainActivity::class.java)
+                    startActivity(intent)
+                    dismiss()
+                } else {
+                    Toast.makeText(requireContext(), "Thêm không thành công!", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
     }
 
     private fun doCalculations(mark: String) {
@@ -341,9 +446,9 @@ class KeyBoardBottomSheetFragment : BottomSheetDialogFragment() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("SetTextI18n")
     fun onReceiveDate(year: String, month: String, dayOfMonth: String) {
-        val selectedDate = "$dayOfMonth/$month/$year"
         val todayCalendar = Calendar.getInstance()
         val isSameDay = (year.toInt() == todayCalendar.get(Calendar.YEAR)
                 && month.toInt() == todayCalendar.get(Calendar.MONTH) + 1
@@ -354,14 +459,19 @@ class KeyBoardBottomSheetFragment : BottomSheetDialogFragment() {
             buttonCalendar.text = "$dayOfMonth thg $month $year"
             buttonCalendar.textSize = 14f
         }
+        selectedDate = LocalDate.of(year.toInt(), month.toInt(), dayOfMonth.toInt())
     }
 
     fun categoryData(category: CombinedCategoryIcon) {
         categoryData = category
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun showCustomDialogAddCategory() {
         val calendarDialogFragment = CalendarDialogFragment()
+        val bundle = Bundle()
+        bundle.putString("selectedDate", selectedDate.toString())
+        calendarDialogFragment.arguments = bundle
         calendarDialogFragment.setTargetFragment(this, 0)
         calendarDialogFragment.show(parentFragmentManager, "CalendarDialogFragment")
     }
