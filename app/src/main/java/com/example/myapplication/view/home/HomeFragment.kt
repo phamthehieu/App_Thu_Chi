@@ -17,15 +17,17 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import com.example.myapplication.R
+import com.example.myapplication.adapter.IncomeExpenseListAdapter
 import com.example.myapplication.adapter.MonthPagerAdapter
 import com.example.myapplication.databinding.FragmentHomeBinding
-import com.example.myapplication.entity.Icon
 import com.example.myapplication.entity.IncomeExpenseList
 import com.example.myapplication.interfaces.OnMonthSelectedListener
 import com.example.myapplication.viewModel.IncomeExpenseListFactory
 import com.example.myapplication.viewModel.IncomeExpenseListModel
+import java.text.DecimalFormat
 import java.util.Calendar
 
 class HomeFragment : Fragment(), OnMonthSelectedListener {
@@ -36,6 +38,7 @@ class HomeFragment : Fragment(), OnMonthSelectedListener {
     private var yearSearch = Calendar.getInstance().get(Calendar.YEAR)
 
     private var check = true
+    private lateinit var adapter: IncomeExpenseListAdapter
 
     private val incomeExpenseListModel: IncomeExpenseListModel by viewModels {
         IncomeExpenseListFactory(requireActivity().application)
@@ -59,8 +62,7 @@ class HomeFragment : Fragment(), OnMonthSelectedListener {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
-        val currentNightMode =
-            requireActivity().resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        val currentNightMode = requireActivity().resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
         when (currentNightMode) {
             Configuration.UI_MODE_NIGHT_NO -> {
                 binding.searchBtn.setColorFilter(
@@ -112,33 +114,35 @@ class HomeFragment : Fragment(), OnMonthSelectedListener {
 
         binding.monthTv.text = "Thg $monthSearch"
 
+        binding.recyclerViewHome.layoutManager = LinearLayoutManager(requireContext())
+
         setupBackground()
 
         return binding.root;
     }
 
+    @SuppressLint("DefaultLocale")
     private fun setupBackground() {
-        incomeExpenseListModel.allIncomeExpense.observe(viewLifecycleOwner) { incomeExpenseList ->
+        val formattedMonth = String.format("%02d", monthSearch)
+        incomeExpenseListModel.getIncomeExpenseListByMonthYear(yearSearch.toString(), formattedMonth).observe(viewLifecycleOwner) { incomeExpenseList ->
+
+            val totalIncome = incomeExpenseList.filter { it.type == "Income" }
+                .sumOf { it.amount.replace(",", ".").toDouble() }
+            val totalExpense = incomeExpenseList.filter { it.type == "Expense" }
+                .sumOf { it.amount.replace(",", ".").toDouble() }
+            val expenseFormatter = DecimalFormat("#,###.##")
+            val formattedExpense = expenseFormatter.format(totalIncome)
+            val formattedIncome = expenseFormatter.format(totalExpense)
+            binding.costTv.text = formattedIncome
+            binding.IncomeTv.text =  formattedExpense
+            val totalBalance = totalIncome - totalExpense
+            val formattedTotalBalance = expenseFormatter.format(totalBalance)
+            binding.totalBalanceTv.text = formattedTotalBalance
+
             val groupedIncomeExpenseList = groupIconsByType(incomeExpenseList)
+            adapter = IncomeExpenseListAdapter(groupedIncomeExpenseList)
+            binding.recyclerViewHome.adapter = adapter
         }
-    }
-
-    private fun calculateTotalAmounts(groupedIncomeExpenseList: Map<String, List<IncomeExpenseList>>): Map<String, Map<String, Double>> {
-        val totalAmounts = mutableMapOf<String, MutableMap<String, Double>>()
-
-        for ((date, incomeExpenseList) in groupedIncomeExpenseList) {
-            val typeAmounts = mutableMapOf<String, Double>()
-
-            for (item in incomeExpenseList) {
-                val currentAmount = item.amount.replace(",", ".").toDoubleOrNull() ?: 0.0
-                val type = item.type
-                typeAmounts[type] = (typeAmounts[type] ?: 0.0) + currentAmount
-            }
-
-            totalAmounts[date] = typeAmounts
-        }
-
-        return totalAmounts
     }
 
     private fun groupIconsByType(data: List<IncomeExpenseList>): Map<String, List<IncomeExpenseList>> {
@@ -150,10 +154,8 @@ class HomeFragment : Fragment(), OnMonthSelectedListener {
         context?.let { ctx ->
             val months = listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12)
             val currentYear = Calendar.getInstance().get(Calendar.YEAR)
-            val currentMonth = Calendar.getInstance().get(Calendar.MONTH)
             val years = (currentYear - 50..currentYear + 50).toList()
             val dialog = Dialog(ctx)
-            var yearData = Calendar.getInstance().get(Calendar.YEAR)
 
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
             dialog.setCancelable(false)
@@ -181,7 +183,7 @@ class HomeFragment : Fragment(), OnMonthSelectedListener {
                 months,
                 false,
                 yearSearch,
-                currentMonth,
+                monthSearch - 1,
                 object : OnMonthSelectedListener {
                     override fun onMonthSelected(month: Int) {
                         if (!check) {
@@ -218,7 +220,7 @@ class HomeFragment : Fragment(), OnMonthSelectedListener {
                         years,
                         true,
                         yearSearch,
-                        currentMonth,
+                        monthSearch - 1,
                         object : OnMonthSelectedListener {
                             override fun onMonthSelected(month: Int) {
                                 if (!check) {
@@ -241,7 +243,7 @@ class HomeFragment : Fragment(), OnMonthSelectedListener {
                         months,
                         false,
                         yearSearch,
-                        currentMonth,
+                        monthSearch - 1,
                         object : OnMonthSelectedListener {
                             override fun onMonthSelected(month: Int) {
                                 if (!check) {
@@ -278,6 +280,7 @@ class HomeFragment : Fragment(), OnMonthSelectedListener {
             successBtn.setOnClickListener {
                 binding.yearTv.text = "năm $yearSearch"
                 binding.monthTv.text = "Thg $monthSearch"
+                setupBackground()
                 dialog.dismiss()
             }
             dialog.show()

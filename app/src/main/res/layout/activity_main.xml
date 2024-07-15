@@ -24,8 +24,7 @@
         app:contentInsetStart="0dp"
         app:fabCradleMargin="10dp"
         app:fabCradleRoundedCornerRadius="60dp"
-        app:fabAlignmentMode="center"
-        app:hideOnScroll="true">
+        app:fabAlignmentMode="center">
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottomNavigation"

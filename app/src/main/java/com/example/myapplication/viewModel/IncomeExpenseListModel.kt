@@ -1,7 +1,6 @@
 package com.example.myapplication.viewModel
 
 import android.app.Application
-import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -13,11 +12,13 @@ import com.example.myapplication.database.CategoryDatabase
 import com.example.myapplication.entity.IncomeExpenseList
 import com.example.myapplication.repository.IncomeExpenseListRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 class IncomeExpenseListModel(application: Application) : AndroidViewModel(application) {
     private val repository: IncomeExpenseListRepository
     val allIncomeExpense: LiveData<List<IncomeExpenseList>>
+    val filteredIncomeExpenseList: LiveData<List<IncomeExpenseList>> = MutableLiveData()
 
     init {
         val incomeExpenseDao = CategoryDatabase.getDatabase(application, viewModelScope).incomeExpenseListDao()
@@ -38,9 +39,10 @@ class IncomeExpenseListModel(application: Application) : AndroidViewModel(applic
         return result
     }
 
-
+    fun getIncomeExpenseListByMonthYear(year: String, month: String): LiveData<List<IncomeExpenseList>> {
+        return repository.getIncomeExpenseList(year, month).asLiveData()
+    }
 }
-
 
 class IncomeExpenseListFactory(private val application: Application) : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")

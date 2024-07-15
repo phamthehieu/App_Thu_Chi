@@ -39,4 +39,8 @@
     <string name="album">Album</string>
     <string name="camera">Camera</string>
     <string name="photo">Ảnh</string>
+    <string name="_28_thg_6">28 thg 6</string>
+    <string name="th_s_u">Thứ sáu</string>
+    <string name="chi_ph">Chi phí:</string>
+    <string name="thu_nh_p">Thu nhập:</string>
 </resources>
