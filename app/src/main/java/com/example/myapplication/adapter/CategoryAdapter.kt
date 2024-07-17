@@ -1,6 +1,6 @@
 package com.example.myapplication.adapter
 
-import android.util.Log
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,10 +31,12 @@ class CategoryAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if (viewType == ITEM_VIEW_TYPE_SETTINGS) {
-            val view = LayoutInflater.from(parent.context).inflate(R.layout.item_settings, parent, false)
+            val view =
+                LayoutInflater.from(parent.context).inflate(R.layout.item_settings, parent, false)
             SettingsViewHolder(view)
         } else {
-            val view = LayoutInflater.from(parent.context).inflate(R.layout.row_category_item, parent, false)
+            val view = LayoutInflater.from(parent.context)
+                .inflate(R.layout.row_category_item, parent, false)
             CategoryViewHolder(view)
         }
     }
@@ -45,8 +47,8 @@ class CategoryAdapter(
         } else {
             (holder as CategoryViewHolder).bind(categories[position], position == selectedPosition)
         }
+
         holder.itemView.setOnClickListener {
-            Log.d("CategoryViewHolder", "${categories[position]}")
             notifyItemChanged(selectedPosition)
             selectedPosition = holder.adapterPosition
             notifyItemChanged(selectedPosition)
@@ -61,6 +63,16 @@ class CategoryAdapter(
 
     override fun getItemCount() = categories.size
 
+    @SuppressLint("NotifyDataSetChanged")
+    fun setSelectedPosition(position: Int) {
+        if (position != selectedPosition) {
+            notifyItemChanged(selectedPosition)
+            selectedPosition = position
+            notifyItemChanged(selectedPosition)
+            itemClickListener.onItemClick(categories[selectedPosition])
+        }
+    }
+
     class CategoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val categoryName: TextView = itemView.findViewById(R.id.nameArtistsEt)
         private val categoryIcon: ImageView = itemView.findViewById(R.id.imageArtists)
@@ -68,11 +80,10 @@ class CategoryAdapter(
         fun bind(category: CombinedCategoryIcon, isSelected: Boolean) {
             categoryName.text = category.categoryName
             categoryIcon.setImageResource(category.iconResource)
+            itemView.isSelected = isSelected
             if (isSelected) {
-                itemView.isSelected = true
                 categoryIcon.setColorFilter(itemView.context.getColor(R.color.black))
             } else {
-                itemView.isSelected = false
                 categoryIcon.clearColorFilter()
             }
         }

@@ -5,34 +5,70 @@ import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.util.Log
+import android.view.ContextMenu
 import android.view.LayoutInflater
+import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
-import com.example.myapplication.entity.IncomeExpenseList
+import com.example.myapplication.data.CombinedCategoryIcon
+import com.example.myapplication.data.IncomeExpenseListData
 import java.text.DecimalFormat
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 
-class IncomeExpenseListAdapter(private val groupedIconMap: Map<String, List<IncomeExpenseList>>) :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class IncomeExpenseListAdapter(
+    private val groupedIconMap: Map<String, List<IncomeExpenseListData>>,
+    private val itemClickListener: OnItemClickListener
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    interface OnItemClickListener {
+        fun onItemClick(incomeExpense: Any)
+    }
 
     companion object {
         const val TYPE_HEADER = 0
         private const val TYPE_ITEM = 1
     }
 
-    private val dataList: List<Any> = mutableListOf<Any>().apply {
+    private val dataList: MutableList<Any> = mutableListOf<Any>().apply {
         groupedIconMap.forEach { (type, incomeExpenseList) ->
             add(type)
             addAll(incomeExpenseList)
+        }
+    }
+
+    private var selectedItemPosition: Int = RecyclerView.NO_POSITION
+
+    fun getSelectedItem(): IncomeExpenseListData? {
+        return if (selectedItemPosition != RecyclerView.NO_POSITION && dataList[selectedItemPosition] is IncomeExpenseListData) {
+            dataList[selectedItemPosition] as IncomeExpenseListData
+        } else {
+            null
+        }
+    }
+
+    @SuppressLint("SuspiciousIndentation")
+    fun removeItem(position: Int) {
+        if (position != RecyclerView.NO_POSITION) {
+          selectedItemPosition = position
+            notifyItemRemoved(position)
+        }
+    }
+
+    fun getItem(position: Int): IncomeExpenseListData? {
+        return if (dataList[position] is IncomeExpenseListData) {
+            dataList[position] as IncomeExpenseListData
+        } else {
+            null
         }
     }
 
@@ -46,7 +82,7 @@ class IncomeExpenseListAdapter(private val groupedIconMap: Map<String, List<Inco
 
     private fun calculateTotals() {
         for (item in dataList) {
-            if (item is IncomeExpenseList) {
+            if (item is IncomeExpenseListData) {
                 val date = item.date
                 val amount = parseAmount(item.amount)
                 val totals = totalsMap.getOrPut(date) { Totals() }
@@ -82,7 +118,7 @@ class IncomeExpenseListAdapter(private val groupedIconMap: Map<String, List<Inco
         }
     }
 
-    class HeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class HeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val dateTV: TextView = itemView.findViewById(R.id.dateTV)
         private val weekdaysTV: TextView = itemView.findViewById(R.id.weekdaysTV)
         private val expenseTV: TextView = itemView.findViewById(R.id.expenseTV)
@@ -125,16 +161,30 @@ class IncomeExpenseListAdapter(private val groupedIconMap: Map<String, List<Inco
         }
     }
 
-    class IncomeExpenseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class IncomeExpenseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
+        View.OnCreateContextMenuListener {
         private val iconCategoryIV: ImageView = itemView.findViewById(R.id.iconCategoryIV)
         private val nameCategoryTV: TextView = itemView.findViewById(R.id.nameCategoryTV)
         private val amountCategoryTV: TextView = itemView.findViewById(R.id.amountCategoryTV)
+        private  val checkImage: RelativeLayout = itemView.findViewById(R.id.checkImage)
+
+        init {
+            itemView.setOnCreateContextMenuListener(this)
+            itemView.setOnLongClickListener {
+                selectedItemPosition = adapterPosition
+                false
+            }
+        }
 
         @SuppressLint("SetTextI18n")
-        fun bind(icon: IncomeExpenseList) {
+        fun bind(icon: IncomeExpenseListData) {
+            if (icon.image.isNotEmpty() && icon.image.trim().isNotEmpty() && icon.image.trim() != "[]") {
+                checkImage.visibility = View.VISIBLE
+            } else {
+                checkImage.visibility = View.GONE
+            }
             iconCategoryIV.setImageResource(icon.iconResource)
             iconCategoryIV.setColorFilter(Color.BLACK)
-
             if (icon.note.isEmpty()) {
                 nameCategoryTV.text = icon.categoryName
             } else {
@@ -145,6 +195,7 @@ class IncomeExpenseListAdapter(private val groupedIconMap: Map<String, List<Inco
                 .toDouble()
             val expenseFormatter = DecimalFormat("#,###.##")
             val formattedAmount = expenseFormatter.format(amount)
+
             if (icon.type == "Expense") {
                 amountCategoryTV.text = "-$formattedAmount"
             } else {
@@ -156,6 +207,11 @@ class IncomeExpenseListAdapter(private val groupedIconMap: Map<String, List<Inco
                 R.drawable.setting_background_item
             ) as GradientDrawable
             drawable.setColor(generateRandomLightColor())
+        }
+
+        override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenu.ContextMenuInfo?) {
+            val inflater = MenuInflater(v.context)
+            inflater.inflate(R.menu.context_menu, menu)
         }
 
         private fun generateRandomLightColor(): Int {
@@ -179,22 +235,37 @@ class IncomeExpenseListAdapter(private val groupedIconMap: Map<String, List<Inco
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if (holder is HeaderViewHolder) {
-            val title = dataList[position] as String
-            val totals = totalsMap[title] ?: Totals()
-            holder.bind(title, totals)
-        } else if (holder is IncomeExpenseViewHolder) {
-            holder.bind(dataList[position] as IncomeExpenseList)
-        }
-    }
-
     override fun getItemViewType(position: Int): Int {
-        return if (dataList[position] is String) TYPE_HEADER else TYPE_ITEM
+        return if (dataList[position] is String) {
+            TYPE_HEADER
+        } else {
+            TYPE_ITEM
+        }
     }
 
     override fun getItemCount(): Int {
         return dataList.size
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        val item = dataList[position]
+        when (holder) {
+            is HeaderViewHolder -> {
+                val totals = totalsMap[item as String] ?: Totals()
+                holder.bind(item, totals)
+            }
+
+            is IncomeExpenseViewHolder -> holder.bind(item as IncomeExpenseListData)
+        }
+
+        holder.itemView.setOnClickListener {
+            when (holder) {
+                is IncomeExpenseViewHolder -> {
+                    itemClickListener.onItemClick(item)
+                }
+            }
+
+        }
     }
 }

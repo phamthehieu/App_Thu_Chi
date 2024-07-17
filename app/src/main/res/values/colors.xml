@@ -18,10 +18,10 @@
     <color name="white">#fcfcff</color>
     <color name="white1">#8DFCFCFF</color>
     <color name="deep_red">#B82221</color>
-    <color name="blue">#082af0</color>
+    <color name="blue">#0120D3</color>
     <color name="bright_pink">#ff17e0</color>
     <color name="lavender">#8692f7</color>
-    <color name="red_orange">#ff5723</color>
+    <color name="red_orange">#D0FF5723</color>
     <color name="royal_purple">#6f28ed</color>
     <!--    background text color-->
     <color name="black1">#171717</color>
@@ -34,5 +34,6 @@
 
     <color name="background_night">#1d1d1d</color>
     <color name="background_day">#ABFCFCFF</color>
+    <color name="red">#FF0000</color>
 
 </resources>

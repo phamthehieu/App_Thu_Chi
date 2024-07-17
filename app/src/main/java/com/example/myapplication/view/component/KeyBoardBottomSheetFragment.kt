@@ -27,6 +27,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.myapplication.MainActivity
 import com.example.myapplication.R
 import com.example.myapplication.data.CombinedCategoryIcon
+import com.example.myapplication.data.IncomeExpenseListData
 import com.example.myapplication.databinding.LayoutKeyboardAddBinding
 import com.example.myapplication.entity.IncomeExpenseList
 import com.example.myapplication.viewModel.ImageViewModel
@@ -39,6 +40,7 @@ import kotlinx.coroutines.launch
 import java.math.BigDecimal
 import java.text.DecimalFormat
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.Calendar
 
 class KeyBoardBottomSheetFragment : BottomSheetDialogFragment() {
@@ -46,8 +48,9 @@ class KeyBoardBottomSheetFragment : BottomSheetDialogFragment() {
     private lateinit var binding: LayoutKeyboardAddBinding
 
     private val numberSequence = StringBuilder()
-    private val numberSequence2 = StringBuilder()
+    private var numberSequence2 = StringBuilder()
     private var total: BigDecimal = BigDecimal.ZERO
+    private var checkEdit:Boolean = false
 
     @RequiresApi(Build.VERSION_CODES.O)
     private var selectedDate = LocalDate.now()
@@ -56,6 +59,7 @@ class KeyBoardBottomSheetFragment : BottomSheetDialogFragment() {
     private var nameCategory: String = ""
 
     private var listImage: MutableList<Uri> = mutableListOf()
+    private var itemEdit: IncomeExpenseListData? = null
 
     private val imageViewModel: ImageViewModel by activityViewModels()
 
@@ -67,7 +71,7 @@ class KeyBoardBottomSheetFragment : BottomSheetDialogFragment() {
         val dialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
         dialog.setOnShowListener { dialogInterface ->
             val bottomSheet =
-                (dialogInterface as BottomSheetDialog).findViewById<View>(com.google.android.material.R.id.design_bottom_sheet) as View?
+                (dialogInterface as BottomSheetDialog).findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
             bottomSheet?.setBackgroundColor(resources.getColor(R.color.black, null))
 
             bottomSheet?.viewTreeObserver?.addOnGlobalLayoutListener {
@@ -141,6 +145,30 @@ class KeyBoardBottomSheetFragment : BottomSheetDialogFragment() {
 
         setupNumberButtons()
 
+        itemEdit?.let {
+            listImage.clear()
+            imageViewModel.clearImageUris()
+            numberSequence.append(it.amount)
+            val displayText = formatNumberWithDots(numberSequence.toString())
+            binding.textViewNumberDisplay.text = displayText
+            val dateString = it.date
+            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+            selectedDate = LocalDate.parse(dateString, formatter)
+            onReceiveDate(
+                selectedDate.year.toString(),
+                selectedDate.monthValue.toString(),
+                selectedDate.dayOfMonth.toString()
+            )
+            val dataImage = it.image.replace("[", "").replace("]", "").split(", ")
+            dataImage.distinct().forEach { imageString ->
+                val uri = Uri.parse(imageString)
+                if (!listImage.contains(uri)) {
+                    listImage.add(uri)
+                    imageViewModel.addImageUri(uri)
+                }
+            }
+        }
+
         return binding.root
     }
 
@@ -162,6 +190,7 @@ class KeyBoardBottomSheetFragment : BottomSheetDialogFragment() {
 
     private var calculationMark = ""
     private var calculation = false
+
     @RequiresApi(Build.VERSION_CODES.O)
     private fun onNumberButtonClick(view: View) {
         var mark = ""
@@ -349,48 +378,113 @@ class KeyBoardBottomSheetFragment : BottomSheetDialogFragment() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun saveDataToServer(type: Int) {
-        if (type == 1) {
-            val incomeExpenseList = IncomeExpenseList(
-                note = nameCategory,
-                amount = numberSequence.toString(),
-                date = selectedDate.toString(),
-                categoryId = categoryData!!.idCategory,
-                type = categoryData!!.source,
-                image = listImage.toString(),
-                categoryName = categoryData!!.categoryName,
-                iconResource = categoryData!!.iconResource,
-            )
-            incomeExpenseListModel.insert(incomeExpenseList).observe(viewLifecycleOwner) { isSuccess ->
-                if (isSuccess) {
-                    val intent = Intent(requireContext(), MainActivity::class.java)
-                    startActivity(intent)
-                    dismiss()
-                } else {
-                    Toast.makeText(requireContext(), "Thêm không thành công!", Toast.LENGTH_SHORT).show()
-                }
+        if (!checkEdit) {
+            if (type == 1) {
+                val incomeExpenseList = IncomeExpenseList(
+                    note = nameCategory,
+                    amount = numberSequence.toString(),
+                    date = selectedDate.toString(),
+                    categoryId = categoryData!!.idCategory,
+                    type = categoryData!!.source,
+                    image = listImage.toString(),
+                    categoryName = categoryData!!.categoryName,
+                    iconResource = categoryData!!.iconResource,
+                )
+                incomeExpenseListModel.insert(incomeExpenseList)
+                    .observe(viewLifecycleOwner) { isSuccess ->
+                        if (isSuccess) {
+                            val intent = Intent(requireContext(), MainActivity::class.java)
+                            startActivity(intent)
+                            dismiss()
+                        } else {
+                            Toast.makeText(
+                                requireContext(),
+                                "Thêm không thành công!",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+            } else {
+                val incomeExpenseList = IncomeExpenseList(
+                    note = nameCategory,
+                    amount = numberSequence2.toString(),
+                    date = selectedDate.toString(),
+                    categoryId = categoryData!!.idCategory,
+                    type = categoryData!!.source,
+                    image = listImage.toString(),
+                    categoryName = categoryData!!.categoryName,
+                    iconResource = categoryData!!.iconResource,
+                )
+                incomeExpenseListModel.insert(incomeExpenseList)
+                    .observe(viewLifecycleOwner) { isSuccess ->
+                        if (isSuccess) {
+                            val intent = Intent(requireContext(), MainActivity::class.java)
+                            startActivity(intent)
+                            dismiss()
+                        } else {
+                            Toast.makeText(
+                                requireContext(),
+                                "Thêm không thành công!",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
             }
         } else {
-            val incomeExpenseList = IncomeExpenseList(
-                note = nameCategory,
-                amount = numberSequence2.toString(),
-                date = selectedDate.toString(),
-                categoryId = categoryData!!.idCategory,
-                type = categoryData!!.source,
-                image = listImage.toString(),
-                categoryName = categoryData!!.categoryName,
-                iconResource = categoryData!!.iconResource,
-            )
-            incomeExpenseListModel.insert(incomeExpenseList).observe(viewLifecycleOwner) { isSuccess ->
-                if (isSuccess) {
-                    val intent = Intent(requireContext(), MainActivity::class.java)
-                    startActivity(intent)
-                    dismiss()
-                } else {
-                    Toast.makeText(requireContext(), "Thêm không thành công!", Toast.LENGTH_SHORT).show()
-                }
+            if (type == 1) {
+                val incomeExpenseList = IncomeExpenseList(
+                    id = itemEdit!!.id,
+                    note = nameCategory,
+                    amount = numberSequence.toString(),
+                    date = selectedDate.toString(),
+                    categoryId = categoryData!!.idCategory,
+                    type = categoryData!!.source,
+                    image = listImage.toString(),
+                    categoryName = categoryData!!.categoryName,
+                    iconResource = categoryData!!.iconResource,
+                )
+                incomeExpenseListModel.updateIncomeExpenseListModel(incomeExpenseList)
+                    .observe(viewLifecycleOwner) { isSuccess ->
+                        if (isSuccess) {
+                            val intent = Intent(requireContext(), MainActivity::class.java)
+                            startActivity(intent)
+                            dismiss()
+                        } else {
+                            Toast.makeText(
+                                requireContext(),
+                                "Chỉnh sửa không thành công!",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+            } else {
+                val incomeExpenseList = IncomeExpenseList(
+                    id = itemEdit!!.id,
+                    note = nameCategory,
+                    amount = numberSequence2.toString(),
+                    date = selectedDate.toString(),
+                    categoryId = categoryData!!.idCategory,
+                    type = categoryData!!.source,
+                    image = listImage.toString(),
+                    categoryName = categoryData!!.categoryName,
+                    iconResource = categoryData!!.iconResource,
+                )
+                incomeExpenseListModel.insert(incomeExpenseList)
+                    .observe(viewLifecycleOwner) { isSuccess ->
+                        if (isSuccess) {
+                            val intent = Intent(requireContext(), MainActivity::class.java)
+                            startActivity(intent)
+                            dismiss()
+                        } else {
+                            Toast.makeText(
+                                requireContext(),
+                                "Chỉnh sửa không thành công!",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
             }
         }
-
     }
 
     private fun doCalculations(mark: String) {
@@ -462,7 +556,12 @@ class KeyBoardBottomSheetFragment : BottomSheetDialogFragment() {
         selectedDate = LocalDate.of(year.toInt(), month.toInt(), dayOfMonth.toInt())
     }
 
-    fun categoryData(category: CombinedCategoryIcon) {
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun categoryData(category: CombinedCategoryIcon, dataEdit: IncomeExpenseListData? = null) {
+        if (dataEdit != null) {
+            itemEdit = dataEdit
+            checkEdit = true
+        }
         categoryData = category
     }
 

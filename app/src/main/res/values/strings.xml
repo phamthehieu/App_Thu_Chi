@@ -43,4 +43,7 @@
     <string name="th_s_u">Thứ sáu</string>
     <string name="chi_ph">Chi phí:</string>
     <string name="thu_nh_p">Thu nhập:</string>
+    <string name="edit">Sửa</string>
+    <string name="delete2">Xóa</string>
+    <string name="detail">Chi tiết</string>
 </resources>

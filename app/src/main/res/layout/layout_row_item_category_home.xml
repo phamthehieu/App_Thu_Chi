@@ -13,24 +13,52 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_marginStart="20dp"
-            android:background="@drawable/setting_background_item">
+           >
 
-            <ImageView
-                android:id="@+id/iconCategoryIV"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:background="@android:color/transparent"
-                android:contentDescription="@string/app_name"
-                android:scaleType="centerCrop"
-                android:src="@drawable/ic_camera_24"
+            <FrameLayout
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:background="@drawable/setting_background_item">
 
+                <ImageView
+                    android:id="@+id/iconCategoryIV"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center"
+                    android:background="@android:color/transparent"
+                    android:contentDescription="@string/app_name"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_camera_24"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <RelativeLayout
+                    android:id="@+id/checkImage"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="bottom|end"
+                    android:background="@drawable/background_camera_home"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:id="@+id/totalPhotoEt"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:background="@android:color/transparent"
+                        android:contentDescription="@string/app_name"
+                        android:gravity="center"
+                        android:src="@drawable/ic_camera_10" />
+                </RelativeLayout>
+            </FrameLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
@@ -52,9 +80,8 @@
             android:layout_marginEnd="20dp"
             android:background="@android:color/transparent"
             android:text="@string/_0"
-            android:textStyle="bold"
             android:textSize="18sp"
-            />
+            android:textStyle="bold" />
     </LinearLayout>
 
     <View

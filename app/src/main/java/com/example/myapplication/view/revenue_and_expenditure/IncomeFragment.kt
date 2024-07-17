@@ -1,28 +1,34 @@
 package com.example.myapplication.view.revenue_and_expenditure
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.myapplication.R
 import com.example.myapplication.adapter.CategoryAdapter
 import com.example.myapplication.data.CombinedCategoryIcon
+import com.example.myapplication.data.IncomeExpenseListData
 import com.example.myapplication.databinding.FragmentIncomeBinding
 import com.example.myapplication.view.category.SettingCategoryActivity
 import com.example.myapplication.view.component.KeyBoardBottomSheetFragment
 import com.example.myapplication.viewModel.CategoryViewModel
 import com.example.myapplication.viewModel.CategoryViewModelFactory
+import com.google.gson.Gson
 
 class IncomeFragment : Fragment(), CategoryAdapter.OnItemClickListener {
 
     private lateinit var binding: FragmentIncomeBinding
     private lateinit var categoryAdapter: CategoryAdapter
+
+    private var itemEdit: IncomeExpenseListData? = null
 
     private val categoryViewModel: CategoryViewModel by viewModels {
         CategoryViewModelFactory(requireActivity().application)
@@ -30,6 +36,12 @@ class IncomeFragment : Fragment(), CategoryAdapter.OnItemClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        arguments?.let {
+            val json = it.getString("itemEdit")
+            itemEdit = json?.let { jsonStr ->
+                Gson().fromJson(jsonStr, IncomeExpenseListData::class.java)
+            }
+        }
     }
 
     override fun onCreateView(
@@ -73,13 +85,22 @@ class IncomeFragment : Fragment(), CategoryAdapter.OnItemClickListener {
     private fun updateRecyclerView(combinedList: List<CombinedCategoryIcon>) {
         val reversedList = combinedList.asReversed().toMutableList()
         reversedList.add(settingsItem)
+
+        val selectedPosition = if (itemEdit != null) {
+            reversedList.indexOfFirst { it.idCategory == itemEdit?.categoryId }
+        } else {
+            0
+        }
+
         categoryAdapter = CategoryAdapter(reversedList, this)
         binding.recyclerViewIncome.adapter = categoryAdapter
+        categoryAdapter.setSelectedPosition(selectedPosition)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onItemClick(category: CombinedCategoryIcon) {
         val keyboard = KeyBoardBottomSheetFragment()
-        keyboard.categoryData(category)
+        keyboard.categoryData(category, itemEdit)
         keyboard.show(childFragmentManager, "keyboard")
     }
 

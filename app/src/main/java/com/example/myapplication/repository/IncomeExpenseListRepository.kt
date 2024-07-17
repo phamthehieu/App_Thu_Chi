@@ -2,6 +2,7 @@
 
     import androidx.annotation.WorkerThread
     import com.example.myapplication.dao.IncomeExpenseListDao
+    import com.example.myapplication.data.CategoryWithIncomeExpenseList
     import com.example.myapplication.entity.IncomeExpenseList
     import kotlinx.coroutines.flow.Flow
     import org.threeten.bp.YearMonth
@@ -14,7 +15,18 @@
             incomeExpenseListDao.insert(incomeExpenseList)
         }
 
-        fun getIncomeExpenseList(year: String, month: String): Flow<List<IncomeExpenseList>> {
+        fun getIncomeExpenseList(year: String, month: String): Flow<List<CategoryWithIncomeExpenseList>> {
             return incomeExpenseListDao.getIncomeExpenseListByMonthYear(year, month)
         }
+
+        @WorkerThread
+        suspend fun deleteIncomeExpenseList(incomeExpenseList: IncomeExpenseList) {
+            incomeExpenseListDao.delete(incomeExpenseList)
+        }
+
+        @WorkerThread
+        suspend fun updateIncomeExpenseList(incomeExpenseList: IncomeExpenseList) {
+            incomeExpenseListDao.update(incomeExpenseList)
+        }
+
     }

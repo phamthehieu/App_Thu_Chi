@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import com.example.myapplication.data.CategoryWithIncomeExpenseList
 import com.example.myapplication.database.CategoryDatabase
 import com.example.myapplication.entity.IncomeExpenseList
 import com.example.myapplication.repository.IncomeExpenseListRepository
@@ -17,11 +18,12 @@ import kotlinx.coroutines.launch
 
 class IncomeExpenseListModel(application: Application) : AndroidViewModel(application) {
     private val repository: IncomeExpenseListRepository
-    val allIncomeExpense: LiveData<List<IncomeExpenseList>>
+    private val allIncomeExpense: LiveData<List<IncomeExpenseList>>
     val filteredIncomeExpenseList: LiveData<List<IncomeExpenseList>> = MutableLiveData()
 
     init {
-        val incomeExpenseDao = CategoryDatabase.getDatabase(application, viewModelScope).incomeExpenseListDao()
+        val incomeExpenseDao =
+            CategoryDatabase.getDatabase(application, viewModelScope).incomeExpenseListDao()
         repository = IncomeExpenseListRepository(incomeExpenseDao)
         allIncomeExpense = repository.allIncomeExpenseList.asLiveData()
     }
@@ -39,7 +41,29 @@ class IncomeExpenseListModel(application: Application) : AndroidViewModel(applic
         return result
     }
 
-    fun getIncomeExpenseListByMonthYear(year: String, month: String): LiveData<List<IncomeExpenseList>> {
+    fun deleteIncomeExpenseListModel(incomeExpenseList: IncomeExpenseList) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.deleteIncomeExpenseList(incomeExpenseList)
+        }
+    }
+
+    fun updateIncomeExpenseListModel(incomeExpenseList: IncomeExpenseList): LiveData<Boolean> {
+        val result = MutableLiveData<Boolean>()
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                repository.updateIncomeExpenseList(incomeExpenseList)
+                result.postValue(true)
+            } catch (e: Exception) {
+                result.postValue(false) // Chèn không thành công
+            }
+        }
+        return result
+    }
+
+    fun getIncomeExpenseListByMonthYear(
+        year: String,
+        month: String
+    ): LiveData<List<CategoryWithIncomeExpenseList>> {
         return repository.getIncomeExpenseList(year, month).asLiveData()
     }
 }

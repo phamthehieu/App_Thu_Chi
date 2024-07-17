@@ -2,35 +2,48 @@ package com.example.myapplication.view.home
 
 import android.annotation.SuppressLint
 import android.app.Dialog
+import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.view.Window
+import android.view.*
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.example.myapplication.R
 import com.example.myapplication.adapter.IncomeExpenseListAdapter
 import com.example.myapplication.adapter.MonthPagerAdapter
+import com.example.myapplication.data.CategoryWithIncomeExpenseList
+import com.example.myapplication.data.IncomeExpenseListData
 import com.example.myapplication.databinding.FragmentHomeBinding
 import com.example.myapplication.entity.IncomeExpenseList
 import com.example.myapplication.interfaces.OnMonthSelectedListener
+import com.example.myapplication.view.revenue_and_expenditure.RevenueAndExpenditureActivity
 import com.example.myapplication.viewModel.IncomeExpenseListFactory
 import com.example.myapplication.viewModel.IncomeExpenseListModel
+import com.google.android.material.snackbar.BaseTransientBottomBar
+import com.google.android.material.snackbar.Snackbar
+import com.google.gson.Gson
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.io.Serializable
 import java.text.DecimalFormat
 import java.util.Calendar
 
-class HomeFragment : Fragment(), OnMonthSelectedListener {
+class HomeFragment : Fragment(), OnMonthSelectedListener, IncomeExpenseListAdapter.OnItemClickListener {
 
     private lateinit var binding: FragmentHomeBinding
 
@@ -46,6 +59,7 @@ class HomeFragment : Fragment(), OnMonthSelectedListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
     }
 
     override fun onMonthSelected(month: Int) {
@@ -62,7 +76,8 @@ class HomeFragment : Fragment(), OnMonthSelectedListener {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
-        val currentNightMode = requireActivity().resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        val currentNightMode =
+            requireActivity().resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
         when (currentNightMode) {
             Configuration.UI_MODE_NIGHT_NO -> {
                 binding.searchBtn.setColorFilter(
@@ -124,8 +139,11 @@ class HomeFragment : Fragment(), OnMonthSelectedListener {
     @SuppressLint("DefaultLocale")
     private fun setupBackground() {
         val formattedMonth = String.format("%02d", monthSearch)
-        incomeExpenseListModel.getIncomeExpenseListByMonthYear(yearSearch.toString(), formattedMonth).observe(viewLifecycleOwner) { incomeExpenseList ->
-
+        incomeExpenseListModel.getIncomeExpenseListByMonthYear(
+            yearSearch.toString(),
+            formattedMonth
+        ).observe(viewLifecycleOwner) { data ->
+            val incomeExpenseList = data.map { convertToIncomeExpenseListData(it) }
             val totalIncome = incomeExpenseList.filter { it.type == "Income" }
                 .sumOf { it.amount.replace(",", ".").toDouble() }
             val totalExpense = incomeExpenseList.filter { it.type == "Expense" }
@@ -134,18 +152,82 @@ class HomeFragment : Fragment(), OnMonthSelectedListener {
             val formattedExpense = expenseFormatter.format(totalIncome)
             val formattedIncome = expenseFormatter.format(totalExpense)
             binding.costTv.text = formattedIncome
-            binding.IncomeTv.text =  formattedExpense
+            binding.IncomeTv.text = formattedExpense
             val totalBalance = totalIncome - totalExpense
             val formattedTotalBalance = expenseFormatter.format(totalBalance)
             binding.totalBalanceTv.text = formattedTotalBalance
 
             val groupedIncomeExpenseList = groupIconsByType(incomeExpenseList)
-            adapter = IncomeExpenseListAdapter(groupedIncomeExpenseList)
+            adapter = IncomeExpenseListAdapter(groupedIncomeExpenseList, this)
             binding.recyclerViewHome.adapter = adapter
+
+            val swipeGesture = object : SwipeGesture(requireContext()) {
+
+                override fun getMovementFlags(
+                    recyclerView: RecyclerView,
+                    viewHolder: RecyclerView.ViewHolder
+                ): Int {
+                    return if (viewHolder is IncomeExpenseListAdapter.HeaderViewHolder) {
+                        makeMovementFlags(0, 0)
+                    } else {
+                        val swipeFlags = ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+                        makeMovementFlags(0, swipeFlags)
+                    }
+                }
+
+                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                    if (viewHolder is IncomeExpenseListAdapter.HeaderViewHolder) {
+                        adapter.notifyItemChanged(viewHolder.adapterPosition)
+                        return
+                    }
+
+                    val position = viewHolder.adapterPosition
+                    when (direction) {
+                        ItemTouchHelper.LEFT -> {
+                            adapter.removeItem(position)
+                            conformDelete()
+                        }
+                        ItemTouchHelper.RIGHT -> {
+                            adapter.removeItem(position)
+                            val selectedItem = adapter.getSelectedItem()
+                            selectedItem?.let { itemToEdit ->
+                                val gson = Gson()
+                                val json = gson.toJson(itemToEdit)
+
+                                val intent = Intent(requireContext(), RevenueAndExpenditureActivity::class.java)
+                                intent.putExtra("itemToEdit", json)
+                                startActivity(intent)
+                            }
+                        }
+                    }
+                }
+            }
+
+            val itemTouchHelper = ItemTouchHelper(swipeGesture)
+            itemTouchHelper.attachToRecyclerView(binding.recyclerViewHome)
         }
     }
 
-    private fun groupIconsByType(data: List<IncomeExpenseList>): Map<String, List<IncomeExpenseList>> {
+    private fun convertToIncomeExpenseListData(categoryWithIncomeExpenseList: CategoryWithIncomeExpenseList): IncomeExpenseListData {
+        val incomeExpense = categoryWithIncomeExpenseList.incomeExpense
+        val category = categoryWithIncomeExpenseList.category
+
+        return IncomeExpenseListData(
+            id = incomeExpense.id,
+            note = incomeExpense.note,
+            amount = incomeExpense.amount,
+            date = incomeExpense.date,
+            categoryId = incomeExpense.categoryId,
+            type = incomeExpense.type,
+            image = incomeExpense.image,
+            categoryName = incomeExpense.categoryName,
+            iconResource = incomeExpense.iconResource,
+            idIcon = category.icon
+        )
+    }
+
+
+    private fun groupIconsByType(data: List<IncomeExpenseListData>): Map<String, List<IncomeExpenseListData>> {
         return data.groupBy { it.date }
     }
 
@@ -285,5 +367,92 @@ class HomeFragment : Fragment(), OnMonthSelectedListener {
             }
             dialog.show()
         }
+    }
+
+    override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenu.ContextMenuInfo?
+    ) {
+        super.onCreateContextMenu(menu, v, menuInfo)
+        val inflater: MenuInflater = requireActivity().menuInflater
+        inflater.inflate(R.menu.context_menu, menu)
+    }
+
+    override fun onContextItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_edit -> {
+                val selectedItem = adapter.getSelectedItem()
+                selectedItem?.let { itemToEdit ->
+                    val gson = Gson()
+                    val json = gson.toJson(itemToEdit)
+
+                    val intent = Intent(requireContext(), RevenueAndExpenditureActivity::class.java)
+                    intent.putExtra("itemToEdit", json)
+                    startActivity(intent)
+                }
+
+                true
+            }
+
+            R.id.action_delete -> {
+                conformDelete()
+                true
+            }
+
+            R.id.action_detail -> {
+
+                true
+            }
+
+            else -> super.onContextItemSelected(item)
+        }
+    }
+
+    @OptIn(DelicateCoroutinesApi::class)
+    private fun conformDelete() {
+        context.let { cxt ->
+            val dialog = Dialog(cxt!!)
+            dialog.setContentView(R.layout.layout_confirm_delete)
+            dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+            val backDeleteBtn = dialog.findViewById<View>(R.id.backDeleteBtn)
+            val successDeleteBtn = dialog.findViewById<View>(R.id.successDeleteBtn)
+
+            backDeleteBtn.setOnClickListener {
+                dialog.dismiss()
+            }
+
+            successDeleteBtn.setOnClickListener {
+                val selectedItem = adapter.getSelectedItem()
+                selectedItem?.let { itemData ->
+                    val itemToDelete = IncomeExpenseList(
+                        id = itemData.id,
+                        note = itemData.note,
+                        amount = itemData.amount,
+                        date = itemData.date,
+                        categoryId = itemData.categoryId,
+                        type = itemData.type,
+                        image = itemData.image,
+                        categoryName = itemData.categoryName,
+                        iconResource = itemData.iconResource
+                    )
+                    GlobalScope.launch {
+                        incomeExpenseListModel.deleteIncomeExpenseListModel(itemToDelete)
+                        withContext(Dispatchers.Main) {
+                            Toast.makeText(
+                                requireContext(),
+                                "Đã xóa thành công",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            dialog.dismiss()
+                        }
+                    }
+                }
+            }
+
+            dialog.show()
+        }
+    }
+
+    override fun onItemClick(incomeExpense: Any) {
+        Log.d("Hieu438", "onItemClick: $incomeExpense")
     }
 }
