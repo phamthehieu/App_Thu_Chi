@@ -57,7 +57,7 @@ class RevenueAndExpenditureActivity : AppCompatActivity() {
 
         itemEdit?.let {
             if (it.type == "Income") {
-                viewPager.setCurrentItem(1, false) // Chuyển trực tiếp đến IncomeFragment
+                viewPager.setCurrentItem(1, false)
                 updateTabBackground(2)
             } else {
                 viewPager.currentItem = 0

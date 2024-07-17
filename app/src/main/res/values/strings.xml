@@ -46,4 +46,11 @@
     <string name="edit">Sửa</string>
     <string name="delete2">Xóa</string>
     <string name="detail">Chi tiết</string>
+    <string name="type">Kiểu</string>
+    <string name="amount_title">Số tiền</string>
+    <string name="date">Ngày</string>
+    <string name="note">Ghi chú</string>
+    <string name="image">Ảnh</string>
+    <string name="income">Thu nhập</string>
+    <string name="expense">Chi phí</string>
 </resources>

@@ -191,8 +191,7 @@ class IncomeExpenseListAdapter(
                 nameCategoryTV.text = icon.note
             }
 
-            val amount = icon.amount.replace(",", ".")
-                .toDouble()
+            val amount = icon.amount.replace(",", ".").toDouble()
             val expenseFormatter = DecimalFormat("#,###.##")
             val formattedAmount = expenseFormatter.format(amount)
 

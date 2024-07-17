@@ -398,6 +398,14 @@ class HomeFragment : Fragment(), OnMonthSelectedListener, IncomeExpenseListAdapt
             }
 
             R.id.action_detail -> {
+                val selectedItem = adapter.getSelectedItem()
+                selectedItem?.let { itemToEdit ->
+                    val gson = Gson()
+                    val json = gson.toJson(itemToEdit)
+                    val intent = Intent(requireContext(), DetailActivity::class.java)
+                    intent.putExtra("itemDetail", json)
+                    startActivity(intent)
+                }
 
                 true
             }
@@ -453,6 +461,10 @@ class HomeFragment : Fragment(), OnMonthSelectedListener, IncomeExpenseListAdapt
     }
 
     override fun onItemClick(incomeExpense: Any) {
-        Log.d("Hieu438", "onItemClick: $incomeExpense")
+        val gson = Gson()
+        val json = gson.toJson(incomeExpense)
+        val intent = Intent(requireContext(), DetailActivity::class.java)
+        intent.putExtra("itemDetail", json)
+        startActivity(intent)
     }
 }

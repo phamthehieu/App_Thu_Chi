@@ -14,7 +14,8 @@
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="32"
         tools:ignore="ScopedStorage" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
 
     <application
@@ -27,6 +28,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AssetManagementProject"
         tools:targetApi="31">
+        <activity
+            android:name=".view.home.DetailActivity"
+            android:exported="false" />
         <activity
             android:name=".view.category.AddNewCategoryActivity"
             android:exported="false" />
@@ -49,6 +53,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"
