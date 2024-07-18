@@ -45,6 +45,9 @@
             android:exported="false"
             android:theme="@style/Theme.AssetManagementProject" />
         <activity
+            android:name=".view.component.CalendarHomeActivity"
+            android:exported="false" />
+        <activity
             android:name=".view.splash.SplashActivity"
             android:exported="true">
             <intent-filter>

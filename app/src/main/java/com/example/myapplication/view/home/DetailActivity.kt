@@ -148,14 +148,21 @@ class DetailActivity : AppCompatActivity() {
 
         val dataImage = itemDetail?.image?.replace("[", "")?.replace("]", "")?.split(", ")
         dataImage?.distinct()?.forEach { imageString ->
-            val uri = Uri.parse(imageString)
-            listImage.add(uri)
+            if (imageString.isNotBlank()) {
+                val uri = Uri.parse(imageString)
+                listImage.add(uri)
+            }
         }
 
-        val layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        binding.recyclerImageView.layoutManager = layoutManager
-        val adapter = ImageDetailAdapter(listImage)
-        binding.recyclerImageView.adapter = adapter
+        if (listImage.isNotEmpty()) {
+            val layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+            binding.recyclerImageView.layoutManager = layoutManager
+            val adapter = ImageDetailAdapter(listImage)
+            binding.recyclerImageView.adapter = adapter
+            binding.recyclerImageView.visibility = View.VISIBLE
+        } else {
+            binding.recyclerImageView.visibility = View.GONE
+        }
     }
 
     private fun setUpBackground() {

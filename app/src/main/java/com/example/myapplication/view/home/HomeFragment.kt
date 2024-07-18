@@ -28,6 +28,7 @@ import com.example.myapplication.data.IncomeExpenseListData
 import com.example.myapplication.databinding.FragmentHomeBinding
 import com.example.myapplication.entity.IncomeExpenseList
 import com.example.myapplication.interfaces.OnMonthSelectedListener
+import com.example.myapplication.view.component.CalendarHomeActivity
 import com.example.myapplication.view.revenue_and_expenditure.RevenueAndExpenditureActivity
 import com.example.myapplication.viewModel.IncomeExpenseListFactory
 import com.example.myapplication.viewModel.IncomeExpenseListModel
@@ -125,6 +126,11 @@ class HomeFragment : Fragment(), OnMonthSelectedListener, IncomeExpenseListAdapt
 
         binding.popupCalenderBtn.setOnClickListener {
             showCustomDialogBox()
+        }
+
+        binding.calendarBtn.setOnClickListener {
+            val intent = Intent(requireContext(), CalendarHomeActivity::class.java)
+            startActivity(intent)
         }
 
         binding.monthTv.text = "Thg $monthSearch"

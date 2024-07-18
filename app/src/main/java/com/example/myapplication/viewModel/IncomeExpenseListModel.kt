@@ -18,7 +18,7 @@ import kotlinx.coroutines.launch
 
 class IncomeExpenseListModel(application: Application) : AndroidViewModel(application) {
     private val repository: IncomeExpenseListRepository
-    private val allIncomeExpense: LiveData<List<IncomeExpenseList>>
+    val allIncomeExpense: LiveData<List<IncomeExpenseList>>
     val filteredIncomeExpenseList: LiveData<List<IncomeExpenseList>> = MutableLiveData()
 
     init {
