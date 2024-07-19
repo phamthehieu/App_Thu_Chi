@@ -1,4 +1,4 @@
-package com.example.myapplication.view.component
+package com.example.myapplication.view.calendar
 
 import android.annotation.SuppressLint
 import android.app.Dialog
@@ -34,6 +34,7 @@ import java.util.*
 import com.example.myapplication.R
 import com.example.myapplication.databinding.Example3CalendarDayBinding
 import com.example.myapplication.databinding.Example3CalendarHeaderBinding
+import com.example.myapplication.view.component.KeyBoardBottomSheetFragment
 
 @SuppressLint("RestrictedApi")
 class CalendarDialogFragment : DialogFragment() {

@@ -1,39 +1,29 @@
-package com.example.myapplication.view.component
+package com.example.myapplication.view.calendar
 
 import android.annotation.SuppressLint
-import android.graphics.Color
+import android.content.Intent
 import android.graphics.Typeface
-import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.children
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.airbnb.lottie.L
 import com.example.myapplication.R
 import com.example.myapplication.databinding.Example5CalendarDayBinding
 import com.example.myapplication.databinding.Example5CalendarHeaderBinding
-import com.example.myapplication.databinding.Example5EventItemViewBinding
 import com.example.myapplication.databinding.FragmentCalendarHomeBinding
 import com.example.myapplication.entity.IncomeExpenseList
+import com.example.myapplication.view.revenue_and_expenditure.RevenueAndExpenditureActivity
 import com.example.myapplication.viewModel.IncomeExpenseListFactory
 import com.example.myapplication.viewModel.IncomeExpenseListModel
-import com.kizitonwose.calendar.core.CalendarDay
-import com.kizitonwose.calendar.core.CalendarMonth
-import com.kizitonwose.calendar.core.DayPosition
-import com.kizitonwose.calendar.core.daysOfWeek
-import com.kizitonwose.calendar.core.nextMonth
-import com.kizitonwose.calendar.core.previousMonth
+import com.google.gson.Gson
+import com.kizitonwose.calendar.core.*
 import com.kizitonwose.calendar.view.MonthDayBinder
 import com.kizitonwose.calendar.view.MonthHeaderFooterBinder
 import com.kizitonwose.calendar.view.ViewContainer
@@ -44,81 +34,10 @@ import java.time.YearMonth
 import java.time.format.TextStyle
 import java.util.Locale
 
-class Example5FlightsAdapter :
-    RecyclerView.Adapter<Example5FlightsAdapter.Example5FlightsViewHolder>() {
-    val flights = mutableListOf<IncomeExpenseList>()
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Example5FlightsViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
-        val binding = Example5EventItemViewBinding.inflate(inflater, parent, false)
-        return Example5FlightsViewHolder(binding)
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    override fun onBindViewHolder(viewHolder: Example5FlightsViewHolder, position: Int) {
-        viewHolder.bind(flights[position])
-    }
-
-    override fun getItemCount(): Int = flights.size
-
-    inner class Example5FlightsViewHolder(val binding: Example5EventItemViewBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-        @SuppressLint("SetTextI18n")
-        @RequiresApi(Build.VERSION_CODES.O)
-        fun bind(data: IncomeExpenseList) {
-            binding.iconCategoryCalendarIV.setImageResource(data.iconResource)
-            binding.iconCategoryCalendarIV.setColorFilter(
-                ContextCompat.getColor(
-                    itemView.context,
-                    R.color.black
-                )
-            )
-            val drawable =
-                ContextCompat.getDrawable(
-                    itemView.context,
-                    R.drawable.setting_background_item
-                ) as GradientDrawable
-            drawable.setColor(generateRandomLightColor())
-
-            val amount = data.amount.replace(",", ".").toDouble()
-            val expenseFormatter = DecimalFormat("#,###.##")
-            val formattedAmount = expenseFormatter.format(amount)
-
-            if (data.type == "Expense") {
-                binding.amountCategoryCalendarTV.text = "-$formattedAmount"
-            } else {
-                binding.amountCategoryCalendarTV.text = formattedAmount
-            }
-            binding.nameCategoryCalendarTV.text = data.categoryName
-        }
-    }
-
-    private fun generateRandomLightColor(): Int {
-        val random = java.util.Random()
-        val baseColor =
-            Color.argb(255, random.nextInt(256), random.nextInt(256), random.nextInt(256))
-        val lightColor = blendWithWhite(baseColor, 0.5f)
-        return if (lightColor == Color.WHITE || lightColor == Color.BLACK) generateRandomLightColor() else lightColor
-    }
-
-    private fun blendWithWhite(color: Int, ratio: Float): Int {
-        val red = Color.red(color)
-        val green = Color.green(color)
-        val blue = Color.blue(color)
-
-        val blendedRed = (red + (255 - red) * ratio).toInt()
-        val blendedGreen = (green + (255 - green) * ratio).toInt()
-        val blendedBlue = (blue + (255 - blue) * ratio).toInt()
-
-        return Color.argb(255, blendedRed, blendedGreen, blendedBlue)
-    }
-}
-
 class CalendarHomeActivity : AppCompatActivity() {
 
     private var selectedDate: LocalDate? = null
-
-    private val flightsAdapter = Example5FlightsAdapter()
+    private var isDateSelected: Boolean = false
 
     private val incomeExpenseListModel: IncomeExpenseListModel by viewModels {
         IncomeExpenseListFactory(this.application)
@@ -129,27 +48,32 @@ class CalendarHomeActivity : AppCompatActivity() {
     private val incomeExpenseList = mutableListOf<IncomeExpenseList>()
     private val incomeExpensesByDate = mutableMapOf<LocalDate, List<IncomeExpenseList>>()
 
-    @SuppressLint("NotifyDataSetChanged")
+    @SuppressLint("NotifyDataSetChanged", "SetTextI18n")
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = FragmentCalendarHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        binding.closeButton.setOnClickListener {
+            finish()
+        }
+
         incomeExpenseListModel.allIncomeExpense.observe(this) { list ->
             incomeExpenseList.clear()
             incomeExpenseList.addAll(list)
             incomeExpensesByDate.clear()
             incomeExpensesByDate.putAll(incomeExpenseList.groupBy { LocalDate.parse(it.date) })
-            updateAdapterForDate(selectedDate)
+            if (isDateSelected) { // Chỉ cập nhật adapter khi người dùng đã chọn ngày
+                updateAdapterForDate(selectedDate)
+            }
         }
 
-        binding.exFiveRv.apply {
-            layoutManager =
-                LinearLayoutManager(this@CalendarHomeActivity, RecyclerView.VERTICAL, false)
-            adapter = flightsAdapter
+        binding.fabBtn.setColorFilter(R.color.black)
+
+        binding.fabBtn.setOnClickListener {
+            startActivity(Intent(this, RevenueAndExpenditureActivity::class.java))
         }
-        flightsAdapter.notifyDataSetChanged()
 
         val daysOfWeek = daysOfWeek()
         val currentMonth = YearMonth.now()
@@ -160,12 +84,16 @@ class CalendarHomeActivity : AppCompatActivity() {
         binding.exFiveCalendar.scrollToMonth(currentMonth)
 
         binding.exFiveCalendar.monthScrollListener = { month ->
-            binding.exFiveMonthYearText.text = month.yearMonth.month.name.capitalize(Locale.ENGLISH)
+
+            val yearMonth = month.yearMonth
+            val monthNumber = yearMonth.monthValue
+            val year = yearMonth.year
+
+            binding.exFiveMonthYearText.text = "thg $monthNumber $year"
 
             selectedDate?.let {
                 selectedDate = null
                 binding.exFiveCalendar.notifyDateChanged(it)
-                updateAdapterForDate(null)
             }
         }
 
@@ -185,11 +113,18 @@ class CalendarHomeActivity : AppCompatActivity() {
     @SuppressLint("NotifyDataSetChanged")
     @RequiresApi(Build.VERSION_CODES.O)
     private fun updateAdapterForDate(date: LocalDate?) {
-//        flightsAdapter.flights.clear()
-//        flightsAdapter.flights.addAll(incomeExpensesByDate[date].orEmpty())
-//        flightsAdapter.notifyDataSetChanged()
-        Log.d("Hieu190", "${incomeExpensesByDate[date]}")
+        val gson = Gson()
+        val json = gson.toJson(incomeExpensesByDate[date])
+        val intent = Intent(this, CategoryListCalendarActivity::class.java)
+        intent.putExtra("listCategory", json)
+
+        if (date != null) {
+            intent.putExtra("dateSelected", date.toString())
+        }
+
+        startActivity(intent)
     }
+
 
     private fun configureBinders(daysOfWeek: List<DayOfWeek>) {
         @RequiresApi(Build.VERSION_CODES.O)
@@ -203,6 +138,7 @@ class CalendarHomeActivity : AppCompatActivity() {
                         if (selectedDate != day.date) {
                             val oldDate = selectedDate
                             selectedDate = day.date
+                            isDateSelected = true // Đánh dấu rằng người dùng đã chọn ngày
                             val binding = this@CalendarHomeActivity.binding
                             binding.exFiveCalendar.notifyDateChanged(day.date)
                             oldDate?.let { binding.exFiveCalendar.notifyDateChanged(it) }
@@ -234,7 +170,7 @@ class CalendarHomeActivity : AppCompatActivity() {
                     textView.setTextColor(context.getColor(R.color.example_5_text_grey))
                     layout.setBackgroundResource(if (selectedDate == data.date) R.drawable.example_5_selected_bg else 0)
                     val data = incomeExpensesByDate[data.date]
-                    if (data != null && data.isNotEmpty()) {
+                    if (!data.isNullOrEmpty()) {
                         var totalIncome = 0.0
                         var totalExpense = 0.0
                         for (item in data) {
@@ -248,13 +184,15 @@ class CalendarHomeActivity : AppCompatActivity() {
 
                         val expenseFormatter = DecimalFormat("#,###.##")
 
-                        flightTopView.text =  expenseFormatter.format(totalIncome)
+                        flightTopView.text = expenseFormatter.format(totalIncome)
                         flightTopView.setTextColor(context.getColor(R.color.green_text))
-                        flightTopView.visibility = if (totalIncome > 0.0) View.VISIBLE else View.GONE
+                        flightTopView.visibility =
+                            if (totalIncome > 0.0) View.VISIBLE else View.GONE
 
                         flightBottomView.text = expenseFormatter.format(totalExpense)
                         flightBottomView.setTextColor(context.getColor(R.color.red))
-                        flightBottomView.visibility = if (totalExpense > 0.0) View.VISIBLE else View.GONE
+                        flightBottomView.visibility =
+                            if (totalExpense > 0.0) View.VISIBLE else View.GONE
 
                         if (totalExpense > 0.0 || totalIncome > 0.0) {
                             container.binding.all.setBackgroundResource(R.drawable.rounded_background_calendar_day_selected)

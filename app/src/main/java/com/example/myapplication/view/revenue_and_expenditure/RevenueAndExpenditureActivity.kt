@@ -1,7 +1,10 @@
 package com.example.myapplication.view.revenue_and_expenditure
 
 import android.content.res.Configuration
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.viewpager2.widget.ViewPager2
@@ -10,6 +13,7 @@ import com.example.myapplication.adapter.ViewPagerAdapter
 import com.example.myapplication.data.IncomeExpenseListData
 import com.example.myapplication.databinding.ActivityRevenueAndExpenditureBinding
 import com.google.gson.Gson
+import java.time.LocalDate
 
 class RevenueAndExpenditureActivity : AppCompatActivity() {
 
@@ -17,7 +21,9 @@ class RevenueAndExpenditureActivity : AppCompatActivity() {
     private lateinit var viewPager: ViewPager2
     private lateinit var adapter: ViewPagerAdapter
     private var itemEdit: IncomeExpenseListData? = null
+    private var dateSelected: LocalDate? = null
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityRevenueAndExpenditureBinding.inflate(layoutInflater)
@@ -29,8 +35,6 @@ class RevenueAndExpenditureActivity : AppCompatActivity() {
         }
 
         viewPager = findViewById(R.id.viewPagerTv)
-        adapter = ViewPagerAdapter(this, itemEdit)
-        viewPager.adapter = adapter
 
         binding.tabExpense.setOnClickListener {
             viewPager.currentItem = 0
@@ -47,6 +51,15 @@ class RevenueAndExpenditureActivity : AppCompatActivity() {
         binding.backBtn.setOnClickListener {
             finish()
         }
+
+        val dateSelectedString = intent.getStringExtra("dateSelected")
+
+        if (dateSelectedString != null) {
+            dateSelected = LocalDate.parse(dateSelectedString)
+        }
+
+        adapter = ViewPagerAdapter(this, itemEdit, dateSelected)
+        viewPager.adapter = adapter
 
         viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {

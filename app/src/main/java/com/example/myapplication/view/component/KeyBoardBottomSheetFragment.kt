@@ -11,7 +11,6 @@ import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import androidx.fragment.app.viewModels
@@ -19,24 +18,20 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.viewModelScope
-import androidx.navigation.fragment.findNavController
 import com.example.myapplication.MainActivity
 import com.example.myapplication.R
 import com.example.myapplication.data.CombinedCategoryIcon
 import com.example.myapplication.data.IncomeExpenseListData
 import com.example.myapplication.databinding.LayoutKeyboardAddBinding
 import com.example.myapplication.entity.IncomeExpenseList
+import com.example.myapplication.view.calendar.CalendarDialogFragment
 import com.example.myapplication.viewModel.ImageViewModel
 import com.example.myapplication.viewModel.IncomeExpenseListFactory
 import com.example.myapplication.viewModel.IncomeExpenseListModel
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import java.math.BigDecimal
 import java.text.DecimalFormat
 import java.time.LocalDate
@@ -50,7 +45,7 @@ class KeyBoardBottomSheetFragment : BottomSheetDialogFragment() {
     private val numberSequence = StringBuilder()
     private var numberSequence2 = StringBuilder()
     private var total: BigDecimal = BigDecimal.ZERO
-    private var checkEdit:Boolean = false
+    private var checkEdit: Boolean = false
 
     @RequiresApi(Build.VERSION_CODES.O)
     private var selectedDate = LocalDate.now()
@@ -168,6 +163,8 @@ class KeyBoardBottomSheetFragment : BottomSheetDialogFragment() {
                 }
             }
         }
+
+        onReceiveDate(selectedDate.year.toString(), selectedDate.monthValue.toString(), selectedDate.dayOfMonth.toString())
 
         return binding.root
     }
@@ -541,6 +538,22 @@ class KeyBoardBottomSheetFragment : BottomSheetDialogFragment() {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
+    fun categoryData(
+        category: CombinedCategoryIcon,
+        dataEdit: IncomeExpenseListData? = null,
+        dateSelected: String
+    ) {
+        if (dataEdit != null) {
+            itemEdit = dataEdit
+            checkEdit = true
+        }
+
+        selectedDate = LocalDate.parse(dateSelected)
+
+        categoryData = category
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("SetTextI18n")
     fun onReceiveDate(year: String, month: String, dayOfMonth: String) {
         val todayCalendar = Calendar.getInstance()
@@ -554,15 +567,6 @@ class KeyBoardBottomSheetFragment : BottomSheetDialogFragment() {
             buttonCalendar.textSize = 14f
         }
         selectedDate = LocalDate.of(year.toInt(), month.toInt(), dayOfMonth.toInt())
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun categoryData(category: CombinedCategoryIcon, dataEdit: IncomeExpenseListData? = null) {
-        if (dataEdit != null) {
-            itemEdit = dataEdit
-            checkEdit = true
-        }
-        categoryData = category
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

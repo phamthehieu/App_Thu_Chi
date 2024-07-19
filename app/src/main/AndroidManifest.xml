@@ -29,6 +29,9 @@
         android:theme="@style/Theme.AssetManagementProject"
         tools:targetApi="31">
         <activity
+            android:name=".view.calendar.CategoryListCalendarActivity"
+            android:exported="false" />
+        <activity
             android:name=".view.home.DetailActivity"
             android:exported="false" />
         <activity
@@ -45,7 +48,7 @@
             android:exported="false"
             android:theme="@style/Theme.AssetManagementProject" />
         <activity
-            android:name=".view.component.CalendarHomeActivity"
+            android:name=".view.calendar.CalendarHomeActivity"
             android:exported="false" />
         <activity
             android:name=".view.splash.SplashActivity"

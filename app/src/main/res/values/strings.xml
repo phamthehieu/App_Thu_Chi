@@ -53,4 +53,5 @@
     <string name="image">Ảnh</string>
     <string name="income">Thu nhập</string>
     <string name="expense">Chi phí</string>
+    <string name="close">Đóng</string>
 </resources>

@@ -7,7 +7,6 @@ import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.*
 import android.widget.ImageButton
@@ -28,19 +27,16 @@ import com.example.myapplication.data.IncomeExpenseListData
 import com.example.myapplication.databinding.FragmentHomeBinding
 import com.example.myapplication.entity.IncomeExpenseList
 import com.example.myapplication.interfaces.OnMonthSelectedListener
-import com.example.myapplication.view.component.CalendarHomeActivity
+import com.example.myapplication.view.calendar.CalendarHomeActivity
 import com.example.myapplication.view.revenue_and_expenditure.RevenueAndExpenditureActivity
 import com.example.myapplication.viewModel.IncomeExpenseListFactory
 import com.example.myapplication.viewModel.IncomeExpenseListModel
-import com.google.android.material.snackbar.BaseTransientBottomBar
-import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.io.Serializable
 import java.text.DecimalFormat
 import java.util.Calendar
 

@@ -31,6 +31,8 @@ class SpendingFragment : Fragment(), CategoryAdapter.OnItemClickListener {
 
     private var itemEdit: IncomeExpenseListData? = null
 
+    private var dateSelected: String? = null
+
     private val categoryViewModel: CategoryViewModel by viewModels {
         CategoryViewModelFactory(requireActivity().application)
     }
@@ -42,8 +44,10 @@ class SpendingFragment : Fragment(), CategoryAdapter.OnItemClickListener {
             itemEdit = json?.let { jsonStr ->
                 Gson().fromJson(jsonStr, IncomeExpenseListData::class.java)
             }
+            dateSelected = it.getString("dateSelected")
         }
     }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -101,7 +105,7 @@ class SpendingFragment : Fragment(), CategoryAdapter.OnItemClickListener {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onItemClick(category: CombinedCategoryIcon) {
         val keyboard = KeyBoardBottomSheetFragment()
-        keyboard.categoryData(category, itemEdit)
+        dateSelected?.let { keyboard.categoryData(category, itemEdit, it) }
         keyboard.show(childFragmentManager, "keyboard")
     }
 
