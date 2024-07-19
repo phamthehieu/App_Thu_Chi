@@ -541,14 +541,15 @@ class KeyBoardBottomSheetFragment : BottomSheetDialogFragment() {
     fun categoryData(
         category: CombinedCategoryIcon,
         dataEdit: IncomeExpenseListData? = null,
-        dateSelected: String
+        dateSelected: String? = null
     ) {
         if (dataEdit != null) {
             itemEdit = dataEdit
             checkEdit = true
         }
-
-        selectedDate = LocalDate.parse(dateSelected)
+        if (dateSelected != null) {
+            selectedDate = LocalDate.parse(dateSelected)
+        }
 
         categoryData = category
     }

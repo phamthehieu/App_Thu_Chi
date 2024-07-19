@@ -33,6 +33,7 @@ class ViewPagerAdapter(activity: FragmentActivity, private val itemEdit: IncomeE
                     bundle.putString("dateSelected", date.toString())
                     fragment.arguments = bundle
                 }
+
                 fragment
             }
             1 -> {

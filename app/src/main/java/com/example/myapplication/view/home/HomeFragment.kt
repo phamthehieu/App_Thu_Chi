@@ -7,6 +7,7 @@ import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.*
 import android.widget.ImageButton
@@ -49,6 +50,8 @@ class HomeFragment : Fragment(), OnMonthSelectedListener, IncomeExpenseListAdapt
 
     private var check = true
     private lateinit var adapter: IncomeExpenseListAdapter
+
+    private var selectedItemPosition: Int? = null
 
     private val incomeExpenseListModel: IncomeExpenseListModel by viewModels {
         IncomeExpenseListFactory(requireActivity().application)
@@ -186,19 +189,22 @@ class HomeFragment : Fragment(), OnMonthSelectedListener, IncomeExpenseListAdapt
                     val position = viewHolder.adapterPosition
                     when (direction) {
                         ItemTouchHelper.LEFT -> {
+                            selectedItemPosition = position
                             adapter.removeItem(position)
                             conformDelete()
                         }
                         ItemTouchHelper.RIGHT -> {
+                            selectedItemPosition = position
                             adapter.removeItem(position)
                             val selectedItem = adapter.getSelectedItem()
-                            selectedItem?.let { itemToEdit ->
+
+                            selectedItem?.let setOnClickListener@{ itemToEdit ->
                                 val gson = Gson()
                                 val json = gson.toJson(itemToEdit)
-
                                 val intent = Intent(requireContext(), RevenueAndExpenditureActivity::class.java)
                                 intent.putExtra("itemToEdit", json)
                                 startActivity(intent)
+                                adapter.notifyItemChanged(selectedItemPosition ?: return@setOnClickListener)
                             }
                         }
                     }
@@ -428,6 +434,7 @@ class HomeFragment : Fragment(), OnMonthSelectedListener, IncomeExpenseListAdapt
 
             backDeleteBtn.setOnClickListener {
                 dialog.dismiss()
+                adapter.notifyItemChanged(selectedItemPosition ?: return@setOnClickListener)
             }
 
             successDeleteBtn.setOnClickListener {

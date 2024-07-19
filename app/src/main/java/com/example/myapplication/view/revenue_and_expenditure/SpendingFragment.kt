@@ -105,7 +105,7 @@ class SpendingFragment : Fragment(), CategoryAdapter.OnItemClickListener {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onItemClick(category: CombinedCategoryIcon) {
         val keyboard = KeyBoardBottomSheetFragment()
-        dateSelected?.let { keyboard.categoryData(category, itemEdit, it) }
+        keyboard.categoryData(category, itemEdit, dateSelected)
         keyboard.show(childFragmentManager, "keyboard")
     }
 
