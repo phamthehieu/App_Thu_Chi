@@ -54,4 +54,5 @@
     <string name="income">Thu nhập</string>
     <string name="expense">Chi phí</string>
     <string name="close">Đóng</string>
+    <string name="emptyDataText">Chưa có dữ liệu</string>
 </resources>

@@ -70,7 +70,6 @@ class IconListAdapter(
 
         holder.itemView.setOnClickListener {
             if (holder is IconViewHolder) {
-                Log.d("Hieu62", "Selected position: $selectedPosition")
                 notifyItemChanged(selectedPosition)
                 selectedPosition = holder.adapterPosition
                 notifyItemChanged(selectedPosition)

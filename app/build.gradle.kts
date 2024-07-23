@@ -65,4 +65,8 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.8.3")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.3")
     implementation("com.github.xabaras:RecyclerViewSwipeDecorator:1.4")
+    implementation("androidx.viewpager2:viewpager2:1.1.0")
+    implementation("me.relex:circleindicator:2.1.6")
+    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
+
 }

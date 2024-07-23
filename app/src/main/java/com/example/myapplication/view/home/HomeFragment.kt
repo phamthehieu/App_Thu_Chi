@@ -28,6 +28,7 @@ import com.example.myapplication.data.IncomeExpenseListData
 import com.example.myapplication.databinding.FragmentHomeBinding
 import com.example.myapplication.entity.IncomeExpenseList
 import com.example.myapplication.interfaces.OnMonthSelectedListener
+import com.example.myapplication.utilities.convertToIncomeExpenseListData
 import com.example.myapplication.view.calendar.CalendarHomeActivity
 import com.example.myapplication.view.revenue_and_expenditure.RevenueAndExpenditureActivity
 import com.example.myapplication.viewModel.IncomeExpenseListFactory
@@ -215,25 +216,6 @@ class HomeFragment : Fragment(), OnMonthSelectedListener, IncomeExpenseListAdapt
             itemTouchHelper.attachToRecyclerView(binding.recyclerViewHome)
         }
     }
-
-    private fun convertToIncomeExpenseListData(categoryWithIncomeExpenseList: CategoryWithIncomeExpenseList): IncomeExpenseListData {
-        val incomeExpense = categoryWithIncomeExpenseList.incomeExpense
-        val category = categoryWithIncomeExpenseList.category
-
-        return IncomeExpenseListData(
-            id = incomeExpense.id,
-            note = incomeExpense.note,
-            amount = incomeExpense.amount,
-            date = incomeExpense.date,
-            categoryId = incomeExpense.categoryId,
-            type = incomeExpense.type,
-            image = incomeExpense.image,
-            categoryName = incomeExpense.categoryName,
-            iconResource = incomeExpense.iconResource,
-            idIcon = category.icon
-        )
-    }
-
 
     private fun groupIconsByType(data: List<IncomeExpenseListData>): Map<String, List<IncomeExpenseListData>> {
         return data.groupBy { it.date }

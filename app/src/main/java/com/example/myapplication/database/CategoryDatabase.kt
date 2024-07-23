@@ -17,7 +17,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-@Database(entities = [Category::class, Icon::class, IncomeExpenseList::class], version = 1)
+@Database(entities = [Category::class, Icon::class, IncomeExpenseList::class], version = 2)
 abstract class CategoryDatabase : RoomDatabase() {
     abstract fun categoryDao(): CategoryDao
     abstract fun iconDao(): IconsDao

@@ -6,6 +6,7 @@
     style="@style/backgroundStyle"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginBottom="80dp"
     tools:context=".view.chart.ChartFragment">
 
     <RelativeLayout
@@ -54,9 +55,10 @@
     </RelativeLayout>
 
     <LinearLayout
-        android:layout_below="@+id/titleBackground"
+        android:id="@+id/calendarLL"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/titleBackground"
         android:orientation="vertical">
 
         <androidx.recyclerview.widget.RecyclerView
@@ -68,11 +70,71 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/white"/>
+            android:background="@color/white" />
 
     </LinearLayout>
 
+    <RelativeLayout
+        android:id="@+id/chartRL"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:layout_below="@+id/calendarLL"
+        android:visibility="gone"> <!-- Initially hidden -->
 
+        <me.relex.circleindicator.CircleIndicator3
+            android:id="@+id/indicator"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_alignParentBottom="true" />
 
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/view_pager2_chart"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/indicator"
+            android:layout_centerInParent="true" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/listDataChart"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/chartRL"
+        android:visibility="gone">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewChart"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:ignore="RedundantNamespace" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/emptyDataView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/imageEmptyData"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/app_name"
+            android:gravity="center"
+            android:src="@drawable/ic_note_50" />
+
+        <TextView
+            android:id="@+id/emptyDataText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/imageEmptyData"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="@string/emptyDataText"
+            android:textColor="@color/gray1"
+            android:textSize="18sp" />
+    </RelativeLayout>
 
 </RelativeLayout>

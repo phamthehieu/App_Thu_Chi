@@ -11,6 +11,7 @@ import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import androidx.fragment.app.viewModels
@@ -440,6 +441,7 @@ class KeyBoardBottomSheetFragment : BottomSheetDialogFragment() {
                     categoryName = categoryData!!.categoryName,
                     iconResource = categoryData!!.iconResource,
                 )
+                Log.d("Hieu443", incomeExpenseList.toString())
                 incomeExpenseListModel.updateIncomeExpenseListModel(incomeExpenseList)
                     .observe(viewLifecycleOwner) { isSuccess ->
                         if (isSuccess) {
@@ -466,6 +468,7 @@ class KeyBoardBottomSheetFragment : BottomSheetDialogFragment() {
                     categoryName = categoryData!!.categoryName,
                     iconResource = categoryData!!.iconResource,
                 )
+                Log.d("Hieu443", incomeExpenseList.toString())
                 incomeExpenseListModel.insert(incomeExpenseList)
                     .observe(viewLifecycleOwner) { isSuccess ->
                         if (isSuccess) {
