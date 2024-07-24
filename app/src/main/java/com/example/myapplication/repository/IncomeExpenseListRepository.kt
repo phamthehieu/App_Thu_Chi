@@ -15,6 +15,11 @@
             incomeExpenseListDao.insert(incomeExpenseList)
         }
 
+
+        fun getIncomeExpenseList(year: String, month: String, categoryId: Int): Flow<List<CategoryWithIncomeExpenseList>> {
+            return incomeExpenseListDao.getIncomeExpenseListByMonthYearIdCategory(year, month, categoryId)
+        }
+
         fun getIncomeExpenseList(year: String, month: String): Flow<List<CategoryWithIncomeExpenseList>> {
             return incomeExpenseListDao.getIncomeExpenseListByMonthYear(year, month)
         }

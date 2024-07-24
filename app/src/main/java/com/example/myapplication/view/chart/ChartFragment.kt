@@ -1,6 +1,7 @@
 package com.example.myapplication.view.chart
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
@@ -14,6 +15,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
+import com.example.myapplication.MainActivity
 import com.example.myapplication.R
 import com.example.myapplication.adapter.ChartPagerAdapter
 import com.example.myapplication.adapter.DataListChartAdapter
@@ -29,7 +31,7 @@ import com.github.mikephil.charting.data.PieEntry
 import java.time.LocalDate
 import java.util.Calendar
 
-class ChartFragment : Fragment(), DateChartAdapter.OnDateClickListener {
+class ChartFragment : Fragment(), DateChartAdapter.OnDateClickListener, DataListChartAdapter.OnCategoryClickListener {
 
     private lateinit var binding: FragmentChartBinding
     private val monthsList = mutableListOf<String>()
@@ -38,8 +40,6 @@ class ChartFragment : Fragment(), DateChartAdapter.OnDateClickListener {
 
     private var monthSearch = Calendar.getInstance().get(Calendar.MONTH) + 1
     private var yearSearch = Calendar.getInstance().get(Calendar.YEAR)
-
-    private var incomeExpenseList = listOf<IncomeExpenseListData>()
 
     private val incomeExpenseListModel: IncomeExpenseListModel by viewModels {
         IncomeExpenseListFactory(requireActivity().application)
@@ -91,9 +91,7 @@ class ChartFragment : Fragment(), DateChartAdapter.OnDateClickListener {
             yearSearch.toString(),
             formattedMonth
         ).observe(viewLifecycleOwner) { data ->
-            incomeExpenseList = data.map { convertToIncomeExpenseListData(it) }
-            val groupedData = data.groupBy { it.category.id }
-                .map { (categoryId, items) ->
+            val groupedData = data.groupBy { it.category.id }.map { (categoryId, items) ->
                     val totalAmount =
                         items.sumOf { it.incomeExpense.amount.replace(",", ".").toDouble() }
                     CategoryWithIncomeExpenseList(
@@ -154,7 +152,7 @@ class ChartFragment : Fragment(), DateChartAdapter.OnDateClickListener {
             binding.listDataChart.visibility = View.VISIBLE
             binding.emptyDataView.visibility = View.GONE
         }
-        Log.d("Hieu157", "$incomeExpenseList")
+
         var totalAmount = 0f
         filteredData.forEach { item ->
             val amountString = item.incomeExpense.amount.replace(",", ".")
@@ -162,7 +160,7 @@ class ChartFragment : Fragment(), DateChartAdapter.OnDateClickListener {
             totalAmount += amount
         }
 
-        val chartAdapter = DataListChartAdapter(filteredData, totalAmount)
+        val chartAdapter = DataListChartAdapter(filteredData, totalAmount, this, "chartFragment")
         binding.recyclerViewChart.layoutManager = LinearLayoutManager(context)
         binding.recyclerViewChart.adapter = chartAdapter
     }
@@ -298,5 +296,12 @@ class ChartFragment : Fragment(), DateChartAdapter.OnDateClickListener {
                 )
             }
         }
+    }
+
+    override fun onItemClick(data: CategoryWithIncomeExpenseList) {
+        val intent = Intent(requireContext(), DetailedChartOfCategoryActivity::class.java)
+        intent.putExtra("categoryId", data.incomeExpense.categoryId)
+        intent.putExtra("categoryName", data.incomeExpense.categoryName)
+        startActivity(intent)
     }
 }

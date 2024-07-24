@@ -77,8 +77,8 @@ class HomeFragment : Fragment(), OnMonthSelectedListener, IncomeExpenseListAdapt
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
-        val currentNightMode =
-            requireActivity().resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        val currentNightMode = requireActivity().resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+
         when (currentNightMode) {
             Configuration.UI_MODE_NIGHT_NO -> {
                 binding.searchBtn.setColorFilter(
@@ -149,7 +149,7 @@ class HomeFragment : Fragment(), OnMonthSelectedListener, IncomeExpenseListAdapt
             yearSearch.toString(),
             formattedMonth
         ).observe(viewLifecycleOwner) { data ->
-            val incomeExpenseList = data.map { convertToIncomeExpenseListData(it) }
+            val incomeExpenseList = data.reversed().map { convertToIncomeExpenseListData(it) }
             val totalIncome = incomeExpenseList.filter { it.type == "Income" }
                 .sumOf { it.amount.replace(",", ".").toDouble() }
             val totalExpense = incomeExpenseList.filter { it.type == "Expense" }
@@ -452,6 +452,7 @@ class HomeFragment : Fragment(), OnMonthSelectedListener, IncomeExpenseListAdapt
     }
 
     override fun onItemClick(incomeExpense: Any) {
+        Log.d("Hieu455", "onItemClick: $incomeExpense")
         val gson = Gson()
         val json = gson.toJson(incomeExpense)
         val intent = Intent(requireContext(), DetailActivity::class.java)

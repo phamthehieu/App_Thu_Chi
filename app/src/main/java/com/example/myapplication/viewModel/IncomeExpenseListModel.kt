@@ -33,9 +33,9 @@ class IncomeExpenseListModel(application: Application) : AndroidViewModel(applic
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 repository.insert(incomeExpenseList)
-                result.postValue(true)  // Chèn thành công
+                result.postValue(true)
             } catch (e: Exception) {
-                result.postValue(false) // Chèn không thành công
+                result.postValue(false)
             }
         }
         return result
@@ -54,7 +54,7 @@ class IncomeExpenseListModel(application: Application) : AndroidViewModel(applic
                 repository.updateIncomeExpenseList(incomeExpenseList)
                 result.postValue(true)
             } catch (e: Exception) {
-                result.postValue(false) // Chèn không thành công
+                result.postValue(false)
             }
         }
         return result
@@ -65,6 +65,14 @@ class IncomeExpenseListModel(application: Application) : AndroidViewModel(applic
         month: String
     ): LiveData<List<CategoryWithIncomeExpenseList>> {
         return repository.getIncomeExpenseList(year, month).asLiveData()
+    }
+
+    fun getIncomeExpenseListByMonthYearIdCategory(
+        year: String,
+        month: String,
+        categoryId: Int
+    ): LiveData<List<CategoryWithIncomeExpenseList>> {
+        return repository.getIncomeExpenseList(year, month, categoryId).asLiveData()
     }
 }
 

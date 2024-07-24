@@ -23,6 +23,9 @@ interface IncomeExpenseListDao {
     @Query("SELECT * FROM income_expense_list_table WHERE strftime('%Y', date) = :year AND strftime('%m', date) = :month")
     fun getIncomeExpenseListByMonthYear(year: String, month: String): Flow<List<CategoryWithIncomeExpenseList>>
 
+    @Query("SELECT * FROM income_expense_list_table WHERE strftime('%Y', date) = :year AND strftime('%m', date) = :month AND categoryId = :categoryId")
+    fun getIncomeExpenseListByMonthYearIdCategory(year: String, month: String, categoryId: Int): Flow<List<CategoryWithIncomeExpenseList>>
+
     @Delete
     fun delete(incomeExpenseList: IncomeExpenseList): Void
 
