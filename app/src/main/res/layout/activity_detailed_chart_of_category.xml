@@ -39,13 +39,41 @@
             android:textStyle="bold"
             tools:ignore="RelativeOverlap" />
 
+        <LinearLayout
+            android:id="@+id/popupCalenderBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerInParent="true"
+            android:paddingStart="20dp"
+            android:gravity="center_vertical"
+            tools:ignore="RtlSymmetry">
+
+            <TextView
+                android:id="@+id/monthTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Thg 7 2024"
+                android:textSize="16sp"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:contentDescription="@string/calendar"
+                android:src="@drawable/ic_sort_down_24" />
+
+        </LinearLayout>
+
     </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/chartCategory"
         android:layout_below="@+id/title"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:visibility="gone">
 
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/line_chart"
@@ -60,13 +88,41 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/chartCategory"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewChart"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:ignore="RedundantNamespace" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/emptyDataView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/imageEmptyData"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/app_name"
+            android:gravity="center"
+            android:src="@drawable/ic_note_50" />
+
+        <TextView
+            android:id="@+id/emptyDataText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/imageEmptyData"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="@string/emptyDataText"
+            android:textColor="@color/gray1"
+            android:textSize="18sp" />
     </RelativeLayout>
 
 </RelativeLayout>

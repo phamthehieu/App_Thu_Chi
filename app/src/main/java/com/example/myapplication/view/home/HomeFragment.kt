@@ -452,7 +452,6 @@ class HomeFragment : Fragment(), OnMonthSelectedListener, IncomeExpenseListAdapt
     }
 
     override fun onItemClick(incomeExpense: Any) {
-        Log.d("Hieu455", "onItemClick: $incomeExpense")
         val gson = Gson()
         val json = gson.toJson(incomeExpense)
         val intent = Intent(requireContext(), DetailActivity::class.java)
