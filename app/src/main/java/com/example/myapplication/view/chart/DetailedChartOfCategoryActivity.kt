@@ -57,6 +57,8 @@ class DetailedChartOfCategoryActivity : AppCompatActivity(),
 
     private var check = true
 
+    private var checkSearch: Int = 1
+
     private val incomeExpenseListModel: IncomeExpenseListModel by viewModels {
         IncomeExpenseListFactory(this.application)
     }
@@ -72,20 +74,103 @@ class DetailedChartOfCategoryActivity : AppCompatActivity(),
         categoryId = intent.getIntExtra("categoryId", 0)
         val categoryName = intent.getStringExtra("categoryName")
 
+        yearSearch = intent.getIntExtra("yearSearch", Calendar.getInstance().get(Calendar.YEAR))
+
+        monthSearch = intent.getIntExtra("monthSearch", Calendar.getInstance().get(Calendar.MONTH) + 1)
+
+        checkSearch = intent.getIntExtra("checkSearchData", 1)
+
         binding.titleText.text = categoryName
 
-        binding.monthTv.text = "Thg $monthSearch $yearSearch"
+        if (checkSearch == 1) {
+            binding.monthTv.text = "Thg $monthSearch $yearSearch"
+        } else {
+            binding.monthTv.text = "Năm $yearSearch"
+        }
 
         binding.backBtn.setOnClickListener {
             finish()
         }
 
         binding.popupCalenderBtn.setOnClickListener {
-            showCustomDialogBox()
+            Log.d("checkSearch", checkSearch.toString())
+            if (checkSearch == 1) {
+                showCustomDialogBox()
+            } else {
+                showCustomDialogYear()
+            }
+
         }
 
         getDataSource(categoryId!!)
 
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun showCustomDialogYear() {
+        val currentYear = Calendar.getInstance().get(Calendar.YEAR)
+        val years = (currentYear - 50..currentYear + 50).toList()
+        val dialog = Dialog(this)
+
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCancelable(false)
+        dialog.setContentView(R.layout.fragment_pop_up_calender)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        val backBtn: TextView = dialog.findViewById(R.id.backBtn)
+        val textYearTitle: TextView = dialog.findViewById(R.id.textYearTitle)
+        val titleRecord: TextView = dialog.findViewById(R.id.titleRecord)
+        val successBtn: TextView = dialog.findViewById(R.id.successBtn)
+        val yearTv: LinearLayout = dialog.findViewById(R.id.yearTv)
+
+        fun updateTitleRecord(year: Int) {
+            titleRecord.text = "năm $year"
+            textYearTitle.text = year.toString()
+        }
+        updateTitleRecord(yearSearch)
+
+        yearTv.visibility = View.GONE
+
+        val viewPager: ViewPager2 = dialog.findViewById(R.id.viewPager)
+        val monthPagerAdapter = MonthPagerAdapter(
+            this,
+            years,
+            true,
+            yearSearch,
+            monthSearch - 1,
+            object : OnMonthSelectedListener {
+                override fun onMonthSelected(month: Int) {
+                    yearSearch = month
+                    updateTitleRecord(yearSearch)
+                }
+            }
+        )
+
+        viewPager.adapter = monthPagerAdapter
+        viewPager.currentItem = 50
+        viewPager.offscreenPageLimit = ViewPager2.OFFSCREEN_PAGE_LIMIT_DEFAULT
+        viewPager.currentItem = years.indexOf(currentYear)
+
+        viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                if (position != 0) {
+                    yearSearch = years[position]
+                    textYearTitle.text = years[position].toString()
+                    updateTitleRecord(yearSearch)
+                    monthPagerAdapter.updateYearData(yearSearch)
+                }
+            }
+        })
+
+        backBtn.setOnClickListener {
+            dialog.dismiss()
+        }
+        successBtn.setOnClickListener {
+            binding.monthTv.text = "Năm $yearSearch"
+            getDataSource(categoryId!!)
+            dialog.dismiss()
+        }
+        dialog.show()
     }
 
     @SuppressLint("SetTextI18n")
@@ -170,6 +255,8 @@ class DetailedChartOfCategoryActivity : AppCompatActivity(),
                         }
                     }
                 )
+                leftBtn.visibility = View.GONE
+                rightBtn.visibility = View.GONE
                 viewPager.adapter = monthPagerAdapter
                 viewPager.offscreenPageLimit = 1
                 viewPager.isUserInputEnabled = false
@@ -193,6 +280,8 @@ class DetailedChartOfCategoryActivity : AppCompatActivity(),
                         }
                     }
                 )
+                leftBtn.visibility = View.VISIBLE
+                rightBtn.visibility = View.VISIBLE
                 viewPager.adapter = monthPagerAdapter
                 viewPager.offscreenPageLimit = ViewPager2.OFFSCREEN_PAGE_LIMIT_DEFAULT
                 viewPager.isUserInputEnabled = true
@@ -225,48 +314,93 @@ class DetailedChartOfCategoryActivity : AppCompatActivity(),
 
     @SuppressLint("DefaultLocale")
     private fun getDataSource(categoryId: Int) {
-        val formattedMonth = String.format("%02d", monthSearch)
-        incomeExpenseListModel.getIncomeExpenseListByMonthYearIdCategory(
-            yearSearch.toString(),
-            formattedMonth,
-            categoryId
-        ).observe(this) { data ->
-            categoryData = data.reversed().map { item ->
-                CategoryWithIncomeExpenseList(
-                    incomeExpense = IncomeExpenseList(
-                        id = item.incomeExpense.id,
-                        note = item.incomeExpense.note,
-                        amount = item.incomeExpense.amount,
-                        date = item.incomeExpense.date,
-                        categoryId = item.incomeExpense.categoryId,
-                        type = item.incomeExpense.type,
-                        image = item.incomeExpense.image,
-                        categoryName = item.incomeExpense.categoryName,
-                        iconResource = item.incomeExpense.iconResource
-                    ),
-                    category = item.category
-                )
+        Log.d("checkSearch", checkSearch.toString())
+        if (checkSearch == 1) {
+            val formattedMonth = String.format("%02d", monthSearch)
+            incomeExpenseListModel.getIncomeExpenseListByMonthYearIdCategory(
+                yearSearch.toString(),
+                formattedMonth,
+                categoryId
+            ).observe(this) { data ->
+                categoryData = data.reversed().map { item ->
+                    CategoryWithIncomeExpenseList(
+                        incomeExpense = IncomeExpenseList(
+                            id = item.incomeExpense.id,
+                            note = item.incomeExpense.note,
+                            amount = item.incomeExpense.amount,
+                            date = item.incomeExpense.date,
+                            categoryId = item.incomeExpense.categoryId,
+                            type = item.incomeExpense.type,
+                            image = item.incomeExpense.image,
+                            categoryName = item.incomeExpense.categoryName,
+                            iconResource = item.incomeExpense.iconResource
+                        ),
+                        category = item.category
+                    )
+                }
+
+                val dataSetup = data.map { convertToIncomeExpenseListData(it) }
+
+                val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+
+                dateAmountList = dataSetup.map {
+                    val date = LocalDate.parse(it.date, formatter)
+                    val dayOfMonth = date.dayOfMonth
+                    dayOfMonth to it.amount
+                }.groupBy { it.first }
+                    .mapValues { entry ->
+                        entry.value.sumOf { it.second.replace(",", ".").toDouble() }.toString()
+                    }
+                    .map { (dayOfMonth, totalAmount) ->
+                        dayOfMonth to totalAmount
+                    }
+
+                setupChart()
+
+                setupRecyclerView()
             }
-
-            val dataSetup = data.map { convertToIncomeExpenseListData(it) }
-
-            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-
-            dateAmountList = dataSetup.map {
-                val date = LocalDate.parse(it.date, formatter)
-                val dayOfMonth = date.dayOfMonth
-                dayOfMonth to it.amount
-            }.groupBy { it.first }
-                .mapValues { entry ->
-                    entry.value.sumOf { it.second.replace(",", ".").toDouble() }.toString()
+        } else {
+            incomeExpenseListModel.getIncomeExpenseListByYearAndIdCategoryModel(
+                yearSearch.toString(),
+                categoryId
+            ).observe(this) { data ->
+                categoryData = data.reversed().map { item ->
+                    CategoryWithIncomeExpenseList(
+                        incomeExpense = IncomeExpenseList(
+                            id = item.incomeExpense.id,
+                            note = item.incomeExpense.note,
+                            amount = item.incomeExpense.amount,
+                            date = item.incomeExpense.date,
+                            categoryId = item.incomeExpense.categoryId,
+                            type = item.incomeExpense.type,
+                            image = item.incomeExpense.image,
+                            categoryName = item.incomeExpense.categoryName,
+                            iconResource = item.incomeExpense.iconResource
+                        ),
+                        category = item.category
+                    )
                 }
-                .map { (dayOfMonth, totalAmount) ->
-                    dayOfMonth to totalAmount
-                }
 
-            setupChart()
+                val dataSetup = data.map { convertToIncomeExpenseListData(it) }
 
-            setupRecyclerView()
+                val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+
+                dateAmountList = dataSetup.map {
+                    val date = LocalDate.parse(it.date, formatter)
+                    val dayOfMonth = date.dayOfMonth
+                    dayOfMonth to it.amount
+                }.groupBy { it.first }
+                    .mapValues { entry ->
+                        entry.value.sumOf { it.second.replace(",", ".").toDouble() }.toString()
+                    }
+                    .map { (dayOfMonth, totalAmount) ->
+                        dayOfMonth to totalAmount
+                    }
+
+                setupChart()
+
+                setupRecyclerView()
+            }
         }
     }
 

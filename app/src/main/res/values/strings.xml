@@ -55,4 +55,6 @@
     <string name="expense">Chi phí</string>
     <string name="close">Đóng</string>
     <string name="emptyDataText">Chưa có dữ liệu</string>
+    <string name="month">Tháng</string>
+    <string name="n_m">Năm</string>
 </resources>

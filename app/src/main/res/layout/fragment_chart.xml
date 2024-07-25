@@ -34,7 +34,7 @@
                 android:layout_height="40dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="@string/Expense" />
+                android:text="@string/month" />
 
             <View
                 style="@style/background"
@@ -48,7 +48,7 @@
                 android:layout_height="40dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="@string/Income2" />
+                android:text="@string/n_m" />
 
         </LinearLayout>
 
@@ -79,7 +79,7 @@
         android:layout_width="match_parent"
         android:layout_height="250dp"
         android:layout_below="@+id/calendarLL"
-        android:visibility="gone"> <!-- Initially hidden -->
+        android:visibility="visible"> <!-- Initially hidden -->
 
         <me.relex.circleindicator.CircleIndicator3
             android:id="@+id/indicator"
@@ -100,41 +100,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/chartRL"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewChart"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:ignore="RedundantNamespace" />
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/emptyDataView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:visibility="gone">
-
-        <ImageView
-            android:id="@+id/imageEmptyData"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:contentDescription="@string/app_name"
-            android:gravity="center"
-            android:src="@drawable/ic_note_50" />
-
-        <TextView
-            android:id="@+id/emptyDataText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/imageEmptyData"
-            android:layout_marginTop="10dp"
-            android:gravity="center"
-            android:text="@string/emptyDataText"
-            android:textColor="@color/gray1"
-            android:textSize="18sp" />
     </RelativeLayout>
 
 </RelativeLayout>

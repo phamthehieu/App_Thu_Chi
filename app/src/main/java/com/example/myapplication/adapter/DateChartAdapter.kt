@@ -26,7 +26,6 @@ class DateChartAdapter(
         fun onDateClick(date: String)
     }
 
-
     var selectedPosition: Int = 0
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {

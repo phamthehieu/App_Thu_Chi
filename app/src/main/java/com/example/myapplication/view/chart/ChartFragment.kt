@@ -31,7 +31,8 @@ import com.github.mikephil.charting.data.PieEntry
 import java.time.LocalDate
 import java.util.Calendar
 
-class ChartFragment : Fragment(), DateChartAdapter.OnDateClickListener, DataListChartAdapter.OnCategoryClickListener {
+class ChartFragment : Fragment(), DateChartAdapter.OnDateClickListener,
+    DataListChartAdapter.OnCategoryClickListener {
 
     private lateinit var binding: FragmentChartBinding
     private val monthsList = mutableListOf<String>()
@@ -40,6 +41,8 @@ class ChartFragment : Fragment(), DateChartAdapter.OnDateClickListener, DataList
 
     private var monthSearch = Calendar.getInstance().get(Calendar.MONTH) + 1
     private var yearSearch = Calendar.getInstance().get(Calendar.YEAR)
+
+    private var checkSearch: Int = 1
 
     private val incomeExpenseListModel: IncomeExpenseListModel by viewModels {
         IncomeExpenseListFactory(requireActivity().application)
@@ -56,42 +59,44 @@ class ChartFragment : Fragment(), DateChartAdapter.OnDateClickListener, DataList
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         binding = FragmentChartBinding.inflate(inflater, container, false)
 
-        binding.tabExpenseChart.setOnClickListener {
-            updateTabBackground(1)
-        }
-
-        binding.tabIncomeChart.setOnClickListener {
-            updateTabBackground(2)
-        }
-
-        updateTabBackground(1)
-
         adapter = DateChartAdapter(monthsList, {
-            loadMoreMonths()
+            loadMoreDate()
         }, this)
 
         val layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, true)
         binding.recyclerViewDateChart.layoutManager = layoutManager
         binding.recyclerViewDateChart.adapter = adapter
 
-        loadMoreMonths()
+        updateTabBackground(1)
 
         getDataSource()
+
+        loadMoreDate()
+
+        binding.tabExpenseChart.setOnClickListener {
+            updateTabBackground(1)
+            getDataSource()
+        }
+
+        binding.tabIncomeChart.setOnClickListener {
+            updateTabBackground(2)
+            getDataSource()
+        }
 
         return binding.root
     }
 
     @SuppressLint("DefaultLocale")
     private fun getDataSource() {
-        val formattedMonth = String.format("%02d", monthSearch)
-        incomeExpenseListModel.getIncomeExpenseListByMonthYear(
-            yearSearch.toString(),
-            formattedMonth
-        ).observe(viewLifecycleOwner) { data ->
-            val groupedData = data.groupBy { it.category.id }.map { (categoryId, items) ->
+        if (checkSearch == 1) {
+            val formattedMonth = String.format("%02d", monthSearch)
+            incomeExpenseListModel.getIncomeExpenseListByMonthYear(
+                yearSearch.toString(),
+                formattedMonth
+            ).observe(viewLifecycleOwner) { data ->
+                val groupedData = data.groupBy { it.category.id }.map { (categoryId, items) ->
                     val totalAmount =
                         items.sumOf { it.incomeExpense.amount.replace(",", ".").toDouble() }
                     CategoryWithIncomeExpenseList(
@@ -109,7 +114,32 @@ class ChartFragment : Fragment(), DateChartAdapter.OnDateClickListener, DataList
                         category = items.first().category
                     )
                 }
-            chartViewPager(groupedData)
+                chartViewPager(groupedData)
+            }
+        } else {
+            incomeExpenseListModel.getFilteredIncomeExpenseListYear(
+                yearSearch.toString()
+            ).observe(viewLifecycleOwner) { data ->
+                val groupedData = data.groupBy { it.category.id }.map { (categoryId, items) ->
+                    val totalAmount =
+                        items.sumOf { it.incomeExpense.amount.replace(",", ".").toDouble() }
+                    CategoryWithIncomeExpenseList(
+                        incomeExpense = IncomeExpenseList(
+                            id = items.first().incomeExpense.id,
+                            note = items.first().incomeExpense.note,
+                            amount = totalAmount.toString(),
+                            date = items.first().incomeExpense.date,
+                            categoryId = items.first().incomeExpense.categoryId,
+                            type = items.first().incomeExpense.type,
+                            image = items.first().incomeExpense.image,
+                            categoryName = items.first().incomeExpense.categoryName,
+                            iconResource = items.first().incomeExpense.iconResource
+                        ),
+                        category = items.first().category
+                    )
+                }
+                chartViewPager(groupedData)
+            }
         }
     }
 
@@ -143,16 +173,6 @@ class ChartFragment : Fragment(), DateChartAdapter.OnDateClickListener, DataList
             else -> groupedData
         }
 
-        if (filteredData.isEmpty()) {
-            binding.chartRL.visibility = View.GONE
-            binding.listDataChart.visibility = View.GONE
-            binding.emptyDataView.visibility = View.VISIBLE
-        } else {
-            binding.chartRL.visibility = View.VISIBLE
-            binding.listDataChart.visibility = View.VISIBLE
-            binding.emptyDataView.visibility = View.GONE
-        }
-
         var totalAmount = 0f
         filteredData.forEach { item ->
             val amountString = item.incomeExpense.amount.replace(",", ".")
@@ -168,18 +188,40 @@ class ChartFragment : Fragment(), DateChartAdapter.OnDateClickListener, DataList
 
     @SuppressLint("NotifyDataSetChanged")
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun loadMoreMonths() {
-        val newMonths = getPreviousMonths(currentMonthIndex, 10)
-        val oldSize = monthsList.size
-        monthsList.addAll(newMonths)
-        currentMonthIndex += newMonths.size
-        adapter.notifyItemRangeInserted(oldSize, newMonths.size)
+    private fun loadMoreDate() {
+        monthsList.clear()
+        currentMonthIndex = 0
+
+        if (checkSearch == 1) {
+            val newMonths = getPreviousMonths(currentMonthIndex, 10)
+            monthsList.addAll(newMonths)
+            currentMonthIndex += newMonths.size
+        } else {
+            val newYears = getPreviousYears(currentMonthIndex, 10)
+            monthsList.addAll(newYears)
+            currentMonthIndex += newYears.size
+        }
+
+        adapter.notifyDataSetChanged()
 
         if (monthsList.isNotEmpty()) {
-            val position = monthsList.size - newMonths.size
             (binding.recyclerViewDateChart.layoutManager as LinearLayoutManager)
-                .scrollToPositionWithOffset(position, 0)
+                .scrollToPositionWithOffset(0, 0)
         }
+    }
+
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun getPreviousYears(startIndex: Int, count: Int): List<String> {
+        val currentYear = LocalDate.now().year
+        val yearsList = mutableListOf<String>()
+
+        for (i in startIndex until startIndex + count) {
+            val year = currentYear - i
+            yearsList.add(year.toString())
+        }
+
+        return yearsList
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -215,32 +257,38 @@ class ChartFragment : Fragment(), DateChartAdapter.OnDateClickListener, DataList
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onDateClick(date: String) {
         val currentDate = LocalDate.now()
-        when (date) {
-            "Tháng này" -> {
-                monthSearch = currentDate.monthValue
-                yearSearch = currentDate.year
-            }
+        if (checkSearch == 1) {
+            when (date) {
+                "Tháng này" -> {
+                    monthSearch = currentDate.monthValue
+                    yearSearch = currentDate.year
+                }
 
-            "Tháng trước" -> {
-                val previousMonthDate = currentDate.minusMonths(1)
-                monthSearch = previousMonthDate.monthValue
-                yearSearch = previousMonthDate.year
-            }
+                "Tháng trước" -> {
+                    val previousMonthDate = currentDate.minusMonths(1)
+                    monthSearch = previousMonthDate.monthValue
+                    yearSearch = previousMonthDate.year
+                }
 
-            else -> {
-                val parts = date.split(" ")
-                if (parts.size == 3) {
-                    monthSearch = parts[1].toInt()
-                    yearSearch = parts[2].toInt()
+                else -> {
+                    val parts = date.split(" ")
+                    if (parts.size == 3) {
+                        monthSearch = parts[1].toInt()
+                        yearSearch = parts[2].toInt()
+                    }
                 }
             }
+        } else {
+            yearSearch = date.toInt()
         }
         getDataSource()
     }
 
+    @SuppressLint("NotifyDataSetChanged")
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun updateTabBackground(selectedTabNumber: Int) {
-        val currentNightMode =
-            resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        checkSearch = selectedTabNumber
+        val currentNightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
         when (currentNightMode) {
             Configuration.UI_MODE_NIGHT_YES -> {
                 val selectedColor = resources.getColor(R.color.black, requireContext().theme)
@@ -255,12 +303,7 @@ class ChartFragment : Fragment(), DateChartAdapter.OnDateClickListener, DataList
                     setTextColor(if (selectedTabNumber == 2) selectedColor else unselectedColor)
                 }
                 binding.titleSubAAE.setBackgroundResource(R.drawable.round_back_white10_100)
-                binding.imageEmptyData.setColorFilter(
-                    ContextCompat.getColor(
-                        requireContext(),
-                        R.color.gray1
-                    )
-                )
+
                 binding.titleBackground.setBackgroundColor(
                     ContextCompat.getColor(
                         requireContext(),
@@ -288,20 +331,22 @@ class ChartFragment : Fragment(), DateChartAdapter.OnDateClickListener, DataList
                         R.color.gray1
                     )
                 )
-                binding.imageEmptyData.setColorFilter(
-                    ContextCompat.getColor(
-                        requireContext(),
-                        R.color.gray1
-                    )
-                )
             }
         }
+        yearSearch = Calendar.getInstance().get(Calendar.YEAR)
+        monthSearch = Calendar.getInstance().get(Calendar.MONTH) + 1
+        adapter.selectedPosition = 0
+        adapter.notifyDataSetChanged()
+        loadMoreDate()
     }
 
     override fun onItemClick(data: CategoryWithIncomeExpenseList) {
         val intent = Intent(requireContext(), DetailedChartOfCategoryActivity::class.java)
         intent.putExtra("categoryId", data.incomeExpense.categoryId)
         intent.putExtra("categoryName", data.incomeExpense.categoryName)
+        intent.putExtra("yearSearch", yearSearch)
+        intent.putExtra("monthSearch", monthSearch)
+        intent.putExtra("checkSearchData", checkSearch)
         startActivity(intent)
     }
 }

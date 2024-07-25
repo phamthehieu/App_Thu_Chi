@@ -49,7 +49,14 @@ class TotalCostChartFragment : Fragment() {
         pieChart = binding.pieChart
         recyclerView = binding.recyclerViewDataLegend
 
-        setupPieChart()
+        if (groupedData.isNullOrEmpty()) {
+            binding.chartCl.visibility = View.GONE
+            binding.emptyDataView.visibility = View.VISIBLE
+        } else {
+            setupPieChart()
+            binding.chartCl.visibility = View.VISIBLE
+            binding.emptyDataView.visibility = View.GONE
+        }
 
         return binding.root
     }
