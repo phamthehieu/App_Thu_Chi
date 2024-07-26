@@ -10,9 +10,8 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
+import com.example.myapplication.data.LegendItem
 import java.text.DecimalFormat
-
-data class LegendItem(val category: String, val color: Int, val amount: String, var isSelected: Boolean = false)
 
 class LegendAdapter(private val items: List<LegendItem>, private val totalAmount: Float) :
     RecyclerView.Adapter<LegendAdapter.ViewHolder>() {

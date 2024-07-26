@@ -28,6 +28,11 @@
         <item name="android:background">@color/black2</item>
     </style>
 
+
+    <style name="backgroundBudgetStyle">
+        <item name="android:background">@color/black1</item>
+    </style>
+
     <style name="bottomStyle">
         <item name="android:background">@color/background_night</item>
     </style>

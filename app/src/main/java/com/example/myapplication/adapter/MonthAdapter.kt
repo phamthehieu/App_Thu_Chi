@@ -17,8 +17,7 @@ class MonthAdapter(
     private val context: Context,
     private val data: List<Int>,
     private val check: Boolean,
-    private val yearData: Int,
-    private val selectedMonth: Int,
+    private var selectedMonth: Int,
     private val onMonthSelected: (Int) -> Unit
 ) : RecyclerView.Adapter<MonthAdapter.MonthViewHolder>() {
 
@@ -31,33 +30,28 @@ class MonthAdapter(
         return MonthViewHolder(view)
     }
 
-    @SuppressLint("SetTextI18n", "NotifyDataSetChanged")
-    override fun onBindViewHolder(holder: MonthViewHolder, @SuppressLint("RecyclerView") position: Int) {
+    @SuppressLint("SetTextI18n")
+    override fun onBindViewHolder(holder: MonthViewHolder, position: Int) {
         if (check) {
             holder.monthTextView.text = data[position].toString()
-            if (data[position] == yearData) {
-                holder.monthTextView.setBackgroundResource(R.drawable.rounded_corner_yellow)
-            } else {
-                holder.monthTextView.setBackgroundColor(Color.TRANSPARENT)
-            }
-
-            holder.itemView.setOnClickListener {
-                onMonthSelected(data[position])
-                notifyDataSetChanged()
-            }
-
         } else {
             holder.monthTextView.text = "Thg ${data[position]}"
-            if (position == selectedMonth) {
-                holder.monthTextView.setBackgroundResource(R.drawable.rounded_corner_yellow)
-            } else {
-                holder.monthTextView.setBackgroundColor(Color.TRANSPARENT)
-            }
+        }
 
-            holder.itemView.setOnClickListener {
-                onMonthSelected(position)
-                notifyDataSetChanged()
-            }
+        // Cập nhật background cho phần tử được chọn
+        if (data[position] == selectedMonth) {
+            holder.monthTextView.setBackgroundResource(R.drawable.rounded_corner_yellow)
+        } else {
+            holder.monthTextView.setBackgroundColor(Color.TRANSPARENT)
+        }
+
+        holder.itemView.setOnClickListener {
+            val previousSelectedMonth = selectedMonth
+            selectedMonth = data[position]
+            onMonthSelected(data[position])
+            // Cập nhật phần tử trước đó và phần tử mới được chọn
+            notifyItemChanged(data.indexOf(previousSelectedMonth))
+            notifyItemChanged(position)
         }
     }
 
@@ -65,5 +59,9 @@ class MonthAdapter(
         return data.size
     }
 }
+
+
+
+
 
 

@@ -147,9 +147,8 @@ class DetailedChartOfCategoryActivity : AppCompatActivity(),
         )
 
         viewPager.adapter = monthPagerAdapter
-        viewPager.currentItem = 50
-        viewPager.offscreenPageLimit = ViewPager2.OFFSCREEN_PAGE_LIMIT_DEFAULT
-        viewPager.currentItem = years.indexOf(currentYear)
+        viewPager.offscreenPageLimit = 1
+        viewPager.isUserInputEnabled = false
 
         viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {

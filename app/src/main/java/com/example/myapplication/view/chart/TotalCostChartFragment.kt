@@ -11,8 +11,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
 import com.example.myapplication.adapter.LegendAdapter
-import com.example.myapplication.adapter.LegendItem
 import com.example.myapplication.data.CategoryWithIncomeExpenseList
+import com.example.myapplication.data.LegendItem
 import com.example.myapplication.databinding.FragmentTotalChartBinding
 import com.example.myapplication.databinding.FragmentTotalCostChartBinding
 import com.example.myapplication.utilities.ColorUtils

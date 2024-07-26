@@ -33,9 +33,12 @@
             android:id="@+id/titleText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="171dp"
             android:text="@string/detail"
-            android:textSize="22sp"
+            android:textSize="20sp"
             android:textStyle="bold"
             tools:ignore="RelativeOverlap" />
 
@@ -124,5 +127,6 @@
             android:textColor="@color/gray1"
             android:textSize="18sp" />
     </RelativeLayout>
+
 
 </RelativeLayout>

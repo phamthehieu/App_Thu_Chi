@@ -6,9 +6,11 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.myapplication.R
+import com.example.myapplication.dao.BudgetDao
 import com.example.myapplication.dao.CategoryDao
 import com.example.myapplication.dao.IconsDao
 import com.example.myapplication.dao.IncomeExpenseListDao
+import com.example.myapplication.entity.Budget
 import com.example.myapplication.entity.Category
 import com.example.myapplication.entity.Icon
 import com.example.myapplication.entity.IncomeExpenseList
@@ -17,11 +19,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-@Database(entities = [Category::class, Icon::class, IncomeExpenseList::class], version = 2)
+@Database(entities = [Category::class, Icon::class, IncomeExpenseList::class, Budget::class], version = 2)
 abstract class CategoryDatabase : RoomDatabase() {
     abstract fun categoryDao(): CategoryDao
     abstract fun iconDao(): IconsDao
     abstract fun incomeExpenseListDao(): IncomeExpenseListDao
+    abstract fun budgetDao(): BudgetDao
 
     companion object {
         @Volatile
