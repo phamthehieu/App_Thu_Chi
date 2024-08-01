@@ -2,6 +2,7 @@ package com.example.myapplication.view.reports
 
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -12,6 +13,7 @@ import com.example.myapplication.databinding.ActivityDetailedStatsBinding
 import com.example.myapplication.entity.IncomeExpenseList
 import com.example.myapplication.viewModel.IncomeExpenseListFactory
 import com.example.myapplication.viewModel.IncomeExpenseListModel
+import java.text.DecimalFormat
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
@@ -36,9 +38,21 @@ class DetailedStatsActivity : AppCompatActivity() {
         }
 
         incomeExpenseListModel.allIncomeExpense.observe(this) { list ->
+            val totalIncome = list.filter { it.type == "Income" }
+                .sumOf { it.amount.replace(",", ".").toDouble() }
+            val totalExpense = list.filter { it.type == "Expense" }
+                .sumOf { it.amount.replace(",", ".").toDouble() }
+            val totalBalance = totalIncome - totalExpense
+
+            val decimalFormat = DecimalFormat("#,###.##")
             val groupedIncomeExpenseList = groupAndSumByYearMonthAndType(list)
             val monthlyReports = transformData(groupedIncomeExpenseList)
             val adapter = MonthlyReportAdapter(monthlyReports)
+
+            binding.totalBalanceTv.text = decimalFormat.format(totalBalance)
+            binding.allExpenseTv.text = decimalFormat.format(totalExpense)
+            binding.allIncomeTv.text = decimalFormat.format(totalIncome)
+
             binding.recyclerViewDetailedStats.layoutManager = LinearLayoutManager(this)
             binding.recyclerViewDetailedStats.adapter = adapter
         }

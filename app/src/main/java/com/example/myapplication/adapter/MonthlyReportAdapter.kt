@@ -7,6 +7,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
 import com.example.myapplication.data.MonthlyReport
+import java.text.DecimalFormat
 
 class MonthlyReportAdapter(private val reports: List<Any>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -44,11 +45,12 @@ class MonthlyReportAdapter(private val reports: List<Any>) :
             val year = reports[position] as String
             holder.yearTv.text = year
         } else if (holder is ItemViewHolder) {
+            val decimalFormat = DecimalFormat("#,###.##")
             val report = reports[position] as MonthlyReport
             holder.monthTv.text = report.month
-            holder.expenseTv.text = String.format("%,.0f", report.expense)
-            holder.incomeTv.text = String.format("%,.0f", report.income)
-            holder.balanceTv.text = String.format("%,.0f", report.balance)
+            holder.expenseTv.text = decimalFormat.format(report.expense)
+            holder.incomeTv.text = decimalFormat.format(report.income)
+            holder.balanceTv.text = decimalFormat.format(report.balance)
         }
     }
 
