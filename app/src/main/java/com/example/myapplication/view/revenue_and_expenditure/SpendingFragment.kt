@@ -17,7 +17,6 @@ import com.example.myapplication.adapter.CategoryAdapter
 import com.example.myapplication.data.CombinedCategoryIcon
 import com.example.myapplication.data.IncomeExpenseListData
 import com.example.myapplication.databinding.FragmentSpendingBinding
-import com.example.myapplication.entity.IncomeExpenseList
 import com.example.myapplication.view.component.KeyBoardBottomSheetFragment
 import com.example.myapplication.view.category.SettingCategoryActivity
 import com.example.myapplication.viewModel.CategoryViewModel
@@ -67,7 +66,8 @@ class SpendingFragment : Fragment(), CategoryAdapter.OnItemClickListener {
                         iconType = categoryWithIcon.icon.type,
                         source = categoryWithIcon.category.source,
                         idCategory = categoryWithIcon.category.id,
-                        icon = categoryWithIcon.category.icon
+                        icon = categoryWithIcon.category.icon,
+                        budget = categoryWithIcon.category.budget
                     )
                 }
                 updateRecyclerView(combinedList)
@@ -84,7 +84,8 @@ class SpendingFragment : Fragment(), CategoryAdapter.OnItemClickListener {
         iconType = "Special",
         source = "Special",
         idCategory = -1,
-        icon = -1
+        icon = -1,
+        budget = "0"
     )
 
     private fun updateRecyclerView(combinedList: List<CombinedCategoryIcon>) {

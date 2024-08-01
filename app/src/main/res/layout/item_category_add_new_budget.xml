@@ -54,7 +54,7 @@
             android:layout_marginStart="10dp"
             android:layout_weight="1"
             android:text="@string/name_category"
-            android:textSize="16sp" />
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/totalBudget"
@@ -62,7 +62,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="Sửa"
-            android:textSize="16sp"/>
+            android:textSize="14sp" />
 
         <ImageView
             android:layout_width="wrap_content"

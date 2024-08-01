@@ -4,7 +4,7 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class CombinedCategoryIcon(
+data class CombinedCategoryReport(
     val idCategory: Int,
     val categoryName: String,
     val categoryType: String,
@@ -12,5 +12,6 @@ data class CombinedCategoryIcon(
     val iconType: String,
     val source:String,
     val icon: Int,
-    val budget: String
+    val budget: String,
+    val totalAmount: String
 ) : Parcelable

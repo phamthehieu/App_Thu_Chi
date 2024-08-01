@@ -33,6 +33,7 @@
         </FrameLayout>
 
         <TextView
+            android:id="@+id/nameCategoryTV"
             android:layout_marginStart="10dp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -43,6 +44,7 @@
             android:textStyle="bold"/>
 
         <TextView
+            android:id="@+id/editBudget"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -71,7 +73,7 @@
                 android:indeterminate="false"
                 android:max="100"
                 android:progressDrawable="@drawable/circle"
-                android:rotation="-105" />
+                android:rotation="0"/>
 
             <TextView
                 android:id="@+id/progressText"
@@ -102,6 +104,7 @@
                     android:textSize="14sp" />
 
                 <TextView
+                    android:id="@+id/remainingTv"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -132,6 +135,7 @@
                     android:textSize="14sp" />
 
                 <TextView
+                    android:id="@+id/textBudget"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -156,6 +160,7 @@
                     android:textSize="14sp" />
 
                 <TextView
+                    android:id="@+id/totalCategoryTV"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"

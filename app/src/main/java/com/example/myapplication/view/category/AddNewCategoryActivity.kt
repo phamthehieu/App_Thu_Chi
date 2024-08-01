@@ -138,7 +138,8 @@ class AddNewCategoryActivity : AppCompatActivity(), IconListAdapter.OnIconSelect
                             name = nameCategory,
                             icon = it.id,
                             type = "user",
-                            source = source
+                            source = source,
+                            budget = it1.budget
                         )
                     }
                 }
@@ -156,7 +157,8 @@ class AddNewCategoryActivity : AppCompatActivity(), IconListAdapter.OnIconSelect
                         name = nameCategory,
                         icon = it.id,
                         type = "user",
-                        source = source
+                        source = source,
+                        budget = "0"
                     )
                 }
                 categoryNew?.let {

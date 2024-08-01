@@ -99,6 +99,7 @@
             android:padding="8dp">
 
             <TextView
+                android:id="@+id/monthAllTv"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginStart="8dp"
@@ -150,6 +151,7 @@
                     android:orientation="horizontal">
 
                     <TextView
+                        android:id="@+id/expenseAllTv"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -159,6 +161,7 @@
                         android:textSize="14sp" />
 
                     <TextView
+                        android:id="@+id/incomeAllTv"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -168,6 +171,7 @@
                         android:textSize="14sp" />
 
                     <TextView
+                        android:id="@+id/surplusAllTv"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -228,7 +232,7 @@
                 android:layout_gravity="center">
 
                 <ProgressBar
-                    android:id="@+id/progressBarCircular"
+                    android:id="@+id/progressBarCircularAll"
                     style="?android:attr/progressBarStyleHorizontal"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
@@ -236,10 +240,10 @@
                     android:indeterminate="false"
                     android:max="100"
                     android:progressDrawable="@drawable/circle"
-                    android:rotation="-105" />
+                    android:rotation="0" />
 
                 <TextView
-                    android:id="@+id/progressText"
+                    android:id="@+id/progressTextAll"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -260,6 +264,7 @@
                     android:orientation="horizontal">
 
                     <TextView
+
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="8dp"
@@ -267,6 +272,7 @@
                         android:textSize="14sp" />
 
                     <TextView
+                        android:id="@+id/remainingTotalAllTv"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -297,6 +303,7 @@
                         android:textSize="14sp" />
 
                     <TextView
+                        android:id="@+id/budgetTotalAll"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -321,6 +328,7 @@
                         android:textSize="14sp" />
 
                     <TextView
+                        android:id="@+id/totalCategoryAllTV"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"

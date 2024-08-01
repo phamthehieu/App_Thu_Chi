@@ -64,7 +64,7 @@ class CalendarHomeActivity : AppCompatActivity() {
             incomeExpenseList.addAll(list)
             incomeExpensesByDate.clear()
             incomeExpensesByDate.putAll(incomeExpenseList.groupBy { LocalDate.parse(it.date) })
-            if (isDateSelected) { // Chỉ cập nhật adapter khi người dùng đã chọn ngày
+            if (isDateSelected) {
                 updateAdapterForDate(selectedDate)
             }
         }

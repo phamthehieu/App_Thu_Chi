@@ -7,6 +7,7 @@ import android.graphics.drawable.ColorDrawable
 import android.media.metrics.Event
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -206,6 +207,7 @@ class CalendarDialogFragment : DialogFragment() {
             binding.exThreeCalendar.notifyDateChanged(date)
             updateAdapterForDate(date)
         }
+        updateAdapterForDate(date)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

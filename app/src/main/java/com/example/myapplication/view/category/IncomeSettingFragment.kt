@@ -52,7 +52,8 @@ class IncomeSettingFragment : Fragment(), SettingCategoryAdapter.OnItemClickList
                         iconType = categoryWithIcon.icon.type,
                         source = categoryWithIcon.category.source,
                         idCategory = categoryWithIcon.category.id,
-                        icon = categoryWithIcon.category.icon
+                        icon = categoryWithIcon.category.icon,
+                        budget = categoryWithIcon.category.budget
                     )
                 }
                 updateRecyclerView(combinedList)
@@ -94,7 +95,8 @@ class IncomeSettingFragment : Fragment(), SettingCategoryAdapter.OnItemClickList
                     name = category.categoryName,
                     type = category.categoryType,
                     icon = category.icon,
-                    source = category.source
+                    source = category.source,
+                    budget = category.budget
                 )
                 categoryViewModel.delete(data)
                 dialog.dismiss()

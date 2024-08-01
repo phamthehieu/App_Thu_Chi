@@ -441,7 +441,6 @@ class KeyBoardBottomSheetFragment : BottomSheetDialogFragment() {
                     categoryName = categoryData!!.categoryName,
                     iconResource = categoryData!!.iconResource,
                 )
-                Log.d("Hieu443", incomeExpenseList.toString())
                 incomeExpenseListModel.updateIncomeExpenseListModel(incomeExpenseList)
                     .observe(viewLifecycleOwner) { isSuccess ->
                         if (isSuccess) {

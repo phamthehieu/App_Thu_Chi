@@ -23,5 +23,6 @@ data class Category(
     val name: String,
     val icon: Int,
     val type: String,
-    val source: String
+    val source: String,
+    val budget: String
 ) : Parcelable

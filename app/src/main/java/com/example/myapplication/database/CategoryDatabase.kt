@@ -6,11 +6,9 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.myapplication.R
-import com.example.myapplication.dao.BudgetDao
 import com.example.myapplication.dao.CategoryDao
 import com.example.myapplication.dao.IconsDao
 import com.example.myapplication.dao.IncomeExpenseListDao
-import com.example.myapplication.entity.Budget
 import com.example.myapplication.entity.Category
 import com.example.myapplication.entity.Icon
 import com.example.myapplication.entity.IncomeExpenseList
@@ -19,12 +17,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-@Database(entities = [Category::class, Icon::class, IncomeExpenseList::class, Budget::class], version = 2)
+@Database(entities = [Category::class, Icon::class, IncomeExpenseList::class], version = 3, exportSchema = false)
 abstract class CategoryDatabase : RoomDatabase() {
     abstract fun categoryDao(): CategoryDao
     abstract fun iconDao(): IconsDao
     abstract fun incomeExpenseListDao(): IncomeExpenseListDao
-    abstract fun budgetDao(): BudgetDao
 
     companion object {
         @Volatile
@@ -269,39 +266,39 @@ abstract class CategoryDatabase : RoomDatabase() {
             )
 
             val sampleCategories = listOf(
-                Category(name = "Hoa quả", icon = 25, type = "admin", source = "Expense"),
-                Category(name = "Rau quả", icon = 42, type = "admin", source = "Expense"),
-                Category(name = "Trẻ em", icon = 198, type = "admin", source = "Expense"),
-                Category(name = "Đồ ăn nhẹ", icon = 197, type = "admin", source = "Expense"),
-                Category(name = "Vé số", icon = 196, type = "admin", source = "Expense"),
-                Category(name = "Quyên góp", icon = 195, type = "admin", source = "Expense"),
-                Category(name = "Quà tặng", icon = 194, type = "admin", source = "Expense"),
-                Category(name = "Nhà", icon = 70, type = "admin", source = "Expense"),
-                Category(name = "Nhà ở", icon = 193, type = "admin", source = "Expense"),
-                Category(name = "Sửa chữa", icon = 180, type = "admin", source = "Expense"),
-                Category(name = "Thú cưng", icon = 192, type = "admin", source = "Expense"),
-                Category(name = "Sức khỏe", icon = 191, type = "admin", source = "Expense"),
-                Category(name = "Du lịch", icon = 140, type = "admin", source = "Expense"),
-                Category(name = "Thiết bị điện tử", icon = 86, type = "admin", source = "Expense"),
-                Category(name = "Thuốc lá", icon = 190, type = "admin", source = "Expense"),
-                Category(name = "Rượu", icon = 116, type = "admin", source = "Expense"),
-                Category(name = "Xe hơi", icon = 137, type = "admin", source = "Expense"),
-                Category(name = "Quần áo", icon = 189, type = "admin", source = "Expense"),
-                Category(name = "Vận tải", icon = 138, type = "admin", source = "Expense"),
-                Category(name = "Xã hội", icon = 188, type = "admin", source = "Expense"),
-                Category(name = "Thể thao", icon = 123, type = "admin", source = "Expense"),
-                Category(name = "Làm đẹp", icon = 61, type = "admin", source = "Expense"),
-                Category(name = "Giáo dục", icon = 187, type = "admin", source = "Expense"),
-                Category(name = "Giải trí", icon = 186, type = "admin", source = "Expense"),
-                Category(name = "Điện thoại", icon = 185, type = "admin", source = "Expense"),
-                Category(name = "Đồ ăn", icon = 184, type = "admin", source = "Expense"),
-                Category(name = "Mua Sắm", icon = 183, type = "admin", source = "Expense"),
+                Category(name = "Hoa quả", icon = 25, type = "admin", source = "Expense", budget = "0"),
+                Category(name = "Rau quả", icon = 42, type = "admin", source = "Expense", budget = "0"),
+                Category(name = "Trẻ em", icon = 198, type = "admin", source = "Expense", budget = "0"),
+                Category(name = "Đồ ăn nhẹ", icon = 197, type = "admin", source = "Expense", budget = "0"),
+                Category(name = "Vé số", icon = 196, type = "admin", source = "Expense", budget = "0"),
+                Category(name = "Quyên góp", icon = 195, type = "admin", source = "Expense", budget = "0"),
+                Category(name = "Quà tặng", icon = 194, type = "admin", source = "Expense", budget = "0"),
+                Category(name = "Nhà", icon = 70, type = "admin", source = "Expense", budget = "0"),
+                Category(name = "Nhà ở", icon = 193, type = "admin", source = "Expense", budget = "0"),
+                Category(name = "Sửa chữa", icon = 180, type = "admin", source = "Expense", budget = "0"),
+                Category(name = "Thú cưng", icon = 192, type = "admin", source = "Expense", budget = "0"),
+                Category(name = "Sức khỏe", icon = 191, type = "admin", source = "Expense", budget = "0"),
+                Category(name = "Du lịch", icon = 140, type = "admin", source = "Expense", budget = "0"),
+                Category(name = "Thiết bị điện tử", icon = 86, type = "admin", source = "Expense", budget = "0"),
+                Category(name = "Thuốc lá", icon = 190, type = "admin", source = "Expense", budget = "0"),
+                Category(name = "Rượu", icon = 116, type = "admin", source = "Expense", budget = "0"),
+                Category(name = "Xe hơi", icon = 137, type = "admin", source = "Expense", budget = "0"),
+                Category(name = "Quần áo", icon = 189, type = "admin", source = "Expense", budget = "0"),
+                Category(name = "Vận tải", icon = 138, type = "admin", source = "Expense", budget = "0"),
+                Category(name = "Xã hội", icon = 188, type = "admin", source = "Expense", budget = "0"),
+                Category(name = "Thể thao", icon = 123, type = "admin", source = "Expense", budget = "0"),
+                Category(name = "Làm đẹp", icon = 61, type = "admin", source = "Expense", budget = "0"),
+                Category(name = "Giáo dục", icon = 187, type = "admin", source = "Expense", budget = "0"),
+                Category(name = "Giải trí", icon = 186, type = "admin", source = "Expense", budget = "0"),
+                Category(name = "Điện thoại", icon = 185, type = "admin", source = "Expense", budget = "0"),
+                Category(name = "Đồ ăn", icon = 184, type = "admin", source = "Expense", budget = "0"),
+                Category(name = "Mua Sắm", icon = 183, type = "admin", source = "Expense", budget = "0"),
 
-                Category(name = "Khác", icon = 168, type = "admin", source = "Income"),
-                Category(name = "Lương", icon = 199, type = "admin", source = "Income"),
-                Category(name = "Đầu tư", icon = 200, type = "admin", source = "Income"),
-                Category(name = "Bán thời gian", icon = 201, type = "admin", source = "Income"),
-                Category(name = "Giải thưởng", icon = 202, type = "admin", source = "Income"),
+                Category(name = "Khác", icon = 168, type = "admin", source = "Income", budget = "0"),
+                Category(name = "Lương", icon = 199, type = "admin", source = "Income", budget = "0"),
+                Category(name = "Đầu tư", icon = 200, type = "admin", source = "Income", budget = "0"),
+                Category(name = "Bán thời gian", icon = 201, type = "admin", source = "Income", budget = "0"),
+                Category(name = "Giải thưởng", icon = 202, type = "admin", source = "Income", budget = "0"),
             )
 
             withContext(Dispatchers.IO) {

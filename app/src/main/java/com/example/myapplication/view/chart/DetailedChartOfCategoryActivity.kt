@@ -93,7 +93,6 @@ class DetailedChartOfCategoryActivity : AppCompatActivity(),
         }
 
         binding.popupCalenderBtn.setOnClickListener {
-            Log.d("checkSearch", checkSearch.toString())
             if (checkSearch == 1) {
                 showCustomDialogBox()
             } else {

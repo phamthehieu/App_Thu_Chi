@@ -2,6 +2,7 @@ package com.example.myapplication.adapter
 
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
 import com.example.myapplication.adapter.SettingCategoryAdapter.OnItemClickListener
 import com.example.myapplication.data.CombinedCategoryIcon
+import java.text.DecimalFormat
 
 class SettingBudgetAdapter(
     private val categories: List<CombinedCategoryIcon>,
@@ -46,13 +48,18 @@ class SettingBudgetAdapter(
         private val categoryIcon: ImageView = itemView.findViewById(R.id.iconCategory)
         private val editBudget: LinearLayout = itemView.findViewById(R.id.editBudget)
         private val deleteCategory: ImageView = itemView.findViewById(R.id.deleteCategory)
+        private val totalBudget: TextView = itemView.findViewById(R.id.totalBudget)
 
         init {
             deleteCategory.setOnClickListener {
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
                     val category = categories[position]
-                    itemClickListener.onItemClick(category)
+                    val budgetString = category.budget.replace(',', '.')
+                    val budgetValue = budgetString.toDoubleOrNull() ?: 0.0
+                    if (budgetValue != 0.0) {
+                        itemClickListener.onItemClick(category)
+                    }
                 }
             }
 
@@ -68,6 +75,16 @@ class SettingBudgetAdapter(
         fun bind(category: CombinedCategoryIcon) {
             categoryName.text = category.categoryName
             categoryIcon.setImageResource(category.iconResource)
+
+            val budgetString = category.budget.replace(',', '.')
+            val budgetValue = budgetString.toDoubleOrNull() ?: 0.0
+            val decimalFormat = DecimalFormat("#,###.##")
+            if (budgetValue == 0.0) {
+                deleteCategory.setImageResource(R.drawable.ic_minus_notselected_24)
+            } else {
+                deleteCategory.setImageResource(R.drawable.ic_minus_24)
+                totalBudget.text = decimalFormat.format(budgetValue)
+            }
 
             categoryIcon.setColorFilter(Color.BLACK)
             val drawable =

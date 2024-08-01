@@ -65,7 +65,8 @@ class IncomeFragment : Fragment(), CategoryAdapter.OnItemClickListener {
                         iconType = categoryWithIcon.icon.type,
                         source = categoryWithIcon.category.source,
                         idCategory = categoryWithIcon.category.id,
-                        icon = categoryWithIcon.category.icon
+                        icon = categoryWithIcon.category.icon,
+                        budget = categoryWithIcon.category.budget
                     )
                 }
                 updateRecyclerView(combinedList)
@@ -82,7 +83,8 @@ class IncomeFragment : Fragment(), CategoryAdapter.OnItemClickListener {
         iconType = "Special",
         source = "Special",
         idCategory = -1,
-        icon = -1
+        icon = -1,
+        budget = "0"
     )
 
     private fun updateRecyclerView(combinedList: List<CombinedCategoryIcon>) {

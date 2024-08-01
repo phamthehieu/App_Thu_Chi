@@ -126,7 +126,7 @@
     </RelativeLayout>
 
     <LinearLayout
-        android:id="@+id/budgetTotal"
+        android:id="@+id/budgetTotalLL"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/title"
@@ -148,12 +148,6 @@
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Sửa"
-                android:textSize="16sp"/>
-
         </LinearLayout>
 
         <LinearLayout
@@ -167,7 +161,7 @@
                 android:layout_gravity="center">
 
                 <ProgressBar
-                    android:id="@+id/progressBarCircular"
+                    android:id="@+id/progressBarCircularDetai"
                     style="?android:attr/progressBarStyleHorizontal"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
@@ -175,10 +169,10 @@
                     android:indeterminate="false"
                     android:max="100"
                     android:progressDrawable="@drawable/circle"
-                    android:rotation="-105" />
+                    android:rotation="0" />
 
                 <TextView
-                    android:id="@+id/progressText"
+                    android:id="@+id/progressTextDetai"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -206,6 +200,7 @@
                         android:textSize="14sp" />
 
                     <TextView
+                        android:id="@+id/remainingTotalDetailTv"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -236,6 +231,7 @@
                         android:textSize="14sp" />
 
                     <TextView
+                        android:id="@+id/budgetTotalDetai"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -260,6 +256,7 @@
                         android:textSize="14sp" />
 
                     <TextView
+                        android:id="@+id/totalCategoryDetaiTV"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -280,7 +277,7 @@
         android:id="@+id/recyclerViewBudget"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/budgetTotal"
+        android:layout_below="@+id/budgetTotalLL"
         android:layout_above="@+id/bottomLayout"
         style="@style/backgroundBudgetStyle"
         android:layout_alignParentEnd="true"

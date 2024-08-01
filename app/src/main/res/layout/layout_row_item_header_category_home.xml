@@ -7,7 +7,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="35dp"
+        android:layout_height="30dp"
         tools:ignore="MissingConstraints">
 
         <LinearLayout
@@ -27,7 +27,7 @@
                 android:layout_marginStart="20dp"
                 android:background="@android:color/transparent"
                 android:text="@string/_28_thg_6"
-                android:textSize="14sp" />
+                android:textSize="10sp" />
 
             <TextView
                 android:id="@+id/weekdaysTV"
@@ -36,7 +36,7 @@
                 android:layout_marginStart="10dp"
                 android:background="@android:color/transparent"
                 android:text="@string/th_s_u"
-                android:textSize="14sp" />
+                android:textSize="10sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -54,7 +54,7 @@
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
                 android:text="@string/chi_ph"
-                android:textSize="14sp" />
+                android:textSize="10sp" />
 
             <TextView
                 android:id="@+id/expenseTV"
@@ -63,7 +63,7 @@
                 android:layout_marginStart="5dp"
                 android:background="@android:color/transparent"
                 android:text="@string/_0"
-                android:textSize="14sp" />
+                android:textSize="10sp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -71,7 +71,7 @@
                 android:layout_marginStart="10dp"
                 android:background="@android:color/transparent"
                 android:text="@string/thu_nh_p"
-                android:textSize="14sp" />
+                android:textSize="10sp" />
 
             <TextView
                 android:id="@+id/incomeTV"
@@ -81,7 +81,7 @@
                 android:layout_marginEnd="10dp"
                 android:background="@android:color/transparent"
                 android:text="@string/_0"
-                android:textSize="14sp" />
+                android:textSize="10sp" />
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -29,6 +29,9 @@
         android:theme="@style/Theme.AssetManagementProject"
         tools:targetApi="31">
         <activity
+            android:name=".view.reports.DetailedStatsActivity"
+            android:exported="false" />
+        <activity
             android:name=".view.reports.SettingBudgetActivity"
             android:exported="false" />
         <activity
