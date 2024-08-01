@@ -37,7 +37,7 @@ class MonthPagerAdapter(
     }
 
     override fun getItemCount(): Int {
-        return data.size
+        return 100
     }
 
     inner class MonthViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -49,18 +49,16 @@ class MonthPagerAdapter(
 
         @SuppressLint("NotifyDataSetChanged")
         fun bind(position: Int, selectedMonth: Int) {
-            val adapter = MonthAdapter(context, data, check, selectedMonth) { newSelectedMonth ->
-                val previousSelectedMonth = this@MonthPagerAdapter.selectedMonth
-                this@MonthPagerAdapter.selectedMonth = newSelectedMonth
-                onMonthSelectedListener.onMonthSelected(newSelectedMonth)
-                // Notify the adapter for the specific ViewHolder
-                recyclerView.adapter?.notifyItemChanged(data.indexOf(previousSelectedMonth))
-                recyclerView.adapter?.notifyItemChanged(data.indexOf(newSelectedMonth))
+            recyclerView.adapter = MonthAdapter(context, data, check, yearData, selectedMonth) { selectedMonth ->
+                this@MonthPagerAdapter.yearData = selectedMonth
+                this@MonthPagerAdapter.selectedMonth = selectedMonth
+                onMonthSelectedListener.onMonthSelected(selectedMonth)
+                notifyDataSetChanged()
             }
-            recyclerView.adapter = adapter
         }
     }
 }
+
 
 
 

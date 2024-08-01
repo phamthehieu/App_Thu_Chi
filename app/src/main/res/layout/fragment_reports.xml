@@ -158,7 +158,7 @@
                         android:text="19.000"
                         android:textAlignment="center"
                         android:textColor="#FFFFFF"
-                        android:textSize="14sp" />
+                        android:textSize="12sp" />
 
                     <TextView
                         android:id="@+id/incomeAllTv"
@@ -168,7 +168,7 @@
                         android:text="2.000.000.000"
                         android:textAlignment="center"
                         android:textColor="#FFFFFF"
-                        android:textSize="14sp" />
+                        android:textSize="12sp" />
 
                     <TextView
                         android:id="@+id/surplusAllTv"
@@ -178,7 +178,7 @@
                         android:text="1.117.098"
                         android:textAlignment="center"
                         android:textColor="#FFFFFF"
-                        android:textSize="14sp" />
+                        android:textSize="12sp" />
 
                 </LinearLayout>
 

@@ -70,7 +70,8 @@ class ReportsFragment : Fragment() {
         categoryViewModel.allCategory.observe(requireActivity(), Observer { categoriesWithIcons ->
             categoriesWithIcons?.let { categories ->
 
-                val filteredCategories = categories.filter { it.category.source == "Expense" && it.category.budget > 0.toString() }
+                val filteredCategories =
+                    categories.filter { it.category.source == "Expense" && it.category.budget > 0.toString() }
                 var combinedList = filteredCategories.map { categoryWithIcon ->
                     CombinedCategoryReport(
                         categoryName = categoryWithIcon.category.name,
@@ -113,16 +114,19 @@ class ReportsFragment : Fragment() {
                         .sumOf { it.incomeExpense.amount.replace(",", ".").toDouble() }
                     val totalExpense = groupedData.filter { it.category.source == "Expense" }
                         .sumOf { it.incomeExpense.amount.replace(",", ".").toDouble() }
+                    val budgetAll = groupedData.sumOf { it.category.budget.replace(",", ".").toDouble() }
+
                     val decimalFormat = DecimalFormat("#,###.##")
 
                     val surplus = totalIncome - totalExpense
+                    val remaining = budgetAll - totalExpense
 
                     binding.monthAllTv.text = "Thg $monthSearch"
                     binding.expenseAllTv.text = decimalFormat.format(totalExpense)
                     binding.incomeAllTv.text = decimalFormat.format(totalIncome)
                     binding.surplusAllTv.text = decimalFormat.format(surplus)
 
-                    combinedList = combinedList.map { combinedCategoryIcon ->
+                    val dataFormat = combinedList.map { combinedCategoryIcon ->
                         val matchingCategoryWithIncomeExpense =
                             groupedData.find { it.category.id == combinedCategoryIcon.idCategory }
                         combinedCategoryIcon.copy(
@@ -131,20 +135,17 @@ class ReportsFragment : Fragment() {
                         )
                     }
 
-                    renderDataView(combinedList)
+                    renderDataView(dataFormat)
                 }
             }
         })
     }
 
+    @SuppressLint("SetTextI18n")
     private fun renderDataView(combinedList: List<CombinedCategoryReport>) {
-        val totalAmountSum =
-            combinedList.sumOf { it.totalAmount.replace(',', '.').toDoubleOrNull() ?: 0.0 }
+        val totalAmountSum = combinedList.sumOf { it.totalAmount.replace(',', '.').toDoubleOrNull() ?: 0.0 }
         val budgetSum = combinedList.sumOf { it.budget.replace(',', '.').toDoubleOrNull() ?: 0.0 }
         val decimalFormat = DecimalFormat("#,###.##")
-
-        binding.totalCategoryAllTV.text = decimalFormat.format(totalAmountSum)
-        binding.budgetTotalAll.text = decimalFormat.format(budgetSum)
 
         val remaining = budgetSum - totalAmountSum
 
@@ -161,6 +162,10 @@ class ReportsFragment : Fragment() {
             binding.progressBarCircularAll.progress = 0
             binding.progressTextAll.text = "__"
         }
+
+        binding.remainingTotalAllTv.text = decimalFormat.format(remaining)
+        binding.totalCategoryAllTV.text = decimalFormat.format(totalAmountSum)
+        binding.budgetTotalAll.text = decimalFormat.format(budgetSum)
     }
 
 }

@@ -9,7 +9,7 @@ import com.example.myapplication.R
 import com.example.myapplication.data.MonthlyReport
 import java.text.DecimalFormat
 
-class MonthlyReportAdapter(private val reports: List<Any>) :
+class MonthlyReportAdapter(private val reports: List<Any>, private val showHeaders: Boolean) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
@@ -41,7 +41,7 @@ class MonthlyReportAdapter(private val reports: List<Any>) :
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if (holder is HeaderViewHolder) {
+        if (showHeaders && holder is HeaderViewHolder) {
             val year = reports[position] as String
             holder.yearTv.text = year
         } else if (holder is ItemViewHolder) {
@@ -57,6 +57,7 @@ class MonthlyReportAdapter(private val reports: List<Any>) :
     override fun getItemCount() = reports.size
 
     override fun getItemViewType(position: Int): Int {
-        return if (reports[position] is String) VIEW_TYPE_HEADER else VIEW_TYPE_ITEM
+        return if (showHeaders && reports[position] is String) VIEW_TYPE_HEADER else VIEW_TYPE_ITEM
     }
+
 }

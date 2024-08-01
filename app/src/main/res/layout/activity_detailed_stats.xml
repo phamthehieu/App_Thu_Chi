@@ -48,7 +48,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="2024"
+                android:text="Tất cả"
                 android:textSize="16sp" />
 
             <ImageView
