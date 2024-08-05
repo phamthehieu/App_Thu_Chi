@@ -15,6 +15,7 @@ navigationUiKtx = "2.7.7"
 picasso = "2.71828"
 picassoTransformations = "2.4.0"
 recyclerviewswipedecorator = "1.4"
+recyclerview = "1.3.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -32,6 +33,7 @@ androidx-constraintlayout = { group = "androidx.constraintlayout", name = "const
 picasso = { module = "com.squareup.picasso:picasso", version.ref = "picasso" }
 picasso-transformations = { module = "jp.wasabeef:picasso-transformations", version.ref = "picassoTransformations" }
 recyclerviewswipedecorator = { module = "com.github.xabaras:RecyclerViewSwipeDecorator", version.ref = "recyclerviewswipedecorator" }
+androidx-recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerview" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

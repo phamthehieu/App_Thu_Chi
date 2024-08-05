@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".view.reports.AddNewAccountActivity">
+
+    <RelativeLayout
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/grayHeader"
+        tools:ignore="UselessParent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            tools:ignore="UselessParent">
+
+            <TextView
+                android:id="@+id/backBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="1dp"
+                android:padding="10dp"
+                android:text="@string/delete"
+                android:textSize="18sp"
+                tools:ignore="RelativeOverlap" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="Thêm"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                tools:ignore="RelativeOverlap" />
+
+            <ImageButton
+                android:id="@+id/addNewCategory"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="10dp"
+                android:background="@android:color/transparent"
+                android:contentDescription="@string/calendar"
+                android:padding="10dp"
+                android:src="@drawable/ic_tick_30" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/title"
+        android:layout_margin="20dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            tools:ignore="UselessParent">
+
+            <View
+                android:layout_width="5dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/background_yellow" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:text="Tên tài khoản"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/nameAccountEt"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="15dp"
+            android:autofillHints=""
+            android:background="@drawable/background_gray"
+            android:drawablePadding="10dp"
+            android:hint="Vui lòng nhập tên tài khoản"
+            android:inputType="textPersonName"
+            android:maxLines="1"
+            android:padding="10dp"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white1"
+            android:textSize="16sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_marginTop="20dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            tools:ignore="UselessParent">
+
+            <View
+                android:layout_width="5dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/background_yellow" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:text="Kiểu"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/selectAccountType"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/background_gray"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/textTypeAccountTv"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Mặc định" />
+
+            <TextView
+                android:id="@+id/textTypeTitleAccountTv"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="5dp"
+                android:layout_weight="1"
+                android:textColor="@color/gray1" />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:contentDescription="@string/calendar"
+                android:src="@drawable/ic_sort_down_24" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_marginTop="20dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            tools:ignore="UselessParent">
+
+            <View
+                android:layout_width="5dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/background_yellow" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:text="Số tiền"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/nameCategoryEt"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="15dp"
+            android:autofillHints=""
+            android:background="@drawable/background_gray"
+            android:drawablePadding="10dp"
+            android:hint="0"
+            android:inputType="textPersonName"
+            android:maxLines="1"
+            android:padding="10dp"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white1"
+            android:textSize="16sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_marginTop="20dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            tools:ignore="UselessParent">
+
+            <View
+                android:layout_width="5dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/background_yellow" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:text="Biểu tượng"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerIconNewAccountView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/background_gray" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_marginTop="20dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            tools:ignore="UselessParent">
+
+            <View
+                android:layout_width="5dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/background_yellow" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:text="Ghi chú"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="15dp"
+            android:autofillHints=""
+            android:background="@drawable/background_gray"
+            android:drawablePadding="10dp"
+            android:inputType="textPersonName"
+            android:maxLines="1"
+            android:padding="10dp"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+</RelativeLayout>
