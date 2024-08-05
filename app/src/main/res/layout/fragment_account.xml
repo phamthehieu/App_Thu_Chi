@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.reports.AccountFragment">
+    tools:context=".view.account.AccountFragment">
 
     <LinearLayout
         android:id="@+id/accountTotal"
@@ -34,10 +34,10 @@
                     android:textSize="16sp" />
 
                 <TextView
+                    android:id="@+id/netValue"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="2.000.0000.000"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
@@ -69,15 +69,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="Giá trị ròng"
+                    android:text="Tài sản"
                     android:textColor="@color/gray1"
                     android:textSize="16sp" />
 
                 <TextView
+                    android:id="@+id/asset"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="2.000.0000.000"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
@@ -99,12 +99,14 @@
                     android:textSize="16sp" />
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:id="@+id/liabilitiesMustPay"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="2.000.0000.000"
                     android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:textDirection="rtl" />
+
             </LinearLayout>
 
         </LinearLayout>
@@ -113,47 +115,15 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewAccount"
-        android:layout_below="@+id/accountTotal"
-        android:layout_margin="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/accountTotal"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="31dp"
+        android:layout_marginEnd="7dp"
+        android:layout_marginBottom="10dp"
         tools:ignore="RedundantNamespace" />
-
-    <LinearLayout
-        android:id="@+id/confirm_button"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="70dp"
-        android:layout_below="@+id/recyclerViewAccount"
-        android:orientation="horizontal"
-        android:background="@android:color/transparent"
-        tools:ignore="UselessParent">
-
-        <TextView
-            android:id="@+id/addNewAccountBtn"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:text="Thêm tài khoản"
-            android:textSize="14sp"
-            android:textColor="@color/yellow"
-            android:gravity="center"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/successBtn"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:textColor="@color/yellow"
-            android:text="Quản lý tài khoản"
-            android:textSize="14sp"
-            android:gravity="center"
-            android:textStyle="bold" />
-
-    </LinearLayout>
 
 </RelativeLayout>

@@ -387,6 +387,7 @@ class KeyBoardBottomSheetFragment : BottomSheetDialogFragment() {
                     image = listImage.toString(),
                     categoryName = categoryData!!.categoryName,
                     iconResource = categoryData!!.iconResource,
+                    accountId = -1
                 )
                 incomeExpenseListModel.insert(incomeExpenseList)
                     .observe(viewLifecycleOwner) { isSuccess ->
@@ -412,6 +413,7 @@ class KeyBoardBottomSheetFragment : BottomSheetDialogFragment() {
                     image = listImage.toString(),
                     categoryName = categoryData!!.categoryName,
                     iconResource = categoryData!!.iconResource,
+                    accountId = -1
                 )
                 incomeExpenseListModel.insert(incomeExpenseList)
                     .observe(viewLifecycleOwner) { isSuccess ->
@@ -440,6 +442,7 @@ class KeyBoardBottomSheetFragment : BottomSheetDialogFragment() {
                     image = listImage.toString(),
                     categoryName = categoryData!!.categoryName,
                     iconResource = categoryData!!.iconResource,
+                    accountId = itemEdit!!.accountId
                 )
                 incomeExpenseListModel.updateIncomeExpenseListModel(incomeExpenseList)
                     .observe(viewLifecycleOwner) { isSuccess ->
@@ -466,6 +469,7 @@ class KeyBoardBottomSheetFragment : BottomSheetDialogFragment() {
                     image = listImage.toString(),
                     categoryName = categoryData!!.categoryName,
                     iconResource = categoryData!!.iconResource,
+                    accountId = itemEdit!!.accountId
                 )
                 Log.d("Hieu443", incomeExpenseList.toString())
                 incomeExpenseListModel.insert(incomeExpenseList)

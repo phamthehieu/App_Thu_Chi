@@ -17,6 +17,7 @@ fun convertToIncomeExpenseListData(categoryWithIncomeExpenseList: CategoryWithIn
         image = incomeExpense.image,
         categoryName = incomeExpense.categoryName,
         iconResource = incomeExpense.iconResource,
-        idIcon = category.icon
+        idIcon = category.icon,
+        accountId = incomeExpense.accountId
     )
 }

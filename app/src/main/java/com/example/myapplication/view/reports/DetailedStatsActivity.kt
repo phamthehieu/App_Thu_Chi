@@ -79,6 +79,7 @@ class DetailedStatsActivity : AppCompatActivity() {
                         image = it.incomeExpense.image,
                         categoryName = it.category.name,
                         iconResource = it.incomeExpense.iconResource,
+                        accountId = it.incomeExpense.accountId
                     )
                 }
                 val totalIncome = groupedData.filter { it.type == "Income" }

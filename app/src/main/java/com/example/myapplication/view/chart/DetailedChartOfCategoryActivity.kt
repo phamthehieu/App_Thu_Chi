@@ -331,7 +331,8 @@ class DetailedChartOfCategoryActivity : AppCompatActivity(),
                             type = item.incomeExpense.type,
                             image = item.incomeExpense.image,
                             categoryName = item.incomeExpense.categoryName,
-                            iconResource = item.incomeExpense.iconResource
+                            iconResource = item.incomeExpense.iconResource,
+                            accountId = item.incomeExpense.accountId
                         ),
                         category = item.category
                     )
@@ -373,7 +374,8 @@ class DetailedChartOfCategoryActivity : AppCompatActivity(),
                             type = item.incomeExpense.type,
                             image = item.incomeExpense.image,
                             categoryName = item.incomeExpense.categoryName,
-                            iconResource = item.incomeExpense.iconResource
+                            iconResource = item.incomeExpense.iconResource,
+                            accountId = item.incomeExpense.accountId
                         ),
                         category = item.category
                     )
@@ -490,7 +492,8 @@ class DetailedChartOfCategoryActivity : AppCompatActivity(),
             image = data.incomeExpense.image,
             categoryName = data.incomeExpense.categoryName,
             iconResource = data.incomeExpense.iconResource,
-            idIcon = data.category.icon
+            idIcon = data.category.icon,
+            accountId = data.incomeExpense.accountId
         )
         val gson = Gson()
         val json = gson.toJson(dataConverter)

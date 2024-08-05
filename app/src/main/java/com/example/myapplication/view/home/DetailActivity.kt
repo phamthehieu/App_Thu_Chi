@@ -104,7 +104,8 @@ class DetailActivity : AppCompatActivity() {
                     type = itemData.type,
                     image = itemData.image,
                     categoryName = itemData.categoryName,
-                    iconResource = itemData.iconResource
+                    iconResource = itemData.iconResource,
+                    accountId = itemData.accountId
                 )
                 GlobalScope.launch {
                     incomeExpenseListModel.deleteIncomeExpenseListModel(itemToDelete)

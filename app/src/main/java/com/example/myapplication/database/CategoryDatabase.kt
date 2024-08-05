@@ -6,9 +6,11 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.myapplication.R
+import com.example.myapplication.dao.AccountDao
 import com.example.myapplication.dao.CategoryDao
 import com.example.myapplication.dao.IconsDao
 import com.example.myapplication.dao.IncomeExpenseListDao
+import com.example.myapplication.entity.Account
 import com.example.myapplication.entity.Category
 import com.example.myapplication.entity.Icon
 import com.example.myapplication.entity.IncomeExpenseList
@@ -18,7 +20,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 @Database(
-    entities = [Category::class, Icon::class, IncomeExpenseList::class],
+    entities = [Category::class, Icon::class, IncomeExpenseList::class, Account::class],
     version = 3,
     exportSchema = false
 )
@@ -26,6 +28,7 @@ abstract class CategoryDatabase : RoomDatabase() {
     abstract fun categoryDao(): CategoryDao
     abstract fun iconDao(): IconsDao
     abstract fun incomeExpenseListDao(): IncomeExpenseListDao
+    abstract fun accountDao(): AccountDao
 
     companion object {
         @Volatile
@@ -290,7 +293,7 @@ abstract class CategoryDatabase : RoomDatabase() {
                     icon = 25,
                     type = "admin",
                     source = "Expense",
-                    budget = "0"
+                    budget = "0",
                 ),
                 Category(
                     name = "Rau quả",

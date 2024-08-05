@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.reports.AddNewAccountActivity">
+    tools:context=".view.account.AddNewAccountActivity">
 
     <RelativeLayout
         android:id="@+id/title"
@@ -42,7 +42,7 @@
                 tools:ignore="RelativeOverlap" />
 
             <ImageButton
-                android:id="@+id/addNewCategory"
+                android:id="@+id/addNewAccountBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
@@ -88,7 +88,7 @@
         <EditText
             android:id="@+id/nameAccountEt"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:autofillHints=""
             android:background="@drawable/background_gray"
@@ -99,7 +99,8 @@
             android:padding="10dp"
             android:textColor="@color/white"
             android:textColorHint="@color/white1"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:imeOptions="actionDone" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -176,21 +177,21 @@
 
         </LinearLayout>
 
-        <EditText
-            android:id="@+id/nameCategoryEt"
+        <LinearLayout
+            android:id="@+id/amountAccountLL"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="15dp"
-            android:autofillHints=""
             android:background="@drawable/background_gray"
-            android:drawablePadding="10dp"
-            android:hint="0"
-            android:inputType="textPersonName"
-            android:maxLines="1"
-            android:padding="10dp"
-            android:textColor="@color/white"
-            android:textColorHint="@color/white1"
-            android:textSize="16sp" />
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/valueAmountAccountTv"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="0" />
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -244,8 +245,9 @@
         </LinearLayout>
 
         <EditText
+            android:id="@+id/noteAccountEt"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:autofillHints=""
             android:background="@drawable/background_gray"
@@ -254,7 +256,8 @@
             android:maxLines="1"
             android:padding="10dp"
             android:textColor="@color/white"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:imeOptions="actionDone" />
 
     </LinearLayout>
 

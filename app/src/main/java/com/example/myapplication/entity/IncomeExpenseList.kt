@@ -15,8 +15,14 @@ import kotlinx.parcelize.Parcelize
         parentColumns = ["id"],
         childColumns = ["categoryId"],
         onDelete = ForeignKey.CASCADE
-    )],
-    indices = [Index(value = ["categoryId"])]
+    ),
+        ForeignKey(
+            entity = Account::class,
+            parentColumns = ["id"],
+            childColumns = ["accountId"],
+            onDelete = ForeignKey.CASCADE
+        )],
+    indices = [Index(value = ["categoryId"]), Index(value = ["accountId"])]
 )
 data class IncomeExpenseList(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
@@ -27,5 +33,6 @@ data class IncomeExpenseList(
     val type: String,
     val image: String,
     val categoryName: String,
-    val iconResource: Int
+    val iconResource: Int,
+    val accountId: Int
 ) : Parcelable

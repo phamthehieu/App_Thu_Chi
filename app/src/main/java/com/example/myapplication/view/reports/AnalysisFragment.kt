@@ -100,7 +100,8 @@ class AnalysisFragment : Fragment() {
                                 type = items.first().incomeExpense.type,
                                 image = items.first().incomeExpense.image,
                                 categoryName = items.first().incomeExpense.categoryName,
-                                iconResource = items.first().incomeExpense.iconResource
+                                iconResource = items.first().incomeExpense.iconResource,
+                                accountId = items.first().incomeExpense.accountId
                             ),
                             category = items.first().category
                         )

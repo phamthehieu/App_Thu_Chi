@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
 import com.example.myapplication.data.AccountType
 
-class AccountTypeAdapter(private val accountTypes: List<AccountType>, private val onItemClick: (AccountType) -> Unit) :
+class AccountTypeAdapter(private val accountTypes: List<AccountType>, private val onItemClick: (AccountType, Int) -> Unit) :
     RecyclerView.Adapter<AccountTypeAdapter.AccountTypeViewHolder>() {
 
     inner class AccountTypeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -26,7 +26,7 @@ class AccountTypeAdapter(private val accountTypes: List<AccountType>, private va
         holder.textView.text = accountTypes[position].name
         holder.textViewTitle.text = accountTypes[position].type
         holder.itemView.setOnClickListener {
-            onItemClick(accountTypes[position])
+            onItemClick(accountTypes[position], position)
         }
     }
 
