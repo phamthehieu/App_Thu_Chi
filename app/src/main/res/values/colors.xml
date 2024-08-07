@@ -49,4 +49,7 @@
     <color name="green_text">#4eb052</color>
     <color name="green_background">#4000FF8D</color>
 
+    <color name="switch_thumb_color">#FF0000</color> <!-- Màu của thumb -->
+    <color name="switch_track_color">#00FF00</color> <!-- Màu của track -->
+
 </resources>

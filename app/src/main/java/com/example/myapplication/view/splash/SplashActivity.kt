@@ -5,10 +5,15 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
+import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.myapplication.MainActivity
 import com.example.myapplication.databinding.ActivitySplashBinding
+import com.example.myapplication.entity.Account
 import com.example.myapplication.utilities.ThemeUtils
+import com.example.myapplication.viewModel.AccountViewModel
+import com.example.myapplication.viewModel.AccountViewModelFactory
 
 
 @SuppressLint("CustomSplashScreen")

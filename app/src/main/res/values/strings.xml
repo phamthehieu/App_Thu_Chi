@@ -59,4 +59,10 @@
     <string name="n_m">Năm</string>
     <string name="analysis">Phân tích</string>
     <string name="account">Tài khoản</string>
+    <string name="hint_name_account">Vui lòng nhập tên tài khoản</string>
+    <string name="add_account">Thêm</string>
+    <string name="name_account">Tên tài khoản</string>
+    <string name="type_account">Kiểu</string>
+    <string name="note_account">Ghi chú</string>
+    <string name="auto_account">Tự động bật lên mỗi lần</string>
 </resources>

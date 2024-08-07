@@ -14,4 +14,9 @@ class AccountRepository(private val accountDao: AccountDao) {
     fun insert(account: Account) {
         accountDao.insert(account)
     }
+
+    @WorkerThread
+    fun getAccountsByAccountIdRepository(accountId: Int): AccountWithIcon {
+        return accountDao.getAccountsByAccountId(accountId)
+    }
 }

@@ -7,16 +7,19 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.myapplication.R
 import com.example.myapplication.adapter.ListAccountAdapter
 import com.example.myapplication.data.AccountIconFormat
 import com.example.myapplication.databinding.FragmentAccountBinding
 import com.example.myapplication.viewModel.AccountViewModel
 import com.example.myapplication.viewModel.AccountViewModelFactory
+import com.google.gson.Gson
 import java.text.DecimalFormat
 
-class AccountFragment : Fragment() {
+class AccountFragment : Fragment(), ListAccountAdapter.OnItemClickListenerAccount {
 
     private lateinit var binding: FragmentAccountBinding
 
@@ -35,6 +38,13 @@ class AccountFragment : Fragment() {
         binding = FragmentAccountBinding.inflate(inflater, container, false)
 
         renderListAccount()
+
+        binding.imageTitleAccount.setColorFilter(
+            ContextCompat.getColor(
+                requireContext(),
+                R.color.gray
+            )
+        )
 
         return binding.root
     }
@@ -68,7 +78,7 @@ class AccountFragment : Fragment() {
 
             val sortedAccounts = formattedAccounts.sortedBy { it.typeAccount }
             val accountFormat = groupIconsByType(sortedAccounts)
-            val adapter = ListAccountAdapter(accountFormat, requireContext())
+            val adapter = ListAccountAdapter(accountFormat, requireContext(), this)
             recyclerView.adapter = adapter
         }
     }
@@ -98,7 +108,13 @@ class AccountFragment : Fragment() {
         return Pair(type3And7Total, otherTypesTotal)
     }
 
-
+    override fun onItemClick(dataAccount: Any) {
+        val gson = Gson()
+        val json = gson.toJson(dataAccount)
+        val intent = Intent(requireContext(), AccountDetailsActivity::class.java)
+        intent.putExtra("dataAccount", json)
+        startActivity(intent)
+    }
 
 
 }

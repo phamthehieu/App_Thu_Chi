@@ -38,6 +38,16 @@ class AccountViewModel(application: Application) : AndroidViewModel(application)
         }
         return result
     }
+
+    fun getAccountsByAccountId(accountId: Int): LiveData<AccountWithIcon> {
+        val accountData = MutableLiveData<AccountWithIcon>()
+        viewModelScope.launch(Dispatchers.IO) {
+            val account = repository.getAccountsByAccountIdRepository(accountId)
+            accountData.postValue(account)
+        }
+        return accountData
+    }
+
 }
 
 class AccountViewModelFactory(private val application: Application) : ViewModelProvider.Factory {

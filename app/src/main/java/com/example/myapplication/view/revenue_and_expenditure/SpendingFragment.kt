@@ -12,6 +12,7 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
 import com.example.myapplication.adapter.CategoryAdapter
 import com.example.myapplication.data.CombinedCategoryIcon
@@ -95,12 +96,15 @@ class SpendingFragment : Fragment(), CategoryAdapter.OnItemClickListener {
         val selectedPosition = if (itemEdit != null) {
             reversedList.indexOfFirst { it.idCategory == itemEdit?.categoryId }
         } else {
-            0
+            RecyclerView.NO_POSITION
         }
 
         categoryAdapter = CategoryAdapter(reversedList, this)
         binding.recyclerViewSpending.adapter = categoryAdapter
-        categoryAdapter.setSelectedPosition(selectedPosition)
+
+        if (selectedPosition != RecyclerView.NO_POSITION) {
+            categoryAdapter.setSelectedPosition(selectedPosition)
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

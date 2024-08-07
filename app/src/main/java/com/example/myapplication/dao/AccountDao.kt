@@ -17,4 +17,7 @@ interface AccountDao {
 
     @Insert
     fun insert(account: Account)
+
+    @Query("SELECT * FROM account_table WHERE id = :idAccount")
+    fun getAccountsByAccountId(idAccount: Int): AccountWithIcon
 }

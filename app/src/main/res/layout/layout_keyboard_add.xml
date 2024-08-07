@@ -16,7 +16,7 @@
         tools:ignore="UselessParent">
 
         <ImageView
-            android:id="@+id/imageIconSelected"
+            android:id="@+id/selectedAccount"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_alignParentStart="true"

@@ -24,8 +24,13 @@ import java.time.format.DateTimeParseException
 
 class ListAccountAdapter(
     private val accountList: Map<String, List<AccountIconFormat>>,
-    private val context: Context
+    private val context: Context,
+    private val itemClickListenerAccount: OnItemClickListenerAccount
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    interface OnItemClickListenerAccount {
+        fun onItemClick(dataAccount: Any)
+    }
 
     companion object {
         const val TYPE_HEADER = 0
@@ -92,6 +97,14 @@ class ListAccountAdapter(
                 }
             }
         }
+
+        holder.itemView.setOnClickListener {
+            when (holder) {
+                is AccountViewHolder -> {
+                    itemClickListenerAccount.onItemClick(dataList[position])
+                }
+            }
+        }
     }
 
     override fun getItemCount(): Int {
@@ -124,7 +137,8 @@ class ListAccountAdapter(
             val typeAccountId = title.toInt()
             val data = accountTypes[typeAccountId]
             typeAccount.text = data.name
-            titleTotalAmount.visibility = if (typeAccountId == 3 || typeAccountId == 7) View.VISIBLE else View.GONE
+            titleTotalAmount.visibility =
+                if (typeAccountId == 3 || typeAccountId == 7) View.VISIBLE else View.GONE
             val totals = calculateTotalsByType()
             val totalAmount = totals[typeAccountId] ?: 0
 
@@ -154,7 +168,8 @@ class ListAccountAdapter(
             iconImageView.setColorFilter(ContextCompat.getColor(itemView.context, R.color.black))
 
             val typeAccountId = account.typeAccount
-            titleTextView.visibility = if (typeAccountId == 3 || typeAccountId == 7) View.VISIBLE else View.GONE
+            titleTextView.visibility =
+                if (typeAccountId == 3 || typeAccountId == 7) View.VISIBLE else View.GONE
         }
     }
 
