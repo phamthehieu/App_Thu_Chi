@@ -65,4 +65,5 @@
     <string name="type_account">Kiểu</string>
     <string name="note_account">Ghi chú</string>
     <string name="auto_account">Tự động bật lên mỗi lần</string>
+    <string name="account_management">Quản lý tài khoản</string>
 </resources>

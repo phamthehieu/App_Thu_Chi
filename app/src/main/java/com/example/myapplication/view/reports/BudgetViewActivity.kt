@@ -78,10 +78,10 @@ class BudgetViewActivity : AppCompatActivity(), ListDetailBudgetAdapter.OnItemCl
     private fun setupData() {
         categoryViewModel.allCategory.observe(this, Observer { categoriesWithIcons ->
             categoriesWithIcons?.let { categories ->
-                val filteredCategories = categories.filter {
-                    it.category.source == "Expense" && it.category.budget > 0.toString()
-                }
-                var combinedList = filteredCategories.map { categoryWithIcon ->
+//                val filteredCategories = categories.filter {
+//                    it.category.source == "Expense" && it.category.budget > 0.toString()
+//                }
+                var combinedList = categories.map { categoryWithIcon ->
                     CombinedCategoryReport(
                         categoryName = categoryWithIcon.category.name,
                         categoryType = categoryWithIcon.category.type,
@@ -137,12 +137,11 @@ class BudgetViewActivity : AppCompatActivity(), ListDetailBudgetAdapter.OnItemCl
 
     @SuppressLint("SetTextI18n")
     private fun renderDataRecyclerView(combinedList: List<CombinedCategoryReport>) {
-        val totalAmountSum =
-            combinedList.sumOf { it.totalAmount.replace(',', '.').toDoubleOrNull() ?: 0.0 }
+        val totalAmountSum = combinedList.sumOf { it.totalAmount.replace(',', '.').toDoubleOrNull() ?: 0.0 }
         val budgetSum = combinedList.sumOf { it.budget.replace(',', '.').toDoubleOrNull() ?: 0.0 }
         val decimalFormat = DecimalFormat("#,###.##")
 
-        binding.totalCategoryDetaiTV.text = decimalFormat.format(totalAmountSum)
+        binding.totalCategoryDetailTV.text = decimalFormat.format(totalAmountSum)
         binding.budgetTotalDetai.text = decimalFormat.format(budgetSum)
 
         val remaining = budgetSum - totalAmountSum
@@ -163,7 +162,10 @@ class BudgetViewActivity : AppCompatActivity(), ListDetailBudgetAdapter.OnItemCl
 
         binding.remainingTotalDetailTv.text = decimalFormat.format(remaining)
         binding.recyclerViewBudget.layoutManager = LinearLayoutManager(this)
-        listDetailBudgetAdapter = ListDetailBudgetAdapter(combinedList, this)
+
+        val filteredList = combinedList.filter { it.budget > 0.toString() }
+
+        listDetailBudgetAdapter = ListDetailBudgetAdapter(filteredList, this)
         binding.recyclerViewBudget.adapter = listDetailBudgetAdapter
     }
 

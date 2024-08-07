@@ -32,6 +32,7 @@
                 tools:ignore="RelativeOverlap" />
 
             <TextView
+                android:id="@+id/titleName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
@@ -41,12 +42,25 @@
                 tools:ignore="RelativeOverlap" />
 
             <ImageButton
+                android:id="@+id/deleteAccountBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toStartOf="@+id/addNewAccountBtn"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="10dp"
+                android:background="@android:color/transparent"
+                android:contentDescription="@string/calendar"
+                android:padding="10dp"
+                android:src="@drawable/ic_trash_24"
+                android:visibility="gone"/>
+
+            <ImageButton
                 android:id="@+id/addNewAccountBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:layout_marginEnd="10dp"
+                android:layout_marginEnd="20dp"
                 android:background="@android:color/transparent"
                 android:contentDescription="@string/calendar"
                 android:padding="10dp"

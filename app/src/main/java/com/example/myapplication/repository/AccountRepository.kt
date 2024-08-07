@@ -19,4 +19,15 @@ class AccountRepository(private val accountDao: AccountDao) {
     fun getAccountsByAccountIdRepository(accountId: Int): AccountWithIcon {
         return accountDao.getAccountsByAccountId(accountId)
     }
+
+    @WorkerThread
+    fun deleteAccount(account: Account) {
+        accountDao.deleteAccount(account)
+    }
+
+    @WorkerThread
+    fun updateAccount(account: Account) {
+        accountDao.updateAccount(account)
+    }
+
 }

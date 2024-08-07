@@ -48,9 +48,29 @@ class AccountViewModel(application: Application) : AndroidViewModel(application)
         return accountData
     }
 
+    fun deleteAccount(account: Account) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.deleteAccount(account)
+        }
+    }
+
+    fun updateAccount(account: Account): LiveData<Boolean> {
+        val result = MutableLiveData<Boolean>()
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                repository.updateAccount(account)
+                result.postValue(true)
+            } catch (e: Exception) {
+                result.postValue(false)
+            }
+        }
+        return result
+    }
+
 }
 
-class AccountViewModelFactory(private val application: Application) : ViewModelProvider.Factory {
+class AccountViewModelFactory(private val application: Application) :
+    ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(AccountViewModel::class.java)) {

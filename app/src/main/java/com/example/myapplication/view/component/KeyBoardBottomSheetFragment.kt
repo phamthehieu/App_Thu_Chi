@@ -207,7 +207,8 @@ class KeyBoardBottomSheetFragment : BottomSheetDialogFragment() {
                             amountAccount = account.account.amountAccount,
                             icon = account.account.icon,
                             note = account.account.note,
-                            iconResource = account.icon.iconResource
+                            iconResource = account.icon.iconResource,
+                            typeIcon = account.icon.type
                         )
                         selectedAccount = data
                         sharedViewModel.selectAccount(data)
@@ -220,7 +221,8 @@ class KeyBoardBottomSheetFragment : BottomSheetDialogFragment() {
                     amountAccount = "",
                     icon = -1,
                     note = "",
-                    iconResource = -1
+                    iconResource = -1,
+                    typeIcon = "Account"
                 )
                 selectedAccount = data
                 sharedViewModel.selectAccount(data)
@@ -445,6 +447,7 @@ class KeyBoardBottomSheetFragment : BottomSheetDialogFragment() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun saveDataToServer(type: Int) {
+       val accountId = if (selectedAccount == null) "-1" else selectedAccount!!.id.toString()
 
         if (!checkEdit) {
             if (type == 1) {
@@ -461,7 +464,7 @@ class KeyBoardBottomSheetFragment : BottomSheetDialogFragment() {
                         image = listImage.toString(),
                         categoryName = categoryData!!.categoryName,
                         iconResource = categoryData!!.iconResource,
-                        accountId = selectedAccount!!.id.toString()
+                        accountId = accountId
                     )
                     incomeExpenseListModel.insert(incomeExpenseList)
                         .observe(viewLifecycleOwner) { isSuccess ->
@@ -492,7 +495,7 @@ class KeyBoardBottomSheetFragment : BottomSheetDialogFragment() {
                         image = listImage.toString(),
                         categoryName = categoryData!!.categoryName,
                         iconResource = categoryData!!.iconResource,
-                        accountId = selectedAccount!!.id.toString()
+                        accountId = accountId
                     )
                     incomeExpenseListModel.insert(incomeExpenseList)
                         .observe(viewLifecycleOwner) { isSuccess ->

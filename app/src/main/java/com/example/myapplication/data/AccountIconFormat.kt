@@ -10,7 +10,8 @@ data class AccountIconFormat(
     val amountAccount: String,
     val icon: Int,
     val note: String,
-    val iconResource: Int
+    val iconResource: Int,
+    val typeIcon: String
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readInt(),
@@ -19,7 +20,9 @@ data class AccountIconFormat(
         parcel.readString() ?: "",
         parcel.readInt(),
         parcel.readString() ?: "",
-        parcel.readInt()
+        parcel.readInt(),
+        parcel.readString() ?: ""
+
     ) {
     }
 
@@ -31,6 +34,7 @@ data class AccountIconFormat(
         parcel.writeInt(icon)
         parcel.writeString(note)
         parcel.writeInt(iconResource)
+        parcel.writeString(typeIcon)
     }
 
     override fun describeContents(): Int {

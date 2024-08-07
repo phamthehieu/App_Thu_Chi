@@ -9,9 +9,19 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
 import com.example.myapplication.entity.Icon
 
-class IconAddNewAccountAdapter(private val icons: List<Icon>,  private val onIconClickListener: OnIconClickListener) : RecyclerView.Adapter<IconAddNewAccountAdapter.IconViewHolder>() {
+class IconAddNewAccountAdapter(
+    private val icons: List<Icon>,
+    private val onIconClickListener: OnIconClickListener,
+    private val selectedIcon: Icon? = null
+) : RecyclerView.Adapter<IconAddNewAccountAdapter.IconViewHolder>() {
 
     private var selectedPosition = -1
+
+    init {
+        selectedIcon?.let { icon ->
+            selectedPosition = icons.indexOfFirst { it.id == icon.id }
+        }
+    }
 
     interface OnIconClickListener {
         fun onIconClick(icon: Icon)
@@ -49,5 +59,5 @@ class IconAddNewAccountAdapter(private val icons: List<Icon>,  private val onIco
     override fun getItemCount(): Int {
         return icons.size
     }
-
 }
+

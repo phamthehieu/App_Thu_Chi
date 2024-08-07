@@ -62,7 +62,8 @@ class AccountFragment : Fragment(), ListAccountAdapter.OnItemClickListenerAccoun
                     amountAccount = accountWithIcon.account.amountAccount,
                     icon = accountWithIcon.account.icon,
                     note = accountWithIcon.account.note,
-                    iconResource = accountWithIcon.icon.iconResource
+                    iconResource = accountWithIcon.icon.iconResource,
+                    typeIcon = accountWithIcon.icon.type
                 )
             }
 

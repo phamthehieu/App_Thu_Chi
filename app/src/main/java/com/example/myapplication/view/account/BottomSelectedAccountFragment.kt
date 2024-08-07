@@ -1,6 +1,7 @@
 package com.example.myapplication.view.account
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -38,6 +39,11 @@ class BottomSelectedAccountFragment : BottomSheetDialogFragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentBottomSelectedAccountBinding.inflate(inflater, container, false)
+
+        binding.accountManagerBtn.setOnClickListener {
+            val accountManagementIntent = Intent(context, AccountManagementActivity::class.java)
+            context?.startActivity(accountManagementIntent)
+        }
 
         setupRecyclerView()
 
@@ -81,7 +87,8 @@ class BottomSelectedAccountFragment : BottomSheetDialogFragment() {
                     amountAccount = accountWithIcon.account.amountAccount,
                     icon = accountWithIcon.account.icon,
                     note = accountWithIcon.account.note,
-                    iconResource = accountWithIcon.icon.iconResource
+                    iconResource = accountWithIcon.icon.iconResource,
+                    typeIcon = accountWithIcon.icon.type
                 )
             }.toMutableList()
 
@@ -92,7 +99,8 @@ class BottomSelectedAccountFragment : BottomSheetDialogFragment() {
                 amountAccount = "0",
                 icon = -1,
                 note = "",
-                iconResource = R.drawable.ic_credit_card_50
+                iconResource = R.drawable.ic_credit_card_50,
+                typeIcon = "Account"
             )
 
             formattedAccounts.add(setting)

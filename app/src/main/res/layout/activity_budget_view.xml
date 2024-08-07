@@ -176,7 +176,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="99.05%"
                     android:textColor="@android:color/white"
                     android:textSize="14sp" />
             </FrameLayout>
@@ -204,7 +203,6 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="81.000"
                         android:textAlignment="textEnd"
                         android:textSize="14sp"
                         android:textStyle="bold" />
@@ -235,7 +233,6 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="2.000.000.000"
                         android:textAlignment="textEnd"
                         android:textSize="14sp"
                         android:textStyle="bold" />
@@ -256,11 +253,10 @@
                         android:textSize="14sp" />
 
                     <TextView
-                        android:id="@+id/totalCategoryDetaiTV"
+                        android:id="@+id/totalCategoryDetailTV"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="1.919.000"
                         android:textAlignment="textEnd"
                         android:textSize="14sp"
                         android:textStyle="bold" />

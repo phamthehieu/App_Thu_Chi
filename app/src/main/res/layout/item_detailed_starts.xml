@@ -14,9 +14,7 @@
             android:id="@+id/monthTv"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
-            android:text="Tháng"
             android:textSize="12sp" />
 
         <TextView
@@ -24,7 +22,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Chi phí"
             android:textSize="12sp" />
 
         <TextView
@@ -32,7 +29,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Thu nhập"
             android:textSize="12sp" />
 
         <TextView
@@ -40,7 +36,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Số dư"
             android:textSize="12sp" />
 
     </LinearLayout>

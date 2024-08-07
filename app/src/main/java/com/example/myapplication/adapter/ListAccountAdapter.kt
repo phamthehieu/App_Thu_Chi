@@ -17,6 +17,7 @@ import com.example.myapplication.R
 import com.example.myapplication.adapter.IncomeExpenseListAdapter.Totals
 import com.example.myapplication.data.AccountIconFormat
 import com.example.myapplication.utilities.AccountTypeProvider.accountTypes
+import com.example.myapplication.view.account.AccountManagementActivity
 import com.example.myapplication.view.account.AddNewAccountActivity
 import com.example.myapplication.view.account.BottomSheetTypeAccountFragment
 import java.text.DecimalFormat
@@ -94,6 +95,10 @@ class ListAccountAdapter(
                 holder.addNewAccountBtn.setOnClickListener {
                     val addNewAccountIntent = Intent(context, AddNewAccountActivity::class.java)
                     context.startActivity(addNewAccountIntent)
+                }
+                holder.accountManagementBtn.setOnClickListener {
+                    val accountManagementIntent = Intent(context, AccountManagementActivity::class.java)
+                    context.startActivity(accountManagementIntent)
                 }
             }
         }
@@ -175,7 +180,7 @@ class ListAccountAdapter(
 
     inner class FooterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val addNewAccountBtn: TextView = itemView.findViewById(R.id.addNewAccountBtn)
-        val successBtn: TextView = itemView.findViewById(R.id.successBtn)
+        val accountManagementBtn: TextView = itemView.findViewById(R.id.accountManagementBtn)
     }
 }
 

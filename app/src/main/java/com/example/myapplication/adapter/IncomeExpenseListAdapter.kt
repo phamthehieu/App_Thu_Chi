@@ -101,7 +101,6 @@ class IncomeExpenseListAdapter(
         return try {
             cleanedAmountStr.toDouble()
         } catch (e: NumberFormatException) {
-            Log.e("IncomeExpenseListAdapter", "Error parsing amount: $amountStr", e)
             0.0
         }
     }
