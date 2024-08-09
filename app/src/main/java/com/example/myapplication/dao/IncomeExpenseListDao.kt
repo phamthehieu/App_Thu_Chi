@@ -37,4 +37,7 @@ interface IncomeExpenseListDao {
 
     @Update
     fun update(incomeExpenseList: IncomeExpenseList): Void
+
+    @Query("SELECT * FROM income_expense_list_table WHERE accountId = :accountId AND strftime('%Y', date) = :year AND strftime('%m', date) = :month")
+    fun getListIncomeExpenseWithAccount(accountId: String, year: String, month: String): Flow<List<CategoryWithIncomeExpenseList>>
 }

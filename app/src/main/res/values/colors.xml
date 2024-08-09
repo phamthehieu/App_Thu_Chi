@@ -52,4 +52,9 @@
     <color name="switch_thumb_color">#FF0000</color> <!-- Màu của thumb -->
     <color name="switch_track_color">#00FF00</color> <!-- Màu của track -->
 
+    <!-- Màu bạn ngày -->
+
+    <color name="background_yellow">#fbd744</color>
+    <color name="background_white">#ffffff</color>
+    <color name="button_gray">#e4e4e4</color>
 </resources>

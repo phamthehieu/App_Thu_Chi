@@ -40,7 +40,7 @@
                 tools:ignore="RelativeOverlap" />
 
             <ImageButton
-                android:id="@+id/addNewAccountBtn"
+                android:id="@+id/detailAccountBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
@@ -119,6 +119,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/editAmountAccount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
@@ -133,7 +134,6 @@
                 android:textStyle="bold" />
 
             <ImageView
-                android:id="@+id/editAmountAccount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
@@ -146,6 +146,7 @@
     </LinearLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/titleCleared"
         android:layout_below="@+id/accountTotal"
         android:layout_width="match_parent"
         android:layout_marginTop="20dp"
@@ -196,7 +197,7 @@
                 android:textSize="11sp" />
 
             <TextView
-                android:id="@+id/expenseTV"
+                android:id="@+id/expenseAccountTV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
@@ -213,7 +214,7 @@
                 android:textSize="11sp" />
 
             <TextView
-                android:id="@+id/incomeTV"
+                android:id="@+id/incomeAccountTV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
@@ -230,5 +231,13 @@
             app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewAccountDetail"
+        android:layout_below="@+id/titleCleared"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="80dp"
+        tools:ignore="RedundantNamespace" />
 
 </RelativeLayout>

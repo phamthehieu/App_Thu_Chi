@@ -41,4 +41,9 @@
             incomeExpenseListDao.update(incomeExpenseList)
         }
 
+        @WorkerThread
+        fun getListWithAccountByYear(account: String, year: String, month: String): Flow<List<CategoryWithIncomeExpenseList>> {
+            return incomeExpenseListDao.getListIncomeExpenseWithAccount(account, year, month)
+        }
+
     }

@@ -1,7 +1,9 @@
 package com.example.myapplication.view.account
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.Dialog
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -185,6 +187,7 @@ class AddNewAccountActivity : AppCompatActivity(),
     }
 
     private fun setupDataCreateAccount() {
+
         if (nameAccount.isEmpty()) {
             Toast.makeText(this, "Vui lòng nhập tên tài khoản", Toast.LENGTH_SHORT).show()
         } else if (amountAccount.isEmpty()) {
@@ -192,10 +195,9 @@ class AddNewAccountActivity : AppCompatActivity(),
         } else if (selectedIcon == null) {
             Toast.makeText(this, "Vui lòng chọn biểu tượng", Toast.LENGTH_SHORT).show()
         } else {
-           val checkType = intent.getStringExtra("type")
+            val checkType = intent.getStringExtra("type")
 
             if (checkType == "edit") {
-                Log.d("AAA", "setupDataCreateAccount: $accountEdit")
                 val data = Account(
                     id = accountEdit!!.id,
                     nameAccount = nameAccount,
@@ -204,9 +206,24 @@ class AddNewAccountActivity : AppCompatActivity(),
                     icon = selectedIcon!!.id,
                     note = noteAccount
                 )
+
                 accountTypeViewModel.updateAccount(data).observe(this) { result ->
                     if (result) {
                         Toast.makeText(this, "Sửa tài khoản thành công", Toast.LENGTH_SHORT).show()
+                        val dataFormatWithIcon = AccountIconFormat(
+                            id = accountEdit!!.id,
+                            nameAccount = nameAccount,
+                            typeAccount = typeAccount,
+                            amountAccount = amountAccount,
+                            icon = selectedIcon!!.id,
+                            note = noteAccount,
+                            iconResource = selectedIcon!!.iconResource,
+                            typeIcon = selectedIcon!!.type
+                        )
+                        val resultIntent = Intent().apply {
+                            putExtra("updatedAccount", dataFormatWithIcon)
+                        }
+                        setResult(Activity.RESULT_OK, resultIntent)
                         finish()
                     } else {
                         Toast.makeText(this, "Sửa tài khoản thất bại", Toast.LENGTH_SHORT).show()

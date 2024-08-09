@@ -1,34 +1,64 @@
 package com.example.myapplication.view.account
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.Dialog
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
+import android.view.ContextMenu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
 import android.view.Window
 import android.widget.ImageButton
 import android.widget.LinearLayout
+import android.widget.PopupMenu
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import java.lang.reflect.Field
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import com.example.myapplication.R
+import com.example.myapplication.adapter.IncomeExpenseListAdapter
 import com.example.myapplication.adapter.MonthPagerAdapter
 import com.example.myapplication.data.AccountIconFormat
 import com.example.myapplication.data.IncomeExpenseListData
 import com.example.myapplication.databinding.ActivityAccountDetailsBinding
+import com.example.myapplication.entity.Account
+import com.example.myapplication.entity.IncomeExpenseList
 import com.example.myapplication.interfaces.OnMonthSelectedListener
+import com.example.myapplication.utilities.DeleteDialogUtils
+import com.example.myapplication.utilities.convertToIncomeExpenseListData
+import com.example.myapplication.view.home.DetailActivity
+import com.example.myapplication.view.revenue_and_expenditure.RevenueAndExpenditureActivity
+import com.example.myapplication.viewModel.AccountViewModel
+import com.example.myapplication.viewModel.AccountViewModelFactory
+import com.example.myapplication.viewModel.IncomeExpenseListFactory
+import com.example.myapplication.viewModel.IncomeExpenseListModel
 import com.google.gson.Gson
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.text.DecimalFormat
 import java.util.Calendar
 
-class AccountDetailsActivity : AppCompatActivity() {
+class AccountDetailsActivity : AppCompatActivity(), IncomeExpenseListAdapter.OnItemClickListener,
+    KeyBroadBottomSheetAccountFragment.OnNumberSequenceListener {
 
     private lateinit var binding: ActivityAccountDetailsBinding
+
+    companion object {
+        private const val REQUEST_CODE_EDIT = 1
+    }
 
     private var dataAccount: AccountIconFormat? = null
 
@@ -36,6 +66,16 @@ class AccountDetailsActivity : AppCompatActivity() {
     private var yearSearch = Calendar.getInstance().get(Calendar.YEAR)
 
     private var check = true
+
+    private lateinit var adapter: IncomeExpenseListAdapter
+
+    private val incomeExpenseListModel: IncomeExpenseListModel by viewModels {
+        IncomeExpenseListFactory(this.application)
+    }
+
+    private val accountTypeViewModel: AccountViewModel by viewModels {
+        AccountViewModelFactory(application)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,10 +88,46 @@ class AccountDetailsActivity : AppCompatActivity() {
         }
 
         setupViews()
+
+        setupRecyclerView()
     }
 
 
-    @SuppressLint("SetTextI18n")
+
+    @SuppressLint("DefaultLocale")
+    private fun setupRecyclerView() {
+        val formattedMonth = String.format("%02d", monthSearch)
+        incomeExpenseListModel.getListIncomeExpenseListByAccountYear(
+            dataAccount?.id.toString(),
+            yearSearch.toString(),
+            formattedMonth
+        ).observe(this) { data ->
+            val incomeExpenseList = data.reversed().map { convertToIncomeExpenseListData(it) }
+            val totalIncome = incomeExpenseList.filter { it.type == "Income" }
+                .sumOf { it.amount.replace(",", ".").toDouble() }
+            val totalExpense = incomeExpenseList.filter { it.type == "Expense" }
+                .sumOf { it.amount.replace(",", ".").toDouble() }
+            val expenseFormatter = DecimalFormat("#,###.##")
+            val formattedExpense = expenseFormatter.format(totalExpense)
+            val formattedIncome = expenseFormatter.format(totalIncome)
+
+            binding.expenseAccountTV.text = formattedExpense
+            binding.incomeAccountTV.text = formattedIncome
+
+            val groupedIncomeExpenseList = groupIconsByType(incomeExpenseList)
+
+            binding.recyclerViewAccountDetail.layoutManager = LinearLayoutManager(this)
+
+            adapter = IncomeExpenseListAdapter(groupedIncomeExpenseList, this)
+            binding.recyclerViewAccountDetail.adapter = adapter
+        }
+    }
+
+    private fun groupIconsByType(data: List<IncomeExpenseListData>): Map<String, List<IncomeExpenseListData>> {
+        return data.groupBy { it.date }
+    }
+
+    @SuppressLint("SetTextI18n", "DefaultLocale")
     private fun setupViews() {
         val expenseFormatter = DecimalFormat("#,###.##")
         val amount = dataAccount?.amountAccount?.replace(",", ".")?.toDouble()
@@ -72,16 +148,63 @@ class AccountDetailsActivity : AppCompatActivity() {
             showCustomDialogBox()
         }
 
+        binding.editAmountAccount.setOnClickListener {
+            val keyboardBottomSheet = KeyBroadBottomSheetAccountFragment()
+            val bundle = Bundle()
+            val normalizedNumberSequence = dataAccount?.amountAccount?.replace(',', '.')
+            val number = normalizedNumberSequence?.toDouble()
+            if (number != null) {
+                bundle.putDouble("amountAccount", number)
+            }
+            keyboardBottomSheet.arguments = bundle
+            keyboardBottomSheet.show(supportFragmentManager, keyboardBottomSheet.tag)
+        }
+
+        binding.detailAccountBtn.setOnClickListener {
+            showPopupMenu(it)
+        }
+    }
+
+    private fun showPopupMenu(anchor: View) {
+        val popupMenu = PopupMenu(this, anchor)
+        popupMenu.menuInflater.inflate(R.menu.account_menu, popupMenu.menu)
+
+        popupMenu.setOnMenuItemClickListener { item: MenuItem ->
+            when (item.itemId) {
+                R.id.account_edit -> {
+                    val intent = Intent(this, AddNewAccountActivity::class.java).apply {
+                        putExtra("type", "edit")
+                        putExtra("Account", dataAccount!!)
+                    }
+                    startActivityForResult(intent, REQUEST_CODE_EDIT)
+                    true
+                }
+
+                R.id.account_delete -> {
+                    DeleteDialogUtils.showDeleteDialog(
+                        this,
+                        dataAccount!!,
+                        accountTypeViewModel
+                    ) {
+                        finish()
+                    }
+                    true
+                }
+
+                else -> false
+            }
+        }
+
+        popupMenu.show()
+
     }
 
     @SuppressLint("SetTextI18n")
     private fun showCustomDialogBox() {
         val months = listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12)
         val currentYear = Calendar.getInstance().get(Calendar.YEAR)
-        val currentMonth = Calendar.getInstance().get(Calendar.MONTH)
         val years = (currentYear - 50..currentYear + 50).toList()
         val dialog = Dialog(this)
-        var yearData = Calendar.getInstance().get(Calendar.YEAR)
 
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(false)
@@ -109,7 +232,7 @@ class AccountDetailsActivity : AppCompatActivity() {
             months,
             false,
             yearSearch,
-            currentMonth,
+            monthSearch - 1,
             object : OnMonthSelectedListener {
                 override fun onMonthSelected(month: Int) {
                     if (!check) {
@@ -146,7 +269,7 @@ class AccountDetailsActivity : AppCompatActivity() {
                     years,
                     true,
                     yearSearch,
-                    currentMonth,
+                    monthSearch - 1,
                     object : OnMonthSelectedListener {
                         override fun onMonthSelected(month: Int) {
                             if (!check) {
@@ -158,6 +281,8 @@ class AccountDetailsActivity : AppCompatActivity() {
                         }
                     }
                 )
+                leftBtn.visibility = View.GONE
+                rightBtn.visibility = View.GONE
                 viewPager.adapter = monthPagerAdapter
                 viewPager.offscreenPageLimit = 1
                 viewPager.isUserInputEnabled = false
@@ -169,7 +294,7 @@ class AccountDetailsActivity : AppCompatActivity() {
                     months,
                     false,
                     yearSearch,
-                    currentMonth,
+                    monthSearch - 1,
                     object : OnMonthSelectedListener {
                         override fun onMonthSelected(month: Int) {
                             if (!check) {
@@ -181,6 +306,8 @@ class AccountDetailsActivity : AppCompatActivity() {
                         }
                     }
                 )
+                leftBtn.visibility = View.VISIBLE
+                rightBtn.visibility = View.VISIBLE
                 viewPager.adapter = monthPagerAdapter
                 viewPager.offscreenPageLimit = ViewPager2.OFFSCREEN_PAGE_LIMIT_DEFAULT
                 viewPager.isUserInputEnabled = true
@@ -205,9 +332,142 @@ class AccountDetailsActivity : AppCompatActivity() {
         }
         successBtn.setOnClickListener {
             binding.monthTv.text = "Thg $monthSearch $yearSearch"
-//            setupData()
+            setupRecyclerView()
             dialog.dismiss()
         }
         dialog.show()
     }
+
+    override fun onItemClick(incomeExpense: Any) {
+        val gson = Gson()
+        val json = gson.toJson(incomeExpense)
+        val intent = Intent(this, DetailActivity::class.java)
+        intent.putExtra("itemDetail", json)
+        startActivity(intent)
+    }
+
+    override fun onCreateContextMenu(
+        menu: ContextMenu,
+        v: View,
+        menuInfo: ContextMenu.ContextMenuInfo?
+    ) {
+        super.onCreateContextMenu(menu, v, menuInfo)
+        val inflater: MenuInflater = this.menuInflater
+        inflater.inflate(R.menu.context_menu, menu)
+    }
+
+    override fun onContextItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_edit -> {
+                val selectedItem = adapter.getSelectedItem()
+                selectedItem?.let { itemToEdit ->
+                    val gson = Gson()
+                    val json = gson.toJson(itemToEdit)
+                    val intent = Intent(this, RevenueAndExpenditureActivity::class.java)
+                    intent.putExtra("itemToEdit", json)
+                    startActivity(intent)
+                }
+                true
+            }
+
+            R.id.action_delete -> {
+                conformDelete()
+                true
+            }
+
+            R.id.action_detail -> {
+                val selectedItem = adapter.getSelectedItem()
+                selectedItem?.let { itemToEdit ->
+                    val gson = Gson()
+                    val json = gson.toJson(itemToEdit)
+                    val intent = Intent(this, DetailActivity::class.java)
+                    intent.putExtra("itemDetail", json)
+                    startActivity(intent)
+                }
+
+                true
+            }
+
+            else -> super.onContextItemSelected(item)
+        }
+    }
+
+    @OptIn(DelicateCoroutinesApi::class)
+    private fun conformDelete() {
+        val dialog = Dialog(this)
+        dialog.setContentView(R.layout.layout_confirm_delete)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        val backDeleteBtn = dialog.findViewById<View>(R.id.backDeleteBtn)
+        val successDeleteBtn = dialog.findViewById<View>(R.id.successDeleteBtn)
+
+        backDeleteBtn.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        successDeleteBtn.setOnClickListener {
+            val selectedItem = adapter.getSelectedItem()
+            selectedItem?.let { itemData ->
+                val itemToDelete = IncomeExpenseList(
+                    id = itemData.id,
+                    note = itemData.note,
+                    amount = itemData.amount,
+                    date = itemData.date,
+                    categoryId = itemData.categoryId,
+                    type = itemData.type,
+                    image = itemData.image,
+                    categoryName = itemData.categoryName,
+                    iconResource = itemData.iconResource,
+                    accountId = itemData.accountId
+                )
+                GlobalScope.launch {
+                    incomeExpenseListModel.deleteIncomeExpenseListModel(itemToDelete)
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(
+                            this@AccountDetailsActivity,
+                            "Đã xóa thành công",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        dialog.dismiss()
+                    }
+                }
+            }
+        }
+
+        dialog.show()
+    }
+
+    override fun onNumberSequenceEntered(numberSequence: String) {
+        dataAccount?.amountAccount = numberSequence
+        setupViews()
+        val data = Account(
+            id = dataAccount!!.id,
+            nameAccount = dataAccount!!.nameAccount,
+            typeAccount = dataAccount!!.typeAccount,
+            amountAccount = numberSequence,
+            icon = dataAccount!!.icon,
+            note = dataAccount!!.note
+        )
+        accountTypeViewModel.updateAccount(data).observe(this) { result ->
+            if (result) {
+                Toast.makeText(this, "Sửa tài khoản thành công", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "Sửa tài khoản thất bại", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_CODE_EDIT && resultCode == Activity.RESULT_OK) {
+            val updatedAccount = data?.getParcelableExtra<AccountIconFormat>("updatedAccount")
+            if (updatedAccount != null) {
+                dataAccount = updatedAccount
+                setupViews()
+                setupRecyclerView()
+            }
+        }
+    }
+
+
 }

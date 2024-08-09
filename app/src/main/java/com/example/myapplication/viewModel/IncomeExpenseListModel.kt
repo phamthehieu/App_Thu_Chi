@@ -82,6 +82,10 @@ class IncomeExpenseListModel(application: Application) : AndroidViewModel(applic
     fun getIncomeExpenseListByYearAndIdCategoryModel(year: String, categoryId: Int): LiveData<List<CategoryWithIncomeExpenseList>> {
         return repository.getIncomeExpenseListByYearAndIdCategory(year, categoryId).asLiveData()
     }
+
+    fun getListIncomeExpenseListByAccountYear(account: String, year: String, month: String): LiveData<List<CategoryWithIncomeExpenseList>> {
+        return repository.getListWithAccountByYear(account, year, month).asLiveData()
+    }
 }
 
 class IncomeExpenseListFactory(private val application: Application) : ViewModelProvider.Factory {

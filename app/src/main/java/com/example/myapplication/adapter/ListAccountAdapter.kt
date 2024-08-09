@@ -2,26 +2,21 @@ package com.example.myapplication.adapter
 
 import android.content.Context
 import android.content.Intent
-import android.os.Build
-import android.util.Log
 import android.view.LayoutInflater
+import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.PopupMenu
 import android.widget.TextView
-import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
-import com.example.myapplication.adapter.IncomeExpenseListAdapter.Totals
 import com.example.myapplication.data.AccountIconFormat
 import com.example.myapplication.utilities.AccountTypeProvider.accountTypes
 import com.example.myapplication.view.account.AccountManagementActivity
 import com.example.myapplication.view.account.AddNewAccountActivity
-import com.example.myapplication.view.account.BottomSheetTypeAccountFragment
 import java.text.DecimalFormat
-import java.time.format.DateTimeParseException
 
 class ListAccountAdapter(
     private val accountList: Map<String, List<AccountIconFormat>>,
@@ -31,6 +26,7 @@ class ListAccountAdapter(
 
     interface OnItemClickListenerAccount {
         fun onItemClick(dataAccount: Any)
+        fun onDeleteClick(account: Any)
     }
 
     companion object {
@@ -133,7 +129,6 @@ class ListAccountAdapter(
         return totalsByType
     }
 
-
     inner class HeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val typeAccount: TextView = itemView.findViewById(R.id.typeAccount)
         private val totalAmountAccount: TextView = itemView.findViewById(R.id.totalAmountAccount)
@@ -153,14 +148,21 @@ class ListAccountAdapter(
         }
     }
 
-    inner class AccountViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class AccountViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnLongClickListener {
         private val nameTextView: TextView = itemView.findViewById(R.id.nameAccountTV)
         private val amountTextView: TextView = itemView.findViewById(R.id.amountAccountTV)
         private val iconImageView: ImageView = itemView.findViewById(R.id.imageAccountIV)
         private val noteTextView: TextView = itemView.findViewById(R.id.noteAccountTV)
         private val titleTextView: TextView = itemView.findViewById(R.id.titleAccountTV)
+        private lateinit var currentAccount: AccountIconFormat
+
+        init {
+            itemView.setOnLongClickListener(this)
+        }
 
         fun bind(account: AccountIconFormat) {
+            currentAccount = account
+
             nameTextView.text = account.nameAccount
             noteTextView.text = account.note
             noteTextView.visibility = if (account.note.isEmpty()) View.GONE else View.VISIBLE
@@ -176,6 +178,43 @@ class ListAccountAdapter(
             titleTextView.visibility =
                 if (typeAccountId == 3 || typeAccountId == 7) View.VISIBLE else View.GONE
         }
+
+        override fun onLongClick(v: View?): Boolean {
+            showPopupMenu(v)
+            return true
+        }
+
+        private fun showPopupMenu(view: View?) {
+            val popup = PopupMenu(view?.context, view)
+            val inflater: MenuInflater = popup.menuInflater
+            inflater.inflate(R.menu.account_menu, popup.menu)
+            popup.setOnMenuItemClickListener { menuItem ->
+                when (menuItem.itemId) {
+                    R.id.account_edit -> {
+                        handleEditAccount(currentAccount)
+                        true
+                    }
+                    R.id.account_delete -> {
+                        handleDeleteAccount(currentAccount)
+                        true
+                    }
+                    else -> false
+                }
+            }
+            popup.show()
+        }
+
+        private fun handleEditAccount(account: AccountIconFormat) {
+            val intent = Intent(itemView.context, AddNewAccountActivity::class.java).apply {
+                putExtra("type", "edit")
+                putExtra("Account", account)
+            }
+            itemView.context.startActivity(intent)
+        }
+
+        private fun handleDeleteAccount(account: AccountIconFormat) {
+            itemClickListenerAccount.onDeleteClick(account)
+        }
     }
 
     inner class FooterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -183,4 +222,3 @@ class ListAccountAdapter(
         val accountManagementBtn: TextView = itemView.findViewById(R.id.accountManagementBtn)
     }
 }
-

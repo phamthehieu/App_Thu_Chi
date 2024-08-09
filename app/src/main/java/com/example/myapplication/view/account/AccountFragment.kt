@@ -14,6 +14,7 @@ import com.example.myapplication.R
 import com.example.myapplication.adapter.ListAccountAdapter
 import com.example.myapplication.data.AccountIconFormat
 import com.example.myapplication.databinding.FragmentAccountBinding
+import com.example.myapplication.utilities.DeleteDialogUtils
 import com.example.myapplication.viewModel.AccountViewModel
 import com.example.myapplication.viewModel.AccountViewModelFactory
 import com.google.gson.Gson
@@ -117,5 +118,12 @@ class AccountFragment : Fragment(), ListAccountAdapter.OnItemClickListenerAccoun
         startActivity(intent)
     }
 
-
+    override fun onDeleteClick(account: Any) {
+        val dataAccount = account as AccountIconFormat
+        DeleteDialogUtils.showDeleteDialog(
+            requireContext(),
+            dataAccount,
+            accountTypeViewModel
+        ) {}
+    }
 }
