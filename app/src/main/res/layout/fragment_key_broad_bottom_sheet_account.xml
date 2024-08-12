@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:id="@+id/main"
     android:layout_height="wrap_content"
     android:layout_margin="20dp">
 
@@ -20,6 +21,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
             android:text="Số tiền"
+            style="@style/textStyle"
             android:textSize="16sp"
             android:textStyle="bold" />
 

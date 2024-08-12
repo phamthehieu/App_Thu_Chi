@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/example_5_page_bg_color"
+    style="@style/backgroundStyle"
     tools:context=".view.calendar.CategoryListCalendarActivity">
 
     <LinearLayout
@@ -43,7 +43,7 @@
                 android:gravity="center"
                 android:fontFamily="sans-serif-medium"
                 android:text="@string/calendar"
-                android:textColor="@color/white"
+                style="@style/textStyle"
                 android:textSize="22sp"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"

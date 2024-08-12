@@ -54,6 +54,8 @@ class HomeFragment : Fragment(), OnMonthSelectedListener, IncomeExpenseListAdapt
 
     private var selectedItemPosition: Int? = null
 
+    private var checkMode = true
+
     private val incomeExpenseListModel: IncomeExpenseListModel by viewModels {
         IncomeExpenseListFactory(requireActivity().application)
     }
@@ -77,52 +79,6 @@ class HomeFragment : Fragment(), OnMonthSelectedListener, IncomeExpenseListAdapt
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
-        val currentNightMode = requireActivity().resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
-
-        when (currentNightMode) {
-            Configuration.UI_MODE_NIGHT_NO -> {
-                binding.searchBtn.setColorFilter(
-                    ContextCompat.getColor(
-                        requireContext(),
-                        R.color.black1
-                    )
-                )
-
-                binding.calendarBtn.setColorFilter(
-                    ContextCompat.getColor(
-                        requireContext(),
-                        R.color.black1
-                    )
-                )
-                binding.titleBackground.setBackgroundColor(
-                    ContextCompat.getColor(
-                        requireContext(),
-                        R.color.yellow
-                    )
-                )
-                val color = ContextCompat.getColor(requireContext(), R.color.yellow)
-                requireActivity().window.statusBarColor = color
-            }
-
-            Configuration.UI_MODE_NIGHT_YES -> {
-                binding.searchBtn.setColorFilter(
-                    ContextCompat.getColor(
-                        requireContext(),
-                        R.color.white
-                    )
-                )
-                binding.calendarBtn.setColorFilter(
-                    ContextCompat.getColor(
-                        requireContext(),
-                        R.color.white
-                    )
-                )
-            }
-
-            Configuration.UI_MODE_NIGHT_UNDEFINED -> {
-
-            }
-        }
 
         binding.popupCalenderBtn.setOnClickListener {
             showCustomDialogBox()
@@ -135,9 +91,13 @@ class HomeFragment : Fragment(), OnMonthSelectedListener, IncomeExpenseListAdapt
 
         binding.monthTv.text = "Thg $monthSearch"
 
+        binding.yearTv.text = yearSearch.toString()
+
         binding.recyclerViewHome.layoutManager = LinearLayoutManager(requireContext())
 
         setupBackground()
+
+        setupNightMode()
 
         return binding.root;
     }
@@ -242,6 +202,14 @@ class HomeFragment : Fragment(), OnMonthSelectedListener, IncomeExpenseListAdapt
             val leftBtn: ImageButton = dialog.findViewById(R.id.leftBtn)
             val rightBtn: ImageButton = dialog.findViewById(R.id.rightBtn)
             val successBtn: TextView = dialog.findViewById(R.id.successBtn)
+
+            if (checkMode) {
+                leftBtn.setColorFilter(ContextCompat.getColor(requireContext(), R.color.white))
+                rightBtn.setColorFilter(ContextCompat.getColor(requireContext(), R.color.white))
+            } else {
+                leftBtn.setColorFilter(ContextCompat.getColor(requireContext(), R.color.black))
+                rightBtn.setColorFilter(ContextCompat.getColor(requireContext(), R.color.black))
+            }
 
             fun updateTitleRecord(month: Int, year: Int) {
                 titleRecord.text = "tháng $month năm $year"
@@ -350,7 +318,7 @@ class HomeFragment : Fragment(), OnMonthSelectedListener, IncomeExpenseListAdapt
                 dialog.dismiss()
             }
             successBtn.setOnClickListener {
-                binding.yearTv.text = "năm $yearSearch"
+                binding.yearTv.text = yearSearch.toString()
                 binding.monthTv.text = "Thg $monthSearch"
                 setupBackground()
                 dialog.dismiss()
@@ -458,5 +426,60 @@ class HomeFragment : Fragment(), OnMonthSelectedListener, IncomeExpenseListAdapt
         val intent = Intent(requireContext(), DetailActivity::class.java)
         intent.putExtra("itemDetail", json)
         startActivity(intent)
+    }
+
+    private fun setupNightMode() {
+        val currentNightMode = requireActivity().resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+
+        when (currentNightMode) {
+            Configuration.UI_MODE_NIGHT_NO -> {
+                checkMode = false
+                binding.searchBtn.setColorFilter(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.black1
+                    )
+                )
+
+                binding.calendarBtn.setColorFilter(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.black1
+                    )
+                )
+
+                binding.iconCalendar.setColorFilter(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.black1
+                    )
+                )
+
+                binding.titleBackground.setBackgroundColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.yellow
+                    )
+                )
+                val color = ContextCompat.getColor(requireContext(), R.color.yellow)
+                requireActivity().window.statusBarColor = color
+            }
+
+            Configuration.UI_MODE_NIGHT_YES -> {
+                checkMode = true
+                binding.searchBtn.setColorFilter(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.white
+                    )
+                )
+                binding.calendarBtn.setColorFilter(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.white
+                    )
+                )
+            }
+        }
     }
 }

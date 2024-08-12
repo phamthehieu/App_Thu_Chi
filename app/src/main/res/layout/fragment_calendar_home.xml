@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/example_5_page_bg_color"
+    style="@style/backgroundStyle"
     tools:context=".view.calendar.CalendarHomeActivity">
 
     <LinearLayout
@@ -18,7 +18,6 @@
             android:id="@+id/exFiveAppBarLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/example_5_toolbar_color"
             android:theme="@style/AppTheme.AppBarOverlay">
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -29,11 +28,12 @@
                 <TextView
                     android:id="@+id/closeButton"
                     android:layout_width="wrap_content"
-                    android:layout_height="36dp"
+                    android:layout_height="24dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:gravity="center"
                     android:text="@string/close"
-                    android:textSize="20sp"
+                    style="@style/textStyle"
+                    android:textSize="16sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -49,13 +49,12 @@
 
                     <ImageView
                         android:id="@+id/exFivePreviousMonthImage"
-                        android:layout_width="36dp"
-                        android:layout_height="36dp"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
                         android:layout_marginEnd="20dp"
                         android:background="?attr/selectableItemBackgroundBorderless"
                         android:contentDescription="@string/app_name"
-                        app:srcCompat="@drawable/ic_sort_left_24"
-                        app:tint="@color/white" />
+                        app:srcCompat="@drawable/ic_sort_left_24" />
 
                     <TextView
                         android:id="@+id/exFiveMonthYearText"
@@ -63,18 +62,17 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-medium"
                         android:text="@string/calendar"
-                        android:textColor="@color/white"
-                        android:textSize="22sp" />
+                        style="@style/textStyle"
+                        android:textSize="18sp" />
 
                     <ImageView
                         android:id="@+id/exFiveNextMonthImage"
-                        android:layout_width="36dp"
-                        android:layout_height="36dp"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
                         android:layout_marginStart="20dp"
                         android:background="?attr/selectableItemBackgroundBorderless"
                         android:contentDescription="@string/app_name"
-                        app:srcCompat="@drawable/ic_sort_right_24"
-                        app:tint="@color/white" />
+                        app:srcCompat="@drawable/ic_sort_right_24" />
                 </LinearLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
 

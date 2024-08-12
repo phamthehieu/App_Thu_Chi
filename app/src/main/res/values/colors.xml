@@ -7,18 +7,21 @@
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
-    <color name="yellow">#ffd946</color>
+    <color name="yellow">#FADC67</color>
     <color name="yellow2">#2d2924</color>
     <color name="black2">#66000000</color>
     <color name="gray">#BE464646</color>
     <color name="grayHeader">#1e1e1e</color>
+    <color name="gray_icon">#e5e5e5</color>
     <color name="gray1">#696969</color>
     <color name="gray2">#f4f5f7</color>
     <color name="gray3">#464646</color>
     <color name="gray4">#272727</color>
     <color name="gray5">#535353</color>
+    <color name="gray6">#cecece</color>
     <!--    text color-->
     <color name="white">#fcfcff</color>
+    <color name="white2">#f9f9f9</color>
     <color name="white1">#8DFCFCFF</color>
     <color name="deep_red">#B82221</color>
     <color name="blue">#0120D3</color>
@@ -48,6 +51,7 @@
     <color name="brown_700">#5D4037</color>
     <color name="green_text">#4eb052</color>
     <color name="green_background">#4000FF8D</color>
+    <color name="green_background_2">#dbefe6</color>
 
     <color name="switch_thumb_color">#FF0000</color> <!-- Màu của thumb -->
     <color name="switch_track_color">#00FF00</color> <!-- Màu của track -->
@@ -57,4 +61,6 @@
     <color name="background_yellow">#fbd744</color>
     <color name="background_white">#ffffff</color>
     <color name="button_gray">#e4e4e4</color>
+
+    <color name="background_keyboard">#e9eaee</color>
 </resources>

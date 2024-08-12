@@ -4,6 +4,7 @@ import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -81,22 +82,56 @@ class RevenueAndExpenditureActivity : AppCompatActivity() {
 
     private fun updateTabBackground(selectedTabNumber: Int) {
         val currentNightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
-        val selectedColor = ContextCompat.getColor(this, if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) R.color.black else R.color.white)
-        val unselectedColor = ContextCompat.getColor(this, if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) R.color.white else R.color.black)
+        val selectedColor = resources.getColor(R.color.black,this.theme)
+        val unselectedColor = resources.getColor(R.color.white, this.theme)
+
+        when(selectedTabNumber) {
+            1 -> {
+                binding.leftView.visibility = View.GONE
+                binding.rightView.visibility = View.VISIBLE
+            }
+            2 -> {
+                binding.leftView.visibility = View.GONE
+                binding.rightView.visibility = View.GONE
+            }
+            3 -> {
+                binding.leftView.visibility = View.VISIBLE
+                binding.rightView.visibility = View.GONE
+            }
+        }
 
         binding.tabExpense.apply {
-            setBackgroundResource(if (selectedTabNumber == 1) R.drawable.round_back_white_left else 0)
-            setTextColor(if (selectedTabNumber == 1) selectedColor else unselectedColor)
+            if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) {
+                setBackgroundResource(if (selectedTabNumber == 1) R.drawable.round_back_white_left else 0)
+                setTextColor(if (selectedTabNumber == 1) selectedColor else unselectedColor)
+            } else {
+                setBackgroundResource(if (selectedTabNumber == 1) R.drawable.round_back_black_left else 0)
+                setTextColor(if (selectedTabNumber == 1) unselectedColor else selectedColor)
+            }
         }
         binding.tabIncome.apply {
-            setBackgroundResource(if (selectedTabNumber == 2) R.drawable.round_back_white_center else 0)
-            setTextColor(if (selectedTabNumber == 2) selectedColor else unselectedColor)
+            if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) {
+                setBackgroundResource(if (selectedTabNumber == 2) R.drawable.round_back_white_center else 0)
+                setTextColor(if (selectedTabNumber == 2) selectedColor else unselectedColor)
+            } else {
+                setBackgroundResource(if (selectedTabNumber == 2) R.drawable.round_back_black_center else 0)
+                setTextColor(if (selectedTabNumber == 2) unselectedColor else selectedColor)
+            }
         }
         binding.tabTransfer.apply {
-            setBackgroundResource(if (selectedTabNumber == 3) R.drawable.round_back_white_right else 0)
-            setTextColor(if (selectedTabNumber == 3) selectedColor else unselectedColor)
+            if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) {
+                setBackgroundResource(if (selectedTabNumber == 3) R.drawable.round_back_white_right else 0)
+                setTextColor(if (selectedTabNumber == 3) selectedColor else unselectedColor)
+            } else {
+                setBackgroundResource(if (selectedTabNumber == 3) R.drawable.round_back_black_right else 0)
+                setTextColor(if (selectedTabNumber == 3) unselectedColor else selectedColor)
+            }
         }
-        binding.titleSubAAE.setBackgroundResource(R.drawable.round_back_white10_100)
+        if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) {
+            binding.titleSubAAE.setBackgroundResource(R.drawable.round_back_white10_100)
+        } else {
+            binding.titleSubAAE.setBackgroundResource(R.drawable.round_back_black10_100)
+        }
         binding.title.setBackgroundColor(ContextCompat.getColor(this, if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) R.color.black1 else R.color.yellow))
         binding.monthlyPayment.setColorFilter(ContextCompat.getColor(this, if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) R.color.black1 else R.color.black1))
         val color = ContextCompat.getColor(this, if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) R.color.black else R.color.yellow)

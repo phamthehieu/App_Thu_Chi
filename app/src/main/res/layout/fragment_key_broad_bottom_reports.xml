@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:id="@+id/main"
     android:layout_height="wrap_content"
     android:layout_margin="20dp">
 
@@ -20,6 +21,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
             android:text="Ngân sách hàng tháng - "
+            style="@style/textStyle"
             android:textSize="16sp"
             android:textStyle="bold" />
 
@@ -28,7 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toEndOf="@+id/title"
-            android:text="234324"
+            style="@style/textStyle"
             android:textSize="16sp"
             android:textStyle="bold" />
 
@@ -237,6 +239,7 @@
                 android:textStyle="bold" />
 
             <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/none"
                 android:layout_width="0dp"
                 android:layout_height="50dp"
                 android:layout_margin="5dp"

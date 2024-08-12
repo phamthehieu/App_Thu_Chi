@@ -1,6 +1,7 @@
 package com.example.myapplication.view.component
 
 import android.app.Dialog
+import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
@@ -10,6 +11,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
@@ -34,7 +36,6 @@ class CustomListPhotoFragment : BottomSheetDialogFragment(), PhotoAdapter.OnItem
         dialog.setOnShowListener { dialogInterface ->
             val bottomSheet =
                 (dialogInterface as BottomSheetDialog).findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
-            bottomSheet?.setBackgroundColor(resources.getColor(R.color.black, null))
 
             bottomSheet?.viewTreeObserver?.addOnGlobalLayoutListener {
                 val rect = android.graphics.Rect()
@@ -64,7 +65,46 @@ class CustomListPhotoFragment : BottomSheetDialogFragment(), PhotoAdapter.OnItem
             dismiss()
         }
 
+        setupNightMode()
+
         return binding.root
+    }
+
+    private fun setupNightMode() {
+        val currentNightMode =
+            requireActivity().resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+
+        when (currentNightMode) {
+            Configuration.UI_MODE_NIGHT_NO -> {
+                binding.acceptBtn.setColorFilter(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.black
+                    )
+                )
+                binding.removeAllBtn.setColorFilter(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.black
+                    )
+                )
+            }
+
+            Configuration.UI_MODE_NIGHT_YES -> {
+                binding.acceptBtn.setColorFilter(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.white
+                    )
+                )
+                binding.removeAllBtn.setColorFilter(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.white
+                    )
+                )
+            }
+        }
     }
 
     override fun onItemClick() {

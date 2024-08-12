@@ -1,14 +1,131 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.revenue_and_expenditure.TransferFragment">
+    android:orientation="horizontal"
+    android:gravity="center"
+    style="@style/backgroundStyle">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="3" />
+    <LinearLayout
+        android:id="@+id/layoutAccount1"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/background_gray"
+        android:gravity="center"
+        android:layout_margin="8dp">
 
-</FrameLayout>
+        <LinearLayout
+            android:id="@+id/container"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:orientation="vertical"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/background_yellow"
+            android:gravity="center"
+            android:layout_marginBottom="10dp"
+            tools:ignore="MissingConstraints">
+
+            <ImageView
+                android:id="@+id/imageAccount1IV"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:contentDescription="@string/app_name"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_credit_card_50"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/nameAccount1TV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Lựa chọn"
+            android:layout_marginBottom="10dp"
+            android:textSize="14sp"
+            style="@style/textStyle"/>
+
+        <TextView
+            android:id="@+id/amountAccount1TV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Lựa chọn"
+            android:layout_marginBottom="10dp"
+            android:textSize="14sp"
+            style="@style/textStyle"
+            android:visibility="gone"/>
+
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/ic_arrow_50" />
+
+    <LinearLayout
+        android:id="@+id/layoutAccount2"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/background_gray"
+        android:gravity="center"
+        android:layout_margin="8dp">
+
+        <LinearLayout
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:orientation="vertical"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/background_yellow"
+            android:gravity="center"
+            android:layout_marginBottom="10dp"
+            tools:ignore="MissingConstraints">
+
+            <ImageView
+                android:id="@+id/imageAccount2IV"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:contentDescription="@string/app_name"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_credit_card_50"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/nameAccount2TV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Lựa chọn"
+            android:layout_marginBottom="10dp"
+            android:textSize="14sp"
+            style="@style/textStyle"/>
+
+        <TextView
+            android:id="@+id/amountAccount2TV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Lựa chọn"
+            android:layout_marginBottom="10dp"
+            android:textSize="14sp"
+            style="@style/textStyle"
+            android:visibility="gone"/>
+
+    </LinearLayout>
+
+
+</LinearLayout>

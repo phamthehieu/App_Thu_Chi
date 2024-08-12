@@ -90,6 +90,8 @@ class AccountDetailsActivity : AppCompatActivity(), IncomeExpenseListAdapter.OnI
         setupViews()
 
         setupRecyclerView()
+
+        setupNightMode()
     }
 
 
@@ -465,6 +467,25 @@ class AccountDetailsActivity : AppCompatActivity(), IncomeExpenseListAdapter.OnI
                 dataAccount = updatedAccount
                 setupViews()
                 setupRecyclerView()
+            }
+        }
+    }
+
+    private fun setupNightMode() {
+        val currentNightMode = this.resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK
+        when (currentNightMode) {
+            android.content.res.Configuration.UI_MODE_NIGHT_NO -> {
+                binding.accountTotal.setBackgroundResource(R.drawable.bottom_sheet_border_yellow)
+                binding.backBtn.setColorFilter(ContextCompat.getColor(this, R.color.black))
+                binding.detailAccountBtn.setColorFilter(ContextCompat.getColor(this, R.color.black))
+                binding.iconEdit.setColorFilter(ContextCompat.getColor(this, R.color.black))
+            }
+
+            android.content.res.Configuration.UI_MODE_NIGHT_YES -> {
+                binding.accountTotal.setBackgroundResource(R.drawable.bottom_sheet_border_gray)
+                binding.backBtn.setColorFilter(ContextCompat.getColor(this, R.color.white))
+                binding.detailAccountBtn.setColorFilter(ContextCompat.getColor(this, R.color.white))
+                binding.iconEdit.setColorFilter(ContextCompat.getColor(this, R.color.white))
             }
         }
     }

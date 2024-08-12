@@ -1,5 +1,6 @@
 package com.example.myapplication.adapter
 
+import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.ShapeDrawable
@@ -76,6 +77,14 @@ class SettingCategoryAdapter(
                     R.drawable.setting_background_item
                 ) as GradientDrawable
             drawable.setColor(generateRandomLightColor())
+
+            val currentNightMode = itemView.context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+
+            if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) {
+                editCategory.setColorFilter(ContextCompat.getColor(itemView.context, R.color.white))
+            } else {
+                editCategory.setColorFilter(ContextCompat.getColor(itemView.context, R.color.black))
+            }
 
             if (category.categoryType == "admin") {
                 editCategory.visibility = View.GONE

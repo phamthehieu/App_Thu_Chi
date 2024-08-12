@@ -180,8 +180,7 @@ class AddNewCategoryActivity : AppCompatActivity(), IconListAdapter.OnIconSelect
     }
 
     private fun updateTabBackground(selectedTabNumber: Int) {
-        val currentNightMode =
-            resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        val currentNightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
         when (currentNightMode) {
             Configuration.UI_MODE_NIGHT_YES -> {
                 val selectedColor = resources.getColor(R.color.black, theme)

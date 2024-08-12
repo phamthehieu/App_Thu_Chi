@@ -12,7 +12,6 @@
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@color/grayHeader"
         tools:ignore="UselessParent">
 
 
@@ -46,8 +45,7 @@
         style="@style/backgroundBudgetStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/title"
-        android:layout_marginTop="20dp">
+        android:layout_below="@+id/title">
 
         <LinearLayout
             android:id="@+id/editBudget"
@@ -57,7 +55,7 @@
             tools:ignore="MissingConstraints">
 
             <ImageView
-                android:id="@+id/deleteCategory"
+                android:id="@+id/iconAllCategory"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

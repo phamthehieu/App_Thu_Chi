@@ -1,6 +1,7 @@
 package com.example.myapplication.adapter
 
 import android.annotation.SuppressLint
+import android.content.res.Configuration
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -51,6 +52,18 @@ class AccountManagerAdapter(
         holder.icon.setImageResource(account.iconResource)
         holder.icon.setColorFilter(ContextCompat.getColor(holder.itemView.context, R.color.black))
 
+        val currentNightMode = holder.itemView.context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+
+        if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) {
+            holder.editButton.setColorFilter(ContextCompat.getColor(holder.itemView.context, R.color.white))
+            holder.pinButton.setColorFilter(ContextCompat.getColor(holder.itemView.context, R.color.white))
+            holder.dragHandle.setColorFilter(ContextCompat.getColor(holder.itemView.context, R.color.white))
+        } else {
+            holder.editButton.setColorFilter(ContextCompat.getColor(holder.itemView.context, R.color.black))
+            holder.pinButton.setColorFilter(ContextCompat.getColor(holder.itemView.context, R.color.black))
+            holder.dragHandle.setColorFilter(ContextCompat.getColor(holder.itemView.context, R.color.black))
+        }
+
         holder.nameAccount.text = account.nameAccount
         holder.noteAccount.text = account.note
         holder.noteAccount.visibility = if (account.note.isEmpty()) View.GONE else View.VISIBLE
@@ -61,6 +74,8 @@ class AccountManagerAdapter(
         holder.editButton.setOnClickListener {
             itemClickSettingAccount.onEditClick(account)
         }
+
+
 
         if (pinnedAccountIds.contains(account.id)) {
             holder.pinButton.setColorFilter(ContextCompat.getColor(holder.itemView.context, R.color.yellow))

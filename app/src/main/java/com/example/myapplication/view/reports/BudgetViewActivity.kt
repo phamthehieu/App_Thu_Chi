@@ -3,6 +3,7 @@ package com.example.myapplication.view.reports
 import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Intent
+import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -13,6 +14,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
@@ -51,6 +53,8 @@ class BudgetViewActivity : AppCompatActivity(), ListDetailBudgetAdapter.OnItemCl
 
     private var check = true
 
+    private var checkNightMode = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityBudgetViewBinding.inflate(layoutInflater)
@@ -73,6 +77,31 @@ class BudgetViewActivity : AppCompatActivity(), ListDetailBudgetAdapter.OnItemCl
 
         setupData()
 
+        setupNightMode()
+
+    }
+
+    private fun setupNightMode() {
+        val currentNightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        when (currentNightMode) {
+            Configuration.UI_MODE_NIGHT_YES -> {
+                checkNightMode = true
+                binding.title.setBackgroundColor(ContextCompat.getColor(this, R.color.grayHeader))
+                val color = ContextCompat.getColor(this, R.color.grayHeader)
+                this.window.statusBarColor = color
+                binding.btnCalender.setColorFilter(ContextCompat.getColor(this, R.color.white))
+                binding.backBtn.setColorFilter(ContextCompat.getColor(this, R.color.white))
+            }
+
+            Configuration.UI_MODE_NIGHT_NO -> {
+                checkNightMode = false
+                binding.title.setBackgroundColor(ContextCompat.getColor(this, R.color.yellow))
+                val color = ContextCompat.getColor(this, R.color.yellow)
+                this.window.statusBarColor = color
+                binding.btnCalender.setColorFilter(ContextCompat.getColor(this, R.color.black))
+                binding.backBtn.setColorFilter(ContextCompat.getColor(this, R.color.black))
+            }
+        }
     }
 
     private fun setupData() {

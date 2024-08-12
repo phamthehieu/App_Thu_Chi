@@ -2,6 +2,7 @@ package com.example.myapplication.view.calendar
 
 import android.annotation.SuppressLint
 import android.app.Dialog
+import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.media.metrics.Event
@@ -57,6 +58,8 @@ class CalendarDialogFragment : DialogFragment() {
     private var dayOfMonthSelected = ""
     private var dayOfWeekSelected = ""
 
+    private var checkMode = true
+
     private lateinit var binding: ActivityCalendarBinding
 
     @SuppressLint("SetTextI18n")
@@ -68,6 +71,8 @@ class CalendarDialogFragment : DialogFragment() {
             val dateString = it.getString("selectedDate")
             today = LocalDate.parse(dateString)
         }
+
+        setupNightMode()
         return binding.root
     }
 
@@ -254,13 +259,21 @@ class CalendarDialogFragment : DialogFragment() {
                     textView.visibility = View.VISIBLE
                     when (data.date) {
                         selectedDate -> {
-                            textView.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+                            if (checkMode) {
+                                textView.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+                            } else {
+                                textView.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
+                            }
                             textView.setBackgroundResource(R.drawable.example_3_selected_bg)
                             dotView.visibility = View.VISIBLE
                         }
 
                         else -> {
-                            textView.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+                            if (checkMode) {
+                                textView.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+                            } else {
+                                textView.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
+                            }
                             textView.background = null
                             dotView.isVisible = events[data.date].orEmpty().isNotEmpty()
                         }
@@ -285,9 +298,33 @@ class CalendarDialogFragment : DialogFragment() {
                     container.legendLayout.children.map { it as TextView }
                         .forEachIndexed { index, tv ->
                             tv.text = daysOfWeek[index].name.substring(0, 3)
-                            tv.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+                            if (checkMode) {
+                                tv.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+                            } else {
+                                tv.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
+                            }
                         }
                 }
+            }
+        }
+    }
+
+    private fun setupNightMode() {
+        val currentNightMode = requireActivity().resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+
+        when (currentNightMode) {
+            Configuration.UI_MODE_NIGHT_NO -> {
+                checkMode = false
+                binding.exThreeBtnPrevious.setColorFilter(ContextCompat.getColor(requireContext(), R.color.black))
+                binding.exThreeBtnNext.setColorFilter(ContextCompat.getColor(requireContext(), R.color.black))
+            }
+
+            Configuration.UI_MODE_NIGHT_YES -> {
+                checkMode = true
+                binding.exThreeBtnPrevious.setColorFilter(ContextCompat.getColor(requireContext(), R.color.white))
+                binding.exThreeBtnNext.setColorFilter(ContextCompat.getColor(requireContext(), R.color.white))
+
+
             }
         }
     }

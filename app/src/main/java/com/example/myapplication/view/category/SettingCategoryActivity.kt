@@ -84,6 +84,7 @@ class SettingCategoryActivity : AppCompatActivity() {
                 binding.title.setBackgroundColor(ContextCompat.getColor(this, R.color.yellow))
                 val color = ContextCompat.getColor(this, R.color.yellow)
                 this.window.statusBarColor = color
+                binding.backBtn.setColorFilter(ContextCompat.getColor(this, R.color.black))
             }
         }
     }

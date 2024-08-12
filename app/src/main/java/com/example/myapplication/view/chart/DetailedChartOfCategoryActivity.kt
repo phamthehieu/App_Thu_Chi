@@ -3,6 +3,7 @@ package com.example.myapplication.view.chart
 import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Intent
+import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -14,6 +15,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import com.example.myapplication.R
@@ -56,6 +58,8 @@ class DetailedChartOfCategoryActivity : AppCompatActivity(),
     private var categoryId: Int? = null
 
     private var check = true
+
+    private var checkMode = true
 
     private var checkSearch: Int = 1
 
@@ -103,6 +107,26 @@ class DetailedChartOfCategoryActivity : AppCompatActivity(),
 
         getDataSource(categoryId!!)
 
+        setupNightMode()
+
+    }
+
+    private fun setupNightMode() {
+        val currentNightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) {
+            checkMode = true
+            binding.title.setBackgroundColor(resources.getColor(R.color.grayHeader, theme))
+            val color = ContextCompat.getColor(this, R.color.grayHeader)
+            this.window.statusBarColor = color
+            binding.calendarIcon.setColorFilter(resources.getColor(R.color.white, theme))
+        } else {
+            checkMode = false
+            binding.title.setBackgroundColor(resources.getColor(R.color.yellow, theme))
+            val color = ContextCompat.getColor(this, R.color.yellow)
+            this.window.statusBarColor = color
+            binding.calendarIcon.setColorFilter(resources.getColor(R.color.black, theme))
+            binding.backBtn.setColorFilter(resources.getColor(R.color.black, theme))
+        }
     }
 
     @SuppressLint("SetTextI18n")
@@ -191,6 +215,14 @@ class DetailedChartOfCategoryActivity : AppCompatActivity(),
         val leftBtn: ImageButton = dialog.findViewById(R.id.leftBtn)
         val rightBtn: ImageButton = dialog.findViewById(R.id.rightBtn)
         val successBtn: TextView = dialog.findViewById(R.id.successBtn)
+
+        if (checkMode) {
+            leftBtn.setColorFilter(resources.getColor(R.color.white, theme))
+            rightBtn.setColorFilter(resources.getColor(R.color.white, theme))
+        } else {
+            leftBtn.setColorFilter(resources.getColor(R.color.black, theme))
+            rightBtn.setColorFilter(resources.getColor(R.color.black, theme))
+        }
 
         fun updateTitleRecord(month: Int, year: Int) {
             titleRecord.text = "tháng $month năm $year"
@@ -443,7 +475,7 @@ class DetailedChartOfCategoryActivity : AppCompatActivity(),
 
         val lineDataSet = LineDataSet(entries, "")
         lineDataSet.color = android.graphics.Color.GRAY
-        lineDataSet.valueTextColor = android.graphics.Color.WHITE
+        lineDataSet.valueTextColor = if (checkMode) android.graphics.Color.WHITE else android.graphics.Color.BLACK
         lineDataSet.setDrawCircles(true)
         lineDataSet.setCircleColor(android.graphics.Color.YELLOW)
         lineDataSet.circleRadius = 4f
@@ -457,13 +489,15 @@ class DetailedChartOfCategoryActivity : AppCompatActivity(),
 
         val xAxis = lineChart.xAxis
         xAxis.position = XAxis.XAxisPosition.BOTTOM
-        xAxis.textColor = android.graphics.Color.WHITE
+        xAxis.textColor = if (checkMode) android.graphics.Color.WHITE else android.graphics.Color.BLACK
         xAxis.setDrawGridLines(true)
         xAxis.gridColor = android.graphics.Color.DKGRAY
+        xAxis.axisMinimum = 0f
 
         val axisLeft = lineChart.axisLeft
-        axisLeft.textColor = android.graphics.Color.WHITE
+        axisLeft.textColor = if (checkMode) android.graphics.Color.WHITE else android.graphics.Color.BLACK
         axisLeft.setDrawGridLines(false)
+        axisLeft.axisMinimum = 0f
 
         val axisRight = lineChart.axisRight
         axisRight.isEnabled = false
@@ -473,11 +507,16 @@ class DetailedChartOfCategoryActivity : AppCompatActivity(),
         lineChart.invalidate()
     }
 
+
     class MyValueFormatter : ValueFormatter() {
         private val decimalFormat = DecimalFormat("#,###.##")
 
         override fun getFormattedValue(value: Float): String {
-            return decimalFormat.format(value)
+            return if (value == 0f) {
+                ""
+            } else {
+                decimalFormat.format(value)
+            }
         }
     }
 

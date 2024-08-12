@@ -2,6 +2,7 @@ package com.example.myapplication.view.reports
 
 import android.annotation.SuppressLint
 import android.app.Dialog
+import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -11,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.R
@@ -67,7 +69,57 @@ class KeyBroadBottomReportsFragment : BottomSheetDialogFragment() {
 
         binding.textViewNumberDisplay.text = formatNumberWithDots(numberSequence.toString())
 
+        setupNightMode()
+
         return binding.root
+    }
+
+    private fun setupNightMode() {
+        val currentNightMode =
+            this.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+
+        when (currentNightMode) {
+            Configuration.UI_MODE_NIGHT_NO -> {
+                val buttonsWithText = listOf(
+                    binding.buttonSeven,
+                    binding.buttonEight,
+                    binding.buttonNine,
+                    binding.buttonFour,
+                    binding.buttonFive,
+                    binding.buttonSix,
+                    binding.buttonOne,
+                    binding.buttonTwo,
+                    binding.buttonZero,
+                    binding.buttonThree,
+                    binding.buttonComma,
+                    binding.none
+                )
+
+                val buttonsWithColorFilter = listOf(
+                    binding.buttonKeyBoardDelete,
+                    binding.successKeyBoardBtn,
+                    binding.buttonClose,
+                    binding.buttonTrash
+                )
+
+                for (button in buttonsWithText) {
+                    button.setBackgroundResource(R.drawable.background_white)
+                    button.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
+                }
+
+                for (button in buttonsWithColorFilter) {
+                    button.setBackgroundResource(R.drawable.background_white)
+                    button.setColorFilter(ContextCompat.getColor(requireContext(), R.color.black))
+                }
+
+                binding.note.setBackgroundResource(R.drawable.background_white)
+                binding.main.setBackgroundResource(R.color.background_keyboard)
+            }
+
+            Configuration.UI_MODE_NIGHT_YES -> {
+                binding.main.setBackgroundResource(R.color.black)
+            }
+        }
     }
 
     @SuppressLint("NewApi")

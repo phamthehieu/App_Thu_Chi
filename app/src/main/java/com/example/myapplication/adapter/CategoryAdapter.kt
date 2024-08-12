@@ -80,12 +80,10 @@ class CategoryAdapter(
         fun bind(category: CombinedCategoryIcon, isSelected: Boolean) {
             categoryName.text = category.categoryName
             categoryIcon.setImageResource(category.iconResource)
+
+            categoryIcon.setColorFilter(itemView.context.getColor(R.color.black))
+
             itemView.isSelected = isSelected
-            if (isSelected) {
-                categoryIcon.setColorFilter(itemView.context.getColor(R.color.black))
-            } else {
-                categoryIcon.clearColorFilter()
-            }
         }
     }
 

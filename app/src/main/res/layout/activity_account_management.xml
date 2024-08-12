@@ -4,6 +4,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    style="@style/backgroundStyle"
     tools:context=".view.account.AddNewAccountActivity">
 
     <RelativeLayout
@@ -46,13 +47,13 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewAccountSetting"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_above="@+id/bottomLayout"
         android:layout_below="@+id/title"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="0dp"
-        android:layout_marginBottom="0dp"
+        android:layout_marginBottom="2dp"
         tools:ignore="RedundantNamespace" />
 
     <LinearLayout

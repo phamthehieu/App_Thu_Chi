@@ -1,6 +1,7 @@
 package com.example.myapplication.view.reports
 
 import android.app.Dialog
+import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -9,6 +10,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -61,6 +63,30 @@ class SettingBudgetActivity : AppCompatActivity(), SettingBudgetAdapter.OnItemCl
                 updateRecyclerView(combinedList)
             }
         })
+
+        setupNightMode()
+    }
+
+    private fun setupNightMode() {
+        val currentNightMode = this.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+
+        when (currentNightMode) {
+            Configuration.UI_MODE_NIGHT_NO -> {
+                val color = ContextCompat.getColor(this, R.color.yellow)
+                this.window.statusBarColor = color
+                binding.title.setBackgroundColor(ContextCompat.getColor(this, R.color.yellow))
+                binding.backBtn.setColorFilter(ContextCompat.getColor(this, R.color.black))
+                binding.iconAllCategory.setColorFilter(ContextCompat.getColor(this, R.color.black))
+            }
+
+            Configuration.UI_MODE_NIGHT_YES -> {
+                val color = ContextCompat.getColor(this, R.color.grayHeader)
+                this.window.statusBarColor = color
+                binding.title.setBackgroundColor(ContextCompat.getColor(this, R.color.grayHeader))
+                binding.backBtn.setColorFilter(ContextCompat.getColor(this, R.color.white))
+                binding.iconAllCategory.setColorFilter(ContextCompat.getColor(this, R.color.white))
+            }
+        }
     }
 
     private fun updateRecyclerView(combinedList: List<CombinedCategoryIcon>) {

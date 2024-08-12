@@ -85,7 +85,9 @@
             android:id="@+id/indicator"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:layout_alignParentBottom="true" />
+            android:layout_alignParentBottom="true"
+            app:ci_drawable="@drawable/yellow_radius"
+            app:ci_drawable_unselected="@drawable/gray_radius"/>
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/view_pager2_chart"

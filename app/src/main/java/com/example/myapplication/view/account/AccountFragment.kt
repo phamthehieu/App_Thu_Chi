@@ -47,7 +47,22 @@ class AccountFragment : Fragment(), ListAccountAdapter.OnItemClickListenerAccoun
             )
         )
 
+        setupNightMode()
+
         return binding.root
+    }
+
+    private fun setupNightMode() {
+        val currentNightMode = requireContext().resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK
+        when (currentNightMode) {
+            android.content.res.Configuration.UI_MODE_NIGHT_NO -> {
+             binding.accountTotal.setBackgroundResource(R.drawable.bottom_sheet_border_yellow)
+            }
+
+            android.content.res.Configuration.UI_MODE_NIGHT_YES -> {
+                binding.accountTotal.setBackgroundResource(R.drawable.bottom_sheet_border_gray)
+            }
+        }
     }
 
     private fun renderListAccount() {

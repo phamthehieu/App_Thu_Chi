@@ -19,8 +19,8 @@
             >
 
             <FrameLayout
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -29,8 +29,8 @@
 
                 <ImageView
                     android:id="@+id/iconCategoryCalendarIV"
-                    android:layout_width="30dp"
-                    android:layout_height="wrap_content"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
                     android:layout_gravity="center"
                     android:background="@android:color/transparent"
                     android:contentDescription="@string/app_name"
@@ -46,14 +46,13 @@
 
         <TextView
             android:id="@+id/nameCategoryCalendarTV"
-            style="@style/TextViewStyle"
+            style="@style/textStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginStart="20dp"
             android:layout_weight="1"
-            android:text="@string/name_category"
-            android:textSize="18sp" />
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/amountCategoryCalendarTV"
@@ -62,16 +61,15 @@
             android:layout_gravity="center"
             android:layout_marginEnd="20dp"
             android:background="@android:color/transparent"
-            android:text="@string/_0"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            style="@style/textStyle"
+            android:textSize="14sp" />
     </LinearLayout>
 
     <View
         android:id="@+id/dividerView"
         android:layout_width="0dp"
-        android:layout_height="1dp"
-        android:background="@color/gray1"
+        android:layout_height="0.2dp"
+        android:background="@color/gray2"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

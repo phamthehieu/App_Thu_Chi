@@ -1,5 +1,6 @@
 package com.example.myapplication.adapter
 
+import android.graphics.ColorFilter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -40,6 +41,8 @@ class IconAddNewAccountAdapter(
     override fun onBindViewHolder(holder: IconViewHolder, position: Int) {
         val icon = icons[position]
         holder.iconImageView.setImageResource(icon.iconResource)
+
+        holder.iconImageView.setColorFilter(holder.itemView.context.resources.getColor(R.color.black))
 
         if (selectedPosition == position) {
             holder.container.setBackgroundResource(R.drawable.background_item_new_account_selected)

@@ -49,9 +49,11 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="Tất cả"
+                style="@style/textStyle"
                 android:textSize="16sp" />
 
             <ImageView
+                android:id="@+id/iconCalenderBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
@@ -68,7 +70,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/title"
         android:layout_marginEnd="0dp"
-        android:background="@color/grayHeader"
         android:gravity="center"
         android:orientation="vertical"
         tools:ignore="UselessParent">
@@ -77,6 +78,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Tổng số dư"
+            style="@style/textStyle"
             android:textSize="16sp"
             android:textStyle="bold"
             tools:ignore="RelativeOverlap" />
@@ -85,8 +87,8 @@
             android:id="@+id/totalBalanceTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="2.123.456.789"
             android:textSize="16sp"
+            style="@style/textStyle"
             android:textStyle="bold"
             tools:ignore="RelativeOverlap" />
 
@@ -103,6 +105,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="5dp"
                 android:text="Chi phí:"
+                style="@style/textStyle"
                 android:textSize="12sp"
                 tools:ignore="RelativeOverlap" />
 
@@ -111,7 +114,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toEndOf="@+id/titleExpense"
-                android:text="2.123.456.789"
+                style="@style/textStyle"
                 android:textSize="12sp"
                 tools:ignore="RelativeOverlap" />
 
@@ -123,6 +126,7 @@
                 android:layout_marginEnd="5dp"
                 android:layout_toEndOf="@+id/allExpenseTv"
                 android:text="Thu nhập:"
+                style="@style/textStyle"
                 android:textSize="12sp" />
 
             <TextView
@@ -130,7 +134,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toEndOf="@+id/titleIncome"
-                android:text="2.123.456.789"
+                style="@style/textStyle"
                 android:textSize="12sp" />
 
         </RelativeLayout>

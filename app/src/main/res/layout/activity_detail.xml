@@ -270,6 +270,7 @@
             android:layout_weight="1"
             android:background="@android:color/transparent"
             android:text="@string/edit"
+            style="@style/textStyle"
             android:textSize="18sp" />
 
         <View
@@ -284,6 +285,7 @@
             android:layout_weight="1"
             android:background="@android:color/transparent"
             android:text="@string/delete2"
+            style="@style/textStyle"
             android:textSize="18sp" />
 
     </LinearLayout>

@@ -30,6 +30,10 @@
         <item name="android:background">@color/white</item>
     </style>
 
+    <style name="backgroundStyleKeyBoard">
+        <item name="android:background">@color/background_keyboard</item>
+    </style>
+
     <style name="backgroundBudgetStyle">
         <item name="android:background">@color/white</item>
     </style>
@@ -39,5 +43,9 @@
     </style>
     <style name="background">
         <item name="android:background">@color/black</item>
+    </style>
+
+    <style name="textStyle">
+        <item name="android:textColor">@color/black</item>
     </style>
 </resources>

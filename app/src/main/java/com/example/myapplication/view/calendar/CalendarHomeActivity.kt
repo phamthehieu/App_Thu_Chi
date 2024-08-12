@@ -2,6 +2,7 @@ package com.example.myapplication.view.calendar
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.res.Configuration
 import android.graphics.Typeface
 import android.os.Build
 import android.os.Bundle
@@ -38,6 +39,8 @@ class CalendarHomeActivity : AppCompatActivity() {
 
     private var selectedDate: LocalDate? = null
     private var isDateSelected: Boolean = false
+
+    private var checkNightMode = false
 
     private val incomeExpenseListModel: IncomeExpenseListModel by viewModels {
         IncomeExpenseListFactory(this.application)
@@ -108,6 +111,8 @@ class CalendarHomeActivity : AppCompatActivity() {
                 binding.exFiveCalendar.smoothScrollToMonth(it.yearMonth.previousMonth)
             }
         }
+
+        setupBackground()
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -167,7 +172,11 @@ class CalendarHomeActivity : AppCompatActivity() {
                 flightBottomView.background = null
 
                 if (data.position == DayPosition.MonthDate) {
-                    textView.setTextColor(context.getColor(R.color.example_5_text_grey))
+                    if (checkNightMode) {
+                        textView.setTextColor(context.getColor(R.color.example_5_text_grey))
+                    } else {
+                        textView.setTextColor(context.getColor(R.color.black))
+                    }
                     layout.setBackgroundResource(if (selectedDate == data.date) R.drawable.example_5_selected_bg else 0)
                     val data = incomeExpensesByDate[data.date]
                     if (!data.isNullOrEmpty()) {
@@ -195,14 +204,26 @@ class CalendarHomeActivity : AppCompatActivity() {
                             if (totalExpense > 0.0) View.VISIBLE else View.GONE
 
                         if (totalExpense > 0.0 || totalIncome > 0.0) {
-                            container.binding.all.setBackgroundResource(R.drawable.rounded_background_calendar_day_selected)
+                            if (checkNightMode) {
+                                container.binding.all.setBackgroundResource(R.drawable.rounded_background_calendar_day_selected)
+                            } else {
+                                container.binding.all.setBackgroundResource(R.drawable.rounded_background_calendar_night_selected)
+                            }
                         } else {
-                            container.binding.all.setBackgroundResource(R.drawable.rounded_background_calendar_day)
+                            if (checkNightMode) {
+                                container.binding.all.setBackgroundResource(R.drawable.rounded_background_calendar_day)
+                            } else {
+                                container.binding.all.setBackgroundResource(R.drawable.rounded_background_cleandar_night)
+                            }
                         }
                     } else {
                         flightTopView.visibility = View.GONE
                         flightBottomView.visibility = View.GONE
-                        container.binding.all.setBackgroundResource(R.drawable.rounded_background_calendar_day)
+                        if (checkNightMode) {
+                            container.binding.all.setBackgroundResource(R.drawable.rounded_background_calendar_day)
+                        } else {
+                            container.binding.all.setBackgroundResource(R.drawable.rounded_background_cleandar_night)
+                        }
                     }
 
                 } else {
@@ -230,12 +251,22 @@ class CalendarHomeActivity : AppCompatActivity() {
                                     TextStyle.SHORT,
                                     Locale.ENGLISH
                                 )
-                                tv.setTextColor(
-                                    ContextCompat.getColor(
-                                        this@CalendarHomeActivity,
-                                        R.color.white
+                                if (checkNightMode) {
+                                    tv.setTextColor(
+                                        ContextCompat.getColor(
+                                            this@CalendarHomeActivity,
+                                            R.color.white
+                                        )
                                     )
-                                )
+                                } else {
+                                    tv.setTextColor(
+                                        ContextCompat.getColor(
+                                            this@CalendarHomeActivity,
+                                            R.color.black
+                                        )
+                                    )
+                                }
+
                                 tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f)
                                 tv.typeface = typeFace
                             }
@@ -251,6 +282,37 @@ class CalendarHomeActivity : AppCompatActivity() {
         } catch (e: NumberFormatException) {
             Log.e("IncomeExpenseListAdapter", "Error parsing amount: $amountStr", e)
             0.0
+        }
+    }
+
+    private fun setupBackground() {
+        val currentNightMode =
+            this.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+
+        when (currentNightMode) {
+            Configuration.UI_MODE_NIGHT_NO -> {
+                checkNightMode = false
+                binding.exFiveAppBarLayout.setBackgroundResource(R.color.yellow)
+                binding.exFivePreviousMonthImage.setColorFilter(
+                    ContextCompat.getColor(
+                        this,
+                        R.color.black
+                    )
+                )
+                binding.exFiveNextMonthImage.setColorFilter(
+                    ContextCompat.getColor(
+                        this,
+                        R.color.black
+                    )
+                )
+                val color = ContextCompat.getColor(this, R.color.yellow)
+                this.window.statusBarColor = color
+            }
+
+            Configuration.UI_MODE_NIGHT_YES -> {
+                checkNightMode = true
+                binding.exFiveAppBarLayout.setBackgroundResource(R.color.example_5_toolbar_color)
+            }
         }
     }
 }

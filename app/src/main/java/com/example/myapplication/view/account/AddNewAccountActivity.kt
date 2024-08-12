@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
+import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -14,6 +15,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.myapplication.R
@@ -67,12 +69,50 @@ class AddNewAccountActivity : AppCompatActivity(),
 
         setupBackground()
 
+        setupNightMode()
+
         val checkType = intent.getStringExtra("type")
 
         if (checkType == "edit") {
             setupEditAccount()
         }
 
+    }
+
+    private fun setupNightMode() {
+        val currentNightMode = this.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+
+        when (currentNightMode) {
+            Configuration.UI_MODE_NIGHT_NO -> {
+                val color = ContextCompat.getColor(this, R.color.yellow)
+                this.window.statusBarColor = color
+                binding.main.setBackgroundResource(R.color.background_keyboard)
+                binding.title.setBackgroundResource(R.color.yellow)
+                binding.addNewAccountBtn.setColorFilter(ContextCompat.getColor(this, R.color.black))
+                binding.nameAccountEt.setBackgroundResource(R.drawable.background_white)
+                binding.selectAccountType.setBackgroundResource(R.drawable.background_white)
+                binding.iconType.setColorFilter(ContextCompat.getColor(this, R.color.black))
+                binding.amountAccountLL.setBackgroundResource(R.drawable.background_white)
+                binding.recyclerIconNewAccountView.setBackgroundResource(R.drawable.background_white)
+                binding.noteAccountEt.setBackgroundResource(R.drawable.background_white)
+                binding.deleteAccountBtn.setColorFilter(ContextCompat.getColor(this, R.color.black))
+            }
+
+            Configuration.UI_MODE_NIGHT_YES -> {
+                val color = ContextCompat.getColor(this, R.color.grayHeader)
+                this.window.statusBarColor = color
+                binding.main.setBackgroundResource(R.color.black)
+                binding.title.setBackgroundResource(R.color.grayHeader)
+                binding.addNewAccountBtn.setColorFilter(ContextCompat.getColor(this, R.color.white))
+                binding.nameAccountEt.setBackgroundResource(R.drawable.background_gray)
+                binding.selectAccountType.setBackgroundResource(R.drawable.background_gray)
+                binding.iconType.setColorFilter(ContextCompat.getColor(this, R.color.white))
+                binding.amountAccountLL.setBackgroundResource(R.drawable.background_gray)
+                binding.recyclerIconNewAccountView.setBackgroundResource(R.drawable.background_gray)
+                binding.noteAccountEt.setBackgroundResource(R.drawable.background_gray)
+                binding.deleteAccountBtn.setColorFilter(ContextCompat.getColor(this, R.color.white))
+            }
+        }
     }
 
     @SuppressLint("SetTextI18n")

@@ -39,7 +39,6 @@ class ViewPagerAdapter(activity: FragmentActivity, private val itemEdit: IncomeE
             1 -> {
                 val fragment = IncomeFragment()
                 val bundle = Bundle()
-                Log.d("Hieu42", itemEdit.toString())
                 itemEdit?.let {
                     if (it.type == "Income") {
                         bundle.putString("itemEdit", Gson().toJson(it))

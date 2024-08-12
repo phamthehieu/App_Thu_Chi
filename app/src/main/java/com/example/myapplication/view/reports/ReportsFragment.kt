@@ -96,6 +96,8 @@ class ReportsFragment : Fragment() {
                         R.color.grayHeader
                     )
                 )
+                val color = ContextCompat.getColor(requireContext(), R.color.grayHeader)
+                requireActivity().window.statusBarColor = color
             }
 
             Configuration.UI_MODE_NIGHT_NO -> {
@@ -111,12 +113,15 @@ class ReportsFragment : Fragment() {
                     setTextColor(if (selectedTabNumber == 2) selectedColor else unselectedColor)
                 }
                 binding.titleSubAAE.setBackgroundResource(R.drawable.round_back_white10_100_black)
+
                 binding.titleBackground.setBackgroundColor(
                     ContextCompat.getColor(
                         requireContext(),
-                        R.color.gray1
+                        R.color.yellow
                     )
                 )
+                val color = ContextCompat.getColor(requireContext(), R.color.yellow)
+                requireActivity().window.statusBarColor = color
             }
         }
     }

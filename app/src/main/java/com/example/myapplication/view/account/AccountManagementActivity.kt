@@ -3,6 +3,7 @@ package com.example.myapplication.view.account
 import android.app.Dialog
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -11,6 +12,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myapplication.R
@@ -58,6 +60,8 @@ class AccountManagementActivity : AppCompatActivity(),
         }
 
         setupRecyclerView()
+
+        setupNightMode()
     }
 
     private fun setupRecyclerView() {
@@ -163,6 +167,30 @@ class AccountManagementActivity : AppCompatActivity(),
             Gson().fromJson(json, type)
         } else {
             emptyList()
+        }
+    }
+
+    private fun setupNightMode() {
+        val currentNightMode = this.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+
+        when (currentNightMode) {
+            Configuration.UI_MODE_NIGHT_NO -> {
+                val color = ContextCompat.getColor(this, R.color.yellow)
+                this.window.statusBarColor = color
+                binding.main.setBackgroundResource(R.color.background_keyboard)
+                binding.title.setBackgroundResource(R.color.yellow)
+                binding.backBtn.setColorFilter(ContextCompat.getColor(this, R.color.black))
+                binding.recyclerViewAccountSetting.setBackgroundResource(R.color.white)
+            }
+
+            Configuration.UI_MODE_NIGHT_YES -> {
+                val color = ContextCompat.getColor(this, R.color.grayHeader)
+                this.window.statusBarColor = color
+                binding.main.setBackgroundResource(R.color.black)
+                binding.title.setBackgroundResource(R.color.grayHeader)
+                binding.backBtn.setColorFilter(ContextCompat.getColor(this, R.color.white))
+                binding.recyclerViewAccountSetting.setBackgroundResource(R.color.black1)
+            }
         }
     }
 }

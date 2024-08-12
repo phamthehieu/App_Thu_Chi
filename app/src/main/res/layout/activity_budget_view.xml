@@ -3,16 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
-    style="@style/backgroundStyle"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/gray1"
     tools:context=".view.home.DetailActivity">
 
     <RelativeLayout
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@color/grayHeader"
         tools:ignore="UselessParent">
 
 
@@ -31,6 +30,7 @@
 
         <TextView
             android:id="@+id/titleText"
+            style="@style/textStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
@@ -51,13 +51,14 @@
 
             <TextView
                 android:id="@+id/monthTv"
+                style="@style/textStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="Thg 7 2024"
                 android:textSize="16sp" />
 
             <ImageView
+                android:id="@+id/btnCalender"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
@@ -127,10 +128,10 @@
 
     <LinearLayout
         android:id="@+id/budgetTotalLL"
+        style="@style/backgroundBudgetStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/title"
-        style="@style/backgroundBudgetStyle"
         android:orientation="vertical"
         android:padding="16dp">
 
@@ -173,10 +174,10 @@
 
                 <TextView
                     android:id="@+id/progressTextDetai"
+                    style="@style/textStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:textColor="@android:color/white"
                     android:textSize="14sp" />
             </FrameLayout>
 
@@ -192,6 +193,7 @@
                     android:orientation="horizontal">
 
                     <TextView
+                        style="@style/textStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="8dp"
@@ -200,6 +202,7 @@
 
                     <TextView
                         android:id="@+id/remainingTotalDetailTv"
+                        style="@style/textStyle"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -221,6 +224,7 @@
                     android:orientation="horizontal">
 
                     <TextView
+                        style="@style/textStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="4dp"
@@ -230,6 +234,7 @@
 
                     <TextView
                         android:id="@+id/budgetTotalDetai"
+                        style="@style/textStyle"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -246,6 +251,7 @@
                     android:orientation="horizontal">
 
                     <TextView
+                        style="@style/textStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="4dp"
@@ -254,6 +260,7 @@
 
                     <TextView
                         android:id="@+id/totalCategoryDetailTV"
+                        style="@style/textStyle"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -271,22 +278,22 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewBudget"
+        style="@style/backgroundBudgetStyle"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/budgetTotalLL"
         android:layout_above="@+id/bottomLayout"
-        style="@style/backgroundBudgetStyle"
+        android:layout_below="@+id/budgetTotalLL"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="0dp"
         android:layout_marginBottom="0dp"
         tools:ignore="RedundantNamespace" />
 
     <RelativeLayout
         android:id="@+id/bottomLayout"
+        style="@style/backgroundBudgetStyle"
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        style="@style/backgroundBudgetStyle"
         android:layout_alignParentBottom="true">
 
         <View

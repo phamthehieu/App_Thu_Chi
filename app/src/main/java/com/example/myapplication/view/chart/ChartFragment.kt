@@ -3,6 +3,7 @@ package com.example.myapplication.view.chart
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.res.Configuration
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -312,6 +313,8 @@ class ChartFragment : Fragment(), DateChartAdapter.OnDateClickListener,
                         R.color.grayHeader
                     )
                 )
+                val color = ContextCompat.getColor(requireContext(), R.color.grayHeader)
+                requireActivity().window.statusBarColor = color
             }
 
             Configuration.UI_MODE_NIGHT_NO -> {
@@ -326,13 +329,16 @@ class ChartFragment : Fragment(), DateChartAdapter.OnDateClickListener,
                     setBackgroundResource(if (selectedTabNumber == 2) R.drawable.round_back_white_right_black else 0)
                     setTextColor(if (selectedTabNumber == 2) selectedColor else unselectedColor)
                 }
-                binding.titleSubAAE.setBackgroundResource(R.drawable.round_back_white10_100_black)
+                binding.titleSubAAE.setBackgroundResource(R.drawable.round_back_black10_100)
                 binding.titleBackground.setBackgroundColor(
                     ContextCompat.getColor(
                         requireContext(),
                         R.color.gray1
                     )
                 )
+                binding.titleBackground.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.yellow))
+                val color = ContextCompat.getColor(requireContext(), R.color.yellow)
+                requireActivity().window.statusBarColor = color
             }
         }
         yearSearch = Calendar.getInstance().get(Calendar.YEAR)

@@ -44,13 +44,10 @@ class YearAdapter(
 
         if (year == currentYear) {
             viewHolder.yearTextView.setBackgroundResource(R.drawable.round_item_year_defaultt)
-            viewHolder.yearTextView.setTextColor(ContextCompat.getColor(context, R.color.white))
         } else if (year == yearSelected) {
             viewHolder.yearTextView.setBackgroundResource(R.drawable.rounded_corner_yellow)
-            viewHolder.yearTextView.setTextColor(ContextCompat.getColor(context, R.color.black))
         } else {
             viewHolder.yearTextView.background = null
-            viewHolder.yearTextView.setTextColor(ContextCompat.getColor(context, R.color.white))
         }
 
         return view

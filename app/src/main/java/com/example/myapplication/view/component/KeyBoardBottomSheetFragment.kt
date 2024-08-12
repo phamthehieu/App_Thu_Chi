@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
@@ -19,6 +20,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import com.example.myapplication.MainActivity
@@ -106,12 +108,69 @@ class KeyBoardBottomSheetFragment : BottomSheetDialogFragment() {
     ): View {
         binding = LayoutKeyboardAddBinding.inflate(inflater, container, false)
 
+        setupBackground()
+
+        setupNightMode()
+
+        return binding.root
+    }
+
+    private fun setupNightMode() {
+        val currentNightMode =
+            this.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+
+        when (currentNightMode) {
+            Configuration.UI_MODE_NIGHT_NO -> {
+                val buttonsWithText = listOf(
+                    binding.buttonSeven,
+                    binding.buttonEight,
+                    binding.buttonNine,
+                    binding.buttonFour,
+                    binding.buttonFive,
+                    binding.buttonSix,
+                    binding.buttonOne,
+                    binding.buttonTwo,
+                    binding.buttonZero,
+                    binding.buttonThree,
+                    binding.buttonComma,
+                    binding.buttonPlus,
+                    binding.buttonMinus
+                )
+
+                val buttonsWithColorFilter = listOf(
+                    binding.buttonKeyBoardDelete,
+                    binding.successKeyBoardBtn
+                )
+
+                for (button in buttonsWithText) {
+                    button.setBackgroundResource(R.drawable.background_white)
+                    button.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
+                }
+
+                for (button in buttonsWithColorFilter) {
+                    button.setBackgroundResource(R.drawable.background_white)
+                    button.setColorFilter(ContextCompat.getColor(requireContext(), R.color.black))
+                }
+                binding.buttonCalendar.setTextColor(ContextCompat.getColor(requireContext(), R.color.yellow))
+                binding.buttonCalendar.setBackgroundResource(R.drawable.background_white)
+                binding.selectedAccount.setColorFilter(ContextCompat.getColor(requireContext(), R.color.black))
+                binding.note.setBackgroundResource(R.drawable.background_white)
+                binding.imageArtists.setColorFilter(ContextCompat.getColor(requireContext(), R.color.black))
+            }
+
+            Configuration.UI_MODE_NIGHT_YES -> {
+
+            }
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun setupBackground() {
         binding.nameCategoryEt.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
                 showDefaultKeyboard()
             }
         }
-
 
         binding.nameCategoryEt.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -144,6 +203,7 @@ class KeyBoardBottomSheetFragment : BottomSheetDialogFragment() {
 
         sharedViewModel.selectedAccount.observe(viewLifecycleOwner) { account ->
             selectedAccount = account
+            binding.selectedAccount.setColorFilter(ContextCompat.getColor(requireContext(), R.color.yellow))
         }
 
         binding.selectedAccount.setOnClickListener {
@@ -238,7 +298,6 @@ class KeyBoardBottomSheetFragment : BottomSheetDialogFragment() {
             }
         }
 
-        return binding.root
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -447,7 +506,7 @@ class KeyBoardBottomSheetFragment : BottomSheetDialogFragment() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun saveDataToServer(type: Int) {
-       val accountId = if (selectedAccount == null) "-1" else selectedAccount!!.id.toString()
+        val accountId = if (selectedAccount == null) "-1" else selectedAccount!!.id.toString()
 
         if (!checkEdit) {
             if (type == 1) {

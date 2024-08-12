@@ -2,11 +2,13 @@ package com.example.myapplication.view.reports
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.example.myapplication.R
@@ -58,7 +60,24 @@ class AnalysisFragment : Fragment() {
 
         setupData()
 
+        setupNightMode()
+
         return binding.root
+    }
+
+    private fun setupNightMode() {
+        val currentNightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        when (currentNightMode) {
+            Configuration.UI_MODE_NIGHT_YES -> {
+                binding.loadMoreButton.setColorFilter(ContextCompat.getColor(requireContext(), R.color.white))
+                binding.loadMoreAccount.setColorFilter(ContextCompat.getColor(requireContext(), R.color.white))
+            }
+
+            Configuration.UI_MODE_NIGHT_NO -> {
+               binding.loadMoreButton.setColorFilter(ContextCompat.getColor(requireContext(), R.color.black))
+                binding.loadMoreAccount.setColorFilter(ContextCompat.getColor(requireContext(), R.color.black))
+            }
+        }
     }
 
     @SuppressLint("DefaultLocale", "SetTextI18n")

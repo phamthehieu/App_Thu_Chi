@@ -54,7 +54,7 @@ class DateChartAdapter(
             if (position == selectedPosition) {
                 holder.selectionIndicator.setBackgroundColor(ContextCompat.getColor(holder.itemView.context, R.color.yellow))
             } else {
-                holder.selectionIndicator.setBackgroundColor(ContextCompat.getColor(holder.itemView.context, R.color.black1))
+                holder.selectionIndicator.setBackgroundColor(ContextCompat.getColor(holder.itemView.context, android.R.color.transparent))
             }
 
             holder.dateTextView.setOnClickListener {

@@ -114,13 +114,8 @@ class IconListAdapter(
 
         fun bind(icon: Icon, isSelected: Boolean) {
             iconImageView.setImageResource(icon.iconResource)
-            if (isSelected) {
-                itemView.isSelected = true
-                iconImageView.setColorFilter(itemView.context.getColor(R.color.black))
-            } else {
-                itemView.isSelected = false
-                iconImageView.clearColorFilter()
-            }
+            iconImageView.setColorFilter(itemView.context.getColor(R.color.black))
+            itemView.isSelected = isSelected
         }
     }
 }

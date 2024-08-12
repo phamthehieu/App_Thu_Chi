@@ -71,11 +71,6 @@
                 android:gravity="center"
                 android:text="@string/Expense" />
 
-            <View
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                style="@style/background"/>
-
             <TextView
                 android:id="@+id/tabIncomeSetting"
                 style="@style/TextViewStyle"

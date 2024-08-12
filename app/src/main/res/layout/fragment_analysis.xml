@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
-        android:background="@drawable/bottom_sheet_border">
+        android:background="@drawable/bottom_sheet_border_gray">
 
         <LinearLayout
             android:id="@+id/item_container"
@@ -138,7 +138,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/viewMonthlyStatistics"
         android:layout_margin="20dp"
-        android:background="@drawable/bottom_sheet_border"
+        android:background="@drawable/bottom_sheet_border_gray"
         android:orientation="vertical"
         android:padding="16dp">
 
@@ -157,6 +157,7 @@
                 android:textStyle="bold" />
 
             <ImageView
+                android:id="@+id/loadMoreAccount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"

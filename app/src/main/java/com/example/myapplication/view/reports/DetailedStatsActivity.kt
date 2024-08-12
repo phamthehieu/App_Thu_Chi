@@ -2,6 +2,7 @@ package com.example.myapplication.view.reports
 
 import android.annotation.SuppressLint
 import android.app.Dialog
+import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
@@ -14,6 +15,7 @@ import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import com.example.myapplication.R
@@ -60,6 +62,32 @@ class DetailedStatsActivity : AppCompatActivity() {
         }
 
         getData()
+
+        setupNightMode()
+    }
+
+    private fun setupNightMode() {
+        val currentNightMode = this.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+
+        when (currentNightMode) {
+            Configuration.UI_MODE_NIGHT_NO -> {
+                val color = ContextCompat.getColor(this, R.color.yellow)
+                this.window.statusBarColor = color
+                binding.title.setBackgroundColor(ContextCompat.getColor(this, R.color.yellow))
+                binding.allParameters.setBackgroundColor(ContextCompat.getColor(this, R.color.yellow))
+                binding.iconCalenderBtn.setColorFilter(ContextCompat.getColor(this, R.color.black))
+                binding.backBtn.setColorFilter(ContextCompat.getColor(this, R.color.black))
+            }
+
+            Configuration.UI_MODE_NIGHT_YES -> {
+                val color = ContextCompat.getColor(this, R.color.grayHeader)
+                this.window.statusBarColor = color
+                binding.title.setBackgroundColor(ContextCompat.getColor(this, R.color.grayHeader))
+                binding.allParameters.setBackgroundColor(ContextCompat.getColor(this, R.color.grayHeader))
+                binding.iconCalenderBtn.setColorFilter(ContextCompat.getColor(this, R.color.white))
+                binding.backBtn.setColorFilter(ContextCompat.getColor(this, R.color.white))
+            }
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
