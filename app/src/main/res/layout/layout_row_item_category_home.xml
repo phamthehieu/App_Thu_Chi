@@ -19,6 +19,7 @@
            >
 
             <FrameLayout
+                android:id="@+id/backgroundIcon"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -61,15 +62,49 @@
             </FrameLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <TextView
-            android:id="@+id/nameCategoryTV"
-            style="@style/TextViewStyle"
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginStart="10dp"
-            android:layout_weight="1"
-            android:textSize="14sp" />
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/nameCategoryTV"
+                style="@style/TextViewStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="5dp"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:id="@+id/iconArrow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_arrow_20"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/nameAccount2"
+                style="@style/TextViewStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="5dp"
+                android:textSize="14sp"
+                android:visibility="gone"/>
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/iconArrowMount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_arrow_20"
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/amountCategoryTV"

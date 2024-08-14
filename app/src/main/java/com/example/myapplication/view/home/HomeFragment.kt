@@ -16,6 +16,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -23,14 +25,20 @@ import androidx.viewpager2.widget.ViewPager2
 import com.example.myapplication.R
 import com.example.myapplication.adapter.IncomeExpenseListAdapter
 import com.example.myapplication.adapter.MonthPagerAdapter
-import com.example.myapplication.data.CategoryWithIncomeExpenseList
+import com.example.myapplication.data.HistoryAccountWithAccount
 import com.example.myapplication.data.IncomeExpenseListData
 import com.example.myapplication.databinding.FragmentHomeBinding
+import com.example.myapplication.entity.Account
+import com.example.myapplication.entity.HistoryAccount
 import com.example.myapplication.entity.IncomeExpenseList
 import com.example.myapplication.interfaces.OnMonthSelectedListener
 import com.example.myapplication.utilities.convertToIncomeExpenseListData
 import com.example.myapplication.view.calendar.CalendarHomeActivity
 import com.example.myapplication.view.revenue_and_expenditure.RevenueAndExpenditureActivity
+import com.example.myapplication.viewModel.AccountViewModel
+import com.example.myapplication.viewModel.AccountViewModelFactory
+import com.example.myapplication.viewModel.HistoryAccountViewModel
+import com.example.myapplication.viewModel.HistoryAccountViewModelFactory
 import com.example.myapplication.viewModel.IncomeExpenseListFactory
 import com.example.myapplication.viewModel.IncomeExpenseListModel
 import com.google.gson.Gson
@@ -42,7 +50,8 @@ import kotlinx.coroutines.withContext
 import java.text.DecimalFormat
 import java.util.Calendar
 
-class HomeFragment : Fragment(), OnMonthSelectedListener, IncomeExpenseListAdapter.OnItemClickListener {
+class HomeFragment : Fragment(), OnMonthSelectedListener,
+    IncomeExpenseListAdapter.OnItemClickListener {
 
     private lateinit var binding: FragmentHomeBinding
 
@@ -56,13 +65,28 @@ class HomeFragment : Fragment(), OnMonthSelectedListener, IncomeExpenseListAdapt
 
     private var checkMode = true
 
+    private var account1: Account? = null
+
+    private var account2: Account? = null
+
+    private val combinedData = MediatorLiveData<List<Any>>()
+
     private val incomeExpenseListModel: IncomeExpenseListModel by viewModels {
         IncomeExpenseListFactory(requireActivity().application)
+    }
+
+    private val accountViewModel: AccountViewModel by viewModels {
+        AccountViewModelFactory(requireActivity().application)
+    }
+
+    private val historyAccountViewModel: HistoryAccountViewModel by viewModels {
+        HistoryAccountViewModelFactory(requireActivity().application)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+        combineLiveDataSources()
     }
 
     override fun onMonthSelected(month: Int) {
@@ -75,7 +99,8 @@ class HomeFragment : Fragment(), OnMonthSelectedListener, IncomeExpenseListAdapt
 
     @SuppressLint("SetTextI18n")
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
@@ -103,32 +128,58 @@ class HomeFragment : Fragment(), OnMonthSelectedListener, IncomeExpenseListAdapt
     }
 
     @SuppressLint("DefaultLocale")
-    private fun setupBackground() {
+    private fun combineLiveDataSources() {
         val formattedMonth = String.format("%02d", monthSearch)
-        incomeExpenseListModel.getIncomeExpenseListByMonthYear(
-            yearSearch.toString(),
-            formattedMonth
-        ).observe(viewLifecycleOwner) { data ->
-            val incomeExpenseList = data.reversed().map { convertToIncomeExpenseListData(it) }
+        val allHistoryAccountData = historyAccountViewModel.allHistoryAccount
+        val incomeExpenseData = incomeExpenseListModel.getIncomeExpenseListByMonthYear(
+            yearSearch.toString(), formattedMonth
+        )
+
+        combinedData.addSource(allHistoryAccountData) { historyAccounts ->
+            val incomeExpenseList =
+                incomeExpenseData.value?.map { convertToIncomeExpenseListData(it) } ?: emptyList()
+            combinedData.value = combineDataSources(historyAccounts, incomeExpenseList)
+        }
+
+        combinedData.addSource(incomeExpenseData) { incomeExpenseList ->
+            val historyAccounts = allHistoryAccountData.value ?: emptyList()
+            val convertedIncomeExpenseList =
+                incomeExpenseList.map { convertToIncomeExpenseListData(it) }
+            combinedData.value = combineDataSources(historyAccounts, convertedIncomeExpenseList)
+        }
+    }
+
+    private fun combineDataSources(
+        historyAccounts: List<HistoryAccountWithAccount>,
+        incomeExpenseList: List<IncomeExpenseListData>
+    ): List<Any> {
+        return historyAccounts + incomeExpenseList
+    }
+
+    @SuppressLint("DefaultLocale")
+    private fun setupBackground() {
+        combinedData.observe(viewLifecycleOwner) { combinedList ->
+            val incomeExpenseList = combinedList.filterIsInstance<IncomeExpenseListData>()
+            val historyAccountList = combinedList.filterIsInstance<HistoryAccountWithAccount>()
+            Log.d("Hieu163", "incomeExpenseList: $historyAccountList")
             val totalIncome = incomeExpenseList.filter { it.type == "Income" }
                 .sumOf { it.amount.replace(",", ".").toDouble() }
             val totalExpense = incomeExpenseList.filter { it.type == "Expense" }
                 .sumOf { it.amount.replace(",", ".").toDouble() }
-            val expenseFormatter = DecimalFormat("#,###.##")
-            val formattedExpense = expenseFormatter.format(totalIncome)
-            val formattedIncome = expenseFormatter.format(totalExpense)
-            binding.costTv.text = formattedIncome
-            binding.IncomeTv.text = formattedExpense
-            val totalBalance = totalIncome - totalExpense
-            val formattedTotalBalance = expenseFormatter.format(totalBalance)
-            binding.totalBalanceTv.text = formattedTotalBalance
 
-            val groupedIncomeExpenseList = groupIconsByType(incomeExpenseList)
-            adapter = IncomeExpenseListAdapter(groupedIncomeExpenseList, this)
+            val expenseFormatter = DecimalFormat("#,###.##")
+            binding.costTv.text = expenseFormatter.format(totalIncome)
+            binding.IncomeTv.text = expenseFormatter.format(totalExpense)
+            binding.totalBalanceTv.text = expenseFormatter.format(totalIncome - totalExpense)
+
+            val combinedForAdapter = (incomeExpenseList + historyAccountList).let { list ->
+                groupIconsByType(list)
+            }
+
+            adapter = IncomeExpenseListAdapter(combinedForAdapter, this)
             binding.recyclerViewHome.adapter = adapter
 
             val swipeGesture = object : SwipeGesture(requireContext()) {
-
                 override fun getMovementFlags(
                     recyclerView: RecyclerView,
                     viewHolder: RecyclerView.ViewHolder
@@ -154,18 +205,21 @@ class HomeFragment : Fragment(), OnMonthSelectedListener, IncomeExpenseListAdapt
                             adapter.removeItem(position)
                             conformDelete()
                         }
+
                         ItemTouchHelper.RIGHT -> {
                             selectedItemPosition = position
                             adapter.removeItem(position)
                             val selectedItem = adapter.getSelectedItem()
-
-                            selectedItem?.let setOnClickListener@{ itemToEdit ->
+                            selectedItem?.let {
                                 val gson = Gson()
-                                val json = gson.toJson(itemToEdit)
-                                val intent = Intent(requireContext(), RevenueAndExpenditureActivity::class.java)
+                                val json = gson.toJson(it)
+                                val intent = Intent(
+                                    requireContext(),
+                                    RevenueAndExpenditureActivity::class.java
+                                )
                                 intent.putExtra("itemToEdit", json)
                                 startActivity(intent)
-                                adapter.notifyItemChanged(selectedItemPosition ?: return@setOnClickListener)
+                                adapter.notifyItemChanged(selectedItemPosition ?: return@let)
                             }
                         }
                     }
@@ -177,8 +231,14 @@ class HomeFragment : Fragment(), OnMonthSelectedListener, IncomeExpenseListAdapt
         }
     }
 
-    private fun groupIconsByType(data: List<IncomeExpenseListData>): Map<String, List<IncomeExpenseListData>> {
-        return data.groupBy { it.date }
+    private fun groupIconsByType(data: List<Any>): Map<String, List<Any>> {
+        return data.groupBy { item ->
+            when (item) {
+                is IncomeExpenseListData -> item.date
+                is HistoryAccountWithAccount -> item.historyAccount.date
+                else -> throw IllegalArgumentException("Unsupported data type")
+            }
+        }
     }
 
     @SuppressLint("SetTextI18n")
@@ -327,7 +387,10 @@ class HomeFragment : Fragment(), OnMonthSelectedListener, IncomeExpenseListAdapt
         }
     }
 
-    override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenu.ContextMenuInfo?
+    override fun onCreateContextMenu(
+        menu: ContextMenu,
+        v: View,
+        menuInfo: ContextMenu.ContextMenuInfo?
     ) {
         super.onCreateContextMenu(menu, v, menuInfo)
         val inflater: MenuInflater = requireActivity().menuInflater
@@ -341,7 +404,6 @@ class HomeFragment : Fragment(), OnMonthSelectedListener, IncomeExpenseListAdapt
                 selectedItem?.let { itemToEdit ->
                     val gson = Gson()
                     val json = gson.toJson(itemToEdit)
-
                     val intent = Intent(requireContext(), RevenueAndExpenditureActivity::class.java)
                     intent.putExtra("itemToEdit", json)
                     startActivity(intent)
@@ -357,12 +419,22 @@ class HomeFragment : Fragment(), OnMonthSelectedListener, IncomeExpenseListAdapt
 
             R.id.action_detail -> {
                 val selectedItem = adapter.getSelectedItem()
-                selectedItem?.let { itemToEdit ->
-                    val gson = Gson()
-                    val json = gson.toJson(itemToEdit)
-                    val intent = Intent(requireContext(), DetailActivity::class.java)
-                    intent.putExtra("itemDetail", json)
-                    startActivity(intent)
+                if (selectedItem is IncomeExpenseListData) {
+                    selectedItem.let { itemToEdit ->
+                        val gson = Gson()
+                        val json = gson.toJson(itemToEdit)
+                        val intent = Intent(requireContext(), DetailActivity::class.java)
+                        intent.putExtra("itemDetail", json)
+                        startActivity(intent)
+                    }
+                } else if (selectedItem is HistoryAccountWithAccount) {
+                    selectedItem.let { itemToEdit ->
+                        val gson = Gson()
+                        val json = gson.toJson(itemToEdit.historyAccount)
+                        val intent = Intent(requireContext(), DetailActivity::class.java)
+                        intent.putExtra("accountDetail", json)
+                        startActivity(intent)
+                    }
                 }
 
                 true
@@ -389,30 +461,71 @@ class HomeFragment : Fragment(), OnMonthSelectedListener, IncomeExpenseListAdapt
 
             successDeleteBtn.setOnClickListener {
                 val selectedItem = adapter.getSelectedItem()
-                selectedItem?.let { itemData ->
-                    val itemToDelete = IncomeExpenseList(
-                        id = itemData.id,
-                        note = itemData.note,
-                        amount = itemData.amount,
-                        date = itemData.date,
-                        categoryId = itemData.categoryId,
-                        type = itemData.type,
-                        image = itemData.image,
-                        categoryName = itemData.categoryName,
-                        iconResource = itemData.iconResource,
-                        accountId = itemData.accountId
-                    )
-                    GlobalScope.launch {
-                        incomeExpenseListModel.deleteIncomeExpenseListModel(itemToDelete)
-                        withContext(Dispatchers.Main) {
-                            Toast.makeText(
-                                requireContext(),
-                                "Đã xóa thành công",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                            dialog.dismiss()
+                if (selectedItem is IncomeExpenseListData) {
+                    selectedItem.let { itemData ->
+                        val itemToDelete = IncomeExpenseList(
+                            id = itemData.id,
+                            note = itemData.note,
+                            amount = itemData.amount,
+                            date = itemData.date,
+                            categoryId = itemData.categoryId,
+                            type = itemData.type,
+                            image = itemData.image,
+                            categoryName = itemData.categoryName,
+                            iconResource = itemData.iconResource,
+                            accountId = itemData.accountId
+                        )
+                        GlobalScope.launch {
+                            incomeExpenseListModel.deleteIncomeExpenseListModel(itemToDelete)
+                            withContext(Dispatchers.Main) {
+                                Toast.makeText(
+                                    requireContext(),
+                                    "Đã xóa thành công",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                dialog.dismiss()
+                            }
                         }
                     }
+                } else if (selectedItem is HistoryAccountWithAccount) {
+                    val historyAccount = selectedItem.historyAccount
+                    val accountTransfer = selectedItem.accountTransfer
+                    val accountReceive = selectedItem.accountReceive
+
+                    val amountAccount1 =
+                        accountTransfer.amountAccount.replace(",", ".").toDoubleOrNull() ?: 0.0
+                    val amountAccount2 =
+                        accountReceive.amountAccount.replace(",", ".").toDoubleOrNull() ?: 0.0
+
+                    val transferAmount =
+                        historyAccount.transferAmount.replace(",", ".").toDoubleOrNull() ?: 0.0
+
+                    val totalAmount = transferAmount + amountAccount1
+                    val minusAmount = amountAccount2 - transferAmount
+
+                    val accountFormat1 =
+                        accountTransfer.copy(amountAccount = totalAmount.toString())
+                    val accountFormat2 = accountReceive.copy(amountAccount = minusAmount.toString())
+
+                    historyAccountViewModel.deleteHistoryAccount(historyAccount)
+                    accountViewModel.updateListAccounts(listOf(accountFormat1, accountFormat2))
+                        .observe(viewLifecycleOwner) { success ->
+                            if (success) {
+                                Toast.makeText(
+                                    requireContext(),
+                                    "Đã xóa thành công",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                dialog.dismiss()
+                            } else {
+                                Toast.makeText(
+                                    requireContext(),
+                                    "Xóa thất bại",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                dialog.dismiss()
+                            }
+                        }
                 }
             }
 
@@ -429,7 +542,8 @@ class HomeFragment : Fragment(), OnMonthSelectedListener, IncomeExpenseListAdapt
     }
 
     private fun setupNightMode() {
-        val currentNightMode = requireActivity().resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        val currentNightMode =
+            requireActivity().resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
 
         when (currentNightMode) {
             Configuration.UI_MODE_NIGHT_NO -> {

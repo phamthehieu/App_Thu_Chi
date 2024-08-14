@@ -88,6 +88,7 @@ class AccountFragment : Fragment(), ListAccountAdapter.OnItemClickListenerAccoun
             val netValue = assetTotal - liabilitiesMustPayTotal
 
             val expenseFormatter = DecimalFormat("#,###.##")
+            Log.d("AccountFragment", "formattedAccounts: $formattedAccounts")
 
             binding.netValue.text = expenseFormatter.format(netValue)
             binding.asset.text = expenseFormatter.format(assetTotal)

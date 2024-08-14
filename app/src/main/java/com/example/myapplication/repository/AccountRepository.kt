@@ -30,4 +30,14 @@ class AccountRepository(private val accountDao: AccountDao) {
         accountDao.updateAccount(account)
     }
 
+    @WorkerThread
+    fun updateListAccounts(accounts: List<Account>) {
+        accountDao.updateAccounts(accounts)
+    }
+
+    @WorkerThread
+    fun getAccountsByTwoIds(id1: Int, id2: Int): Flow<List<Account>> {
+        return accountDao.getAccountsByTwoIds(id1, id2)
+    }
+
 }

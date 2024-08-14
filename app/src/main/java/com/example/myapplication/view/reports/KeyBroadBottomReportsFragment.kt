@@ -234,8 +234,9 @@ class KeyBroadBottomReportsFragment : BottomSheetDialogFragment() {
 }
 
 private fun formatNumberWithDots(number: String): String {
-
     val hasComma = number.contains(',')
+
+    val isNegative = number.startsWith('-')
 
     val cleanNumber = number.replace("[^0-9,]".toRegex(), "")
     return when {
@@ -249,7 +250,7 @@ private fun formatNumberWithDots(number: String): String {
             formatter.isGroupingUsed = true
 
             val formattedIntegerPart = formatter.format(BigDecimal(integerPart))
-            if (hasComma) {
+            val result = if (hasComma) {
                 if (decimalPart.isNotEmpty()) {
                     "$formattedIntegerPart,$decimalPart"
                 } else {
@@ -258,6 +259,8 @@ private fun formatNumberWithDots(number: String): String {
             } else {
                 formattedIntegerPart
             }
+
+            if (isNegative) "-$result" else result
         }
     }
 }

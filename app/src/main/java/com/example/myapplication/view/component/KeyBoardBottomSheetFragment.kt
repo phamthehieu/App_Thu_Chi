@@ -666,8 +666,9 @@ class KeyBoardBottomSheetFragment : BottomSheetDialogFragment() {
     }
 
     private fun formatNumberWithDots(number: String): String {
-
         val hasComma = number.contains(',')
+
+        val isNegative = number.startsWith('-')
 
         val cleanNumber = number.replace("[^0-9,]".toRegex(), "")
         return when {
@@ -681,7 +682,7 @@ class KeyBoardBottomSheetFragment : BottomSheetDialogFragment() {
                 formatter.isGroupingUsed = true
 
                 val formattedIntegerPart = formatter.format(BigDecimal(integerPart))
-                if (hasComma) {
+                val result = if (hasComma) {
                     if (decimalPart.isNotEmpty()) {
                         "$formattedIntegerPart,$decimalPart"
                     } else {
@@ -690,6 +691,8 @@ class KeyBoardBottomSheetFragment : BottomSheetDialogFragment() {
                 } else {
                     formattedIntegerPart
                 }
+
+                if (isNegative) "-$result" else result
             }
         }
     }
@@ -732,6 +735,7 @@ class KeyBoardBottomSheetFragment : BottomSheetDialogFragment() {
         val calendarDialogFragment = CalendarDialogFragment()
         val bundle = Bundle()
         bundle.putString("selectedDate", selectedDate.toString())
+        bundle.putString("type", "bottom")
         calendarDialogFragment.arguments = bundle
         calendarDialogFragment.setTargetFragment(this, 0)
         calendarDialogFragment.show(parentFragmentManager, "CalendarDialogFragment")

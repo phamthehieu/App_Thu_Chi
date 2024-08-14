@@ -17,7 +17,6 @@ import kotlinx.coroutines.launch
 
 class AccountViewModel(application: Application) : AndroidViewModel(application) {
     private val repository: AccountRepository
-
     val allAccounts: LiveData<List<AccountWithIcon>>
 
     init {
@@ -67,15 +66,31 @@ class AccountViewModel(application: Application) : AndroidViewModel(application)
         return result
     }
 
-}
-
-class AccountViewModelFactory(private val application: Application) :
-    ViewModelProvider.Factory {
-    @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(AccountViewModel::class.java)) {
-            return AccountViewModel(application) as T
+    fun updateListAccounts(accounts: List<Account>): LiveData<Boolean> {
+        val result = MutableLiveData<Boolean>()
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                repository.updateListAccounts(accounts)
+                result.postValue(true)
+            } catch (e: Exception) {
+                result.postValue(false)
+            }
         }
-        throw IllegalArgumentException("Unknown ViewModel class")
+        return result
+    }
+
+    fun getAccountsByTwoIds(id1: Int, id2: Int): LiveData<List<Account>> {
+        return repository.getAccountsByTwoIds(id1, id2).asLiveData()
     }
 }
+
+    class AccountViewModelFactory(private val application: Application) :
+        ViewModelProvider.Factory {
+        @Suppress("UNCHECKED_CAST")
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            if (modelClass.isAssignableFrom(AccountViewModel::class.java)) {
+                return AccountViewModel(application) as T
+            }
+            throw IllegalArgumentException("Unknown ViewModel class")
+        }
+    }

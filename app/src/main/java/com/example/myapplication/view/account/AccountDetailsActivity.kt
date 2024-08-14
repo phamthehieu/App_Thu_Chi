@@ -7,7 +7,6 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.util.Log
 import android.view.ContextMenu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -18,11 +17,9 @@ import android.widget.LinearLayout
 import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import java.lang.reflect.Field
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import com.example.myapplication.R
@@ -32,6 +29,7 @@ import com.example.myapplication.data.AccountIconFormat
 import com.example.myapplication.data.IncomeExpenseListData
 import com.example.myapplication.databinding.ActivityAccountDetailsBinding
 import com.example.myapplication.entity.Account
+import com.example.myapplication.entity.HistoryAccount
 import com.example.myapplication.entity.IncomeExpenseList
 import com.example.myapplication.interfaces.OnMonthSelectedListener
 import com.example.myapplication.utilities.DeleteDialogUtils
@@ -93,7 +91,6 @@ class AccountDetailsActivity : AppCompatActivity(), IncomeExpenseListAdapter.OnI
 
         setupNightMode()
     }
-
 
 
     @SuppressLint("DefaultLocale")
@@ -409,30 +406,34 @@ class AccountDetailsActivity : AppCompatActivity(), IncomeExpenseListAdapter.OnI
 
         successDeleteBtn.setOnClickListener {
             val selectedItem = adapter.getSelectedItem()
-            selectedItem?.let { itemData ->
-                val itemToDelete = IncomeExpenseList(
-                    id = itemData.id,
-                    note = itemData.note,
-                    amount = itemData.amount,
-                    date = itemData.date,
-                    categoryId = itemData.categoryId,
-                    type = itemData.type,
-                    image = itemData.image,
-                    categoryName = itemData.categoryName,
-                    iconResource = itemData.iconResource,
-                    accountId = itemData.accountId
-                )
-                GlobalScope.launch {
-                    incomeExpenseListModel.deleteIncomeExpenseListModel(itemToDelete)
-                    withContext(Dispatchers.Main) {
-                        Toast.makeText(
-                            this@AccountDetailsActivity,
-                            "Đã xóa thành công",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        dialog.dismiss()
+            if (selectedItem is IncomeExpenseListData) {
+                selectedItem.let { itemData ->
+                    val itemToDelete = IncomeExpenseList(
+                        id = itemData.id,
+                        note = itemData.note,
+                        amount = itemData.amount,
+                        date = itemData.date,
+                        categoryId = itemData.categoryId,
+                        type = itemData.type,
+                        image = itemData.image,
+                        categoryName = itemData.categoryName,
+                        iconResource = itemData.iconResource,
+                        accountId = itemData.accountId
+                    )
+                    GlobalScope.launch {
+                        incomeExpenseListModel.deleteIncomeExpenseListModel(itemToDelete)
+                        withContext(Dispatchers.Main) {
+                            Toast.makeText(
+                                this@AccountDetailsActivity,
+                                "Đã xóa thành công",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            dialog.dismiss()
+                        }
                     }
                 }
+            } else if (selectedItem is HistoryAccount) {
+                // Xử lý HistoryAccount
             }
         }
 
@@ -472,7 +473,8 @@ class AccountDetailsActivity : AppCompatActivity(), IncomeExpenseListAdapter.OnI
     }
 
     private fun setupNightMode() {
-        val currentNightMode = this.resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK
+        val currentNightMode =
+            this.resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK
         when (currentNightMode) {
             android.content.res.Configuration.UI_MODE_NIGHT_NO -> {
                 binding.accountTotal.setBackgroundResource(R.drawable.bottom_sheet_border_yellow)

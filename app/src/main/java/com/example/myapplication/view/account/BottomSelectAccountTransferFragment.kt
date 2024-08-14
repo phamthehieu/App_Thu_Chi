@@ -5,7 +5,6 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,73 +13,79 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myapplication.R
-import com.example.myapplication.adapter.AccountSelectedAdapter
-import com.example.myapplication.adapter.ListAccountAdapter
+import com.example.myapplication.adapter.AccountTransferAdapter
 import com.example.myapplication.data.AccountIconFormat
-import com.example.myapplication.databinding.FragmentBottomSelectedAccountBinding
+import com.example.myapplication.databinding.FragmentBottomSelectAccountTransferBinding
 import com.example.myapplication.viewModel.AccountViewModel
 import com.example.myapplication.viewModel.AccountViewModelFactory
 import com.example.myapplication.viewModel.SharedAccountSelectedModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import java.text.DecimalFormat
 
-class BottomSelectedAccountFragment : BottomSheetDialogFragment() {
+class BottomSelectAccountTransferFragment : BottomSheetDialogFragment() {
 
-    private lateinit var binding: FragmentBottomSelectedAccountBinding
+    private lateinit var binding: FragmentBottomSelectAccountTransferBinding
 
     private val accountTypeViewModel: AccountViewModel by viewModels {
         AccountViewModelFactory(requireActivity().application)
     }
 
-    private val sharedViewModel: SharedAccountSelectedModel by activityViewModels()
+    companion object {
+        private const val ARG_ACCOUNT1 = "arg_account1"
+        private const val ARG_ACCOUNT2 = "arg_account2"
+        private const val ARG_IS_ACCOUNT_1_SELECTED = "is_account_1_selected"
 
-    private var selectedAccount: AccountIconFormat? = null
+        fun newInstance(
+            account1: AccountIconFormat?,
+            account2: AccountIconFormat?,
+            isAccount1Selected: Boolean
+        ): BottomSelectAccountTransferFragment {
+            val fragment = BottomSelectAccountTransferFragment()
+            val args = Bundle()
+            args.putParcelable(ARG_ACCOUNT1, account1)
+            args.putParcelable(ARG_ACCOUNT2, account2)
+            args.putBoolean(ARG_IS_ACCOUNT_1_SELECTED, isAccount1Selected)
+            fragment.arguments = args
+            return fragment
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentBottomSelectedAccountBinding.inflate(inflater, container, false)
+        binding = FragmentBottomSelectAccountTransferBinding.inflate(inflater, container, false)
 
         binding.accountManagerBtn.setOnClickListener {
             val accountManagementIntent = Intent(context, AccountManagementActivity::class.java)
             context?.startActivity(accountManagementIntent)
         }
 
-        setupRecyclerView()
+        binding.backBtn.setOnClickListener {
+            dismiss()
+        }
 
-        setupSwitch()
+        binding.addNewAccountBtn.setOnClickListener {
+            val addNewAccountIntent = Intent(context, AddNewAccountActivity::class.java)
+            context?.startActivity(addNewAccountIntent)
+        }
+
+        setupRecyclerView()
 
         setupNightMode()
 
         return binding.root
     }
 
-    private fun setupSwitch() {
-        sharedViewModel.selectedAccount.observe(viewLifecycleOwner) { account ->
-            selectedAccount = account
-        }
-
-        binding.switchAccount.setOnCheckedChangeListener { _, isChecked ->
-            val sharedPreferences = requireContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
-            val editor = sharedPreferences.edit()
-            editor.putBoolean("switchState", isChecked)
-            editor.apply()
-        }
-
-        binding.backBtn.setOnClickListener {
-            dismiss()
-        }
-
-        val sharedPreferences = requireContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
-        val switchState = sharedPreferences.getBoolean("switchState", false)
-
-        binding.switchAccount.isChecked = switchState
-    }
-
     private fun setupRecyclerView() {
-        val recyclerView = binding.recyclerViewAccount
+        val recyclerView = binding.recyclerViewAccountTransfer
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+        val account1 = arguments?.getParcelable<AccountIconFormat>(ARG_ACCOUNT1)
+        val account2 = arguments?.getParcelable<AccountIconFormat>(ARG_ACCOUNT2)
 
         accountTypeViewModel.allAccounts.observe(viewLifecycleOwner) { accounts ->
             val formattedAccounts = accounts.map { accountWithIcon ->
@@ -96,35 +101,30 @@ class BottomSelectedAccountFragment : BottomSheetDialogFragment() {
                 )
             }.toMutableList()
 
-            val setting = AccountIconFormat(
-                id = -1,
-                nameAccount = "Không liên kết bất kì tài khoản nào",
-                typeAccount = -1,
-                amountAccount = "0",
-                icon = -1,
-                note = "",
-                iconResource = R.drawable.ic_credit_card_50,
-                typeIcon = "Account"
-            )
+            if (formattedAccounts.isEmpty()) {
+                binding.recyclerViewAccountTransfer.visibility = View.GONE
+                binding.noData.visibility = View.VISIBLE
+            } else {
+                binding.recyclerViewAccountTransfer.visibility = View.VISIBLE
+                binding.noData.visibility = View.GONE
+            }
 
-            formattedAccounts.add(setting)
-
-            val adapter = AccountSelectedAdapter(formattedAccounts) { account ->
-                sharedViewModel.selectAccount(account)
+            val adapter = AccountTransferAdapter(formattedAccounts, account1, account2) { account ->
+                val result = Bundle().apply {
+                    putParcelable("selected_account", account)
+                }
+                parentFragmentManager.setFragmentResult("requestKey", result)
                 dismiss()
             }
 
             recyclerView.adapter = adapter
-
-            sharedViewModel.selectedAccount.observe(viewLifecycleOwner) { selectedAccount ->
-                adapter.setSelectedAccount(selectedAccount)
-            }
         }
     }
 
-    private fun setupNightMode() {
-        val currentNightMode = requireActivity().resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
 
+    private fun setupNightMode() {
+        val currentNightMode =
+            requireActivity().resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
         when (currentNightMode) {
             Configuration.UI_MODE_NIGHT_NO -> {
                 binding.accountManagerBtn.setColorFilter(
@@ -150,6 +150,7 @@ class BottomSelectedAccountFragment : BottomSheetDialogFragment() {
                         R.color.white
                     )
                 )
+
                 binding.backBtn.setColorFilter(
                     ContextCompat.getColor(
                         requireContext(),

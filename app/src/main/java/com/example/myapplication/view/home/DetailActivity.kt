@@ -19,8 +19,10 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myapplication.R
 import com.example.myapplication.adapter.ImageDetailAdapter
+import com.example.myapplication.data.HistoryAccountWithAccount
 import com.example.myapplication.data.IncomeExpenseListData
 import com.example.myapplication.databinding.ActivityDetailBinding
+import com.example.myapplication.entity.HistoryAccount
 import com.example.myapplication.entity.IncomeExpenseList
 import com.example.myapplication.view.revenue_and_expenditure.RevenueAndExpenditureActivity
 import com.example.myapplication.viewModel.IncomeExpenseListFactory
@@ -41,6 +43,8 @@ class DetailActivity : AppCompatActivity() {
 
     private var itemDetail: IncomeExpenseListData? = null
 
+    private var itemAccount: HistoryAccount? = null
+
     private var listImage: MutableList<Uri> = mutableListOf()
 
     private val incomeExpenseListModel: IncomeExpenseListModel by viewModels {
@@ -58,8 +62,17 @@ class DetailActivity : AppCompatActivity() {
         }
 
         val json = intent.getStringExtra("itemDetail")
-        itemDetail = json?.let {
-            Gson().fromJson(it, IncomeExpenseListData::class.java)
+
+        val jsonAccount = intent.getStringExtra("accountDetail")
+
+        if (json != null) {
+            itemDetail = json.let {
+                Gson().fromJson(it, IncomeExpenseListData::class.java)
+            }
+        } else if (jsonAccount != null) {
+            itemAccount = jsonAccount.let {
+                Gson().fromJson(it, HistoryAccount::class.java)
+            }
         }
 
         binding.editDetailBtn.setOnClickListener {
@@ -110,7 +123,8 @@ class DetailActivity : AppCompatActivity() {
                 GlobalScope.launch {
                     incomeExpenseListModel.deleteIncomeExpenseListModel(itemToDelete)
                     withContext(Dispatchers.Main) {
-                        Toast.makeText(this@DetailActivity, "Đã xóa thành công", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@DetailActivity, "Đã xóa thành công", Toast.LENGTH_SHORT)
+                            .show()
                         dialog.dismiss()
                         finish()
                     }

@@ -51,6 +51,21 @@ class ViewPagerAdapter(activity: FragmentActivity, private val itemEdit: IncomeE
                 }
                 fragment
             }
+            2 -> {
+                val fragment = TransferFragment()
+                val bundle = Bundle()
+                itemEdit?.let {
+                    if (it.type == "Transfer") {
+                        bundle.putString("itemEdit", Gson().toJson(it))
+                        fragment.arguments = bundle
+                    }
+                }
+                if (date != null) {
+                    bundle.putString("dateSelected", date.toString())
+                    fragment.arguments = bundle
+                }
+                fragment
+            }
             else -> TransferFragment()
         }
     }

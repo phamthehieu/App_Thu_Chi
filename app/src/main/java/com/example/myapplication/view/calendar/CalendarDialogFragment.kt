@@ -37,6 +37,7 @@ import com.example.myapplication.R
 import com.example.myapplication.databinding.Example3CalendarDayBinding
 import com.example.myapplication.databinding.Example3CalendarHeaderBinding
 import com.example.myapplication.view.component.KeyBoardBottomSheetFragment
+import com.example.myapplication.view.revenue_and_expenditure.TransferFragment
 
 @SuppressLint("RestrictedApi")
 class CalendarDialogFragment : DialogFragment() {
@@ -60,6 +61,8 @@ class CalendarDialogFragment : DialogFragment() {
 
     private var checkMode = true
 
+    private var checktype = ""
+
     private lateinit var binding: ActivityCalendarBinding
 
     @SuppressLint("SetTextI18n")
@@ -69,6 +72,7 @@ class CalendarDialogFragment : DialogFragment() {
         binding = ActivityCalendarBinding.inflate(inflater, container, false)
         arguments?.let {
             val dateString = it.getString("selectedDate")
+            checktype = it.getString("type").toString()
             today = LocalDate.parse(dateString)
         }
 
@@ -131,9 +135,16 @@ class CalendarDialogFragment : DialogFragment() {
         }
 
         binding.successBtn.setOnClickListener {
-            val targetFragment = targetFragment as? KeyBoardBottomSheetFragment
-            targetFragment?.onReceiveDate(yearSelected, monthSelected, dayOfMonthSelected)
-            dismiss()
+            if(checktype === "transfer") {
+                val targetFragment = targetFragment as? TransferFragment
+                targetFragment?.onReceiveDate(yearSelected, monthSelected, dayOfMonthSelected)
+                dismiss()
+            } else {
+                val targetFragment = targetFragment as? KeyBoardBottomSheetFragment
+                targetFragment?.onReceiveDate(yearSelected, monthSelected, dayOfMonthSelected)
+                dismiss()
+            }
+
         }
 
         val years = (1999..2099).map { it.toString() }

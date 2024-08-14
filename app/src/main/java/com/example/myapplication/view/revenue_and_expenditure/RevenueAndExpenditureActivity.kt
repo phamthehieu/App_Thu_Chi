@@ -70,30 +70,42 @@ class RevenueAndExpenditureActivity : AppCompatActivity() {
         })
 
         itemEdit?.let {
-            if (it.type == "Income") {
-                viewPager.setCurrentItem(1, false)
-                updateTabBackground(2)
-            } else {
-                viewPager.currentItem = 0
-                updateTabBackground(1)
+            Log.d("itemEdit73", it.toString())
+            when (it.type) {
+                "Expense" -> {
+                    viewPager.currentItem = 0
+                    updateTabBackground(1)
+                }
+
+                "Income" -> {
+                    viewPager.currentItem = 1
+                    updateTabBackground(2)
+                }
+
+                "historyAccount" -> {
+                    viewPager.currentItem = 2
+                    updateTabBackground(3)
+                }
             }
         } ?: updateTabBackground(1)
     }
 
     private fun updateTabBackground(selectedTabNumber: Int) {
         val currentNightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
-        val selectedColor = resources.getColor(R.color.black,this.theme)
+        val selectedColor = resources.getColor(R.color.black, this.theme)
         val unselectedColor = resources.getColor(R.color.white, this.theme)
 
-        when(selectedTabNumber) {
+        when (selectedTabNumber) {
             1 -> {
                 binding.leftView.visibility = View.GONE
                 binding.rightView.visibility = View.VISIBLE
             }
+
             2 -> {
                 binding.leftView.visibility = View.GONE
                 binding.rightView.visibility = View.GONE
             }
+
             3 -> {
                 binding.leftView.visibility = View.VISIBLE
                 binding.rightView.visibility = View.GONE
@@ -132,9 +144,22 @@ class RevenueAndExpenditureActivity : AppCompatActivity() {
         } else {
             binding.titleSubAAE.setBackgroundResource(R.drawable.round_back_black10_100)
         }
-        binding.title.setBackgroundColor(ContextCompat.getColor(this, if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) R.color.black1 else R.color.yellow))
-        binding.monthlyPayment.setColorFilter(ContextCompat.getColor(this, if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) R.color.black1 else R.color.black1))
-        val color = ContextCompat.getColor(this, if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) R.color.black else R.color.yellow)
+        binding.title.setBackgroundColor(
+            ContextCompat.getColor(
+                this,
+                if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) R.color.black1 else R.color.yellow
+            )
+        )
+        binding.monthlyPayment.setColorFilter(
+            ContextCompat.getColor(
+                this,
+                if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) R.color.black1 else R.color.black1
+            )
+        )
+        val color = ContextCompat.getColor(
+            this,
+            if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) R.color.black else R.color.yellow
+        )
         this.window.statusBarColor = color
     }
 }
