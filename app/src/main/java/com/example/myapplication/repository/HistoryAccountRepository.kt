@@ -19,4 +19,10 @@ class HistoryAccountRepository(private val historyAccountDao: HistoryAccountDao)
         historyAccountDao.deleteHistoryAccount(historyAccount)
     }
 
+    @WorkerThread
+    fun updateHistoryAccount(historyAccount: HistoryAccount) {
+        historyAccountDao.updateHistoryAccount(historyAccount)
+
+    }
+
 }

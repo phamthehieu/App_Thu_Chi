@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
+import androidx.room.Update
 import com.example.myapplication.data.HistoryAccountWithAccount
 import com.example.myapplication.entity.HistoryAccount
 import kotlinx.coroutines.flow.Flow
@@ -21,5 +22,9 @@ interface HistoryAccountDao {
 
     @Delete
     fun deleteHistoryAccount(historyAccount: HistoryAccount): Void
+
+    @Update
+    fun updateHistoryAccount(historyAccount: HistoryAccount): Void
+
 
 }

@@ -45,6 +45,7 @@ class IncomeFragment : Fragment(), CategoryAdapter.OnItemClickListener {
                 Gson().fromJson(jsonStr, IncomeExpenseListData::class.java)
             }
             dateSelected = it.getString("dateSelected")
+            Log.d("Hieu96", "itemEdit: $itemEdit $dateSelected")
         }
     }
 

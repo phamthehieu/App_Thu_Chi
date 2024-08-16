@@ -66,4 +66,6 @@
     <string name="note_account">Ghi chú</string>
     <string name="auto_account">Tự động bật lên mỗi lần</string>
     <string name="account_management">Quản lý tài khoản</string>
+    <string name="account_detail">Tài khoản</string>
+    <string name="search_title">Tìm kiếm</string>
 </resources>

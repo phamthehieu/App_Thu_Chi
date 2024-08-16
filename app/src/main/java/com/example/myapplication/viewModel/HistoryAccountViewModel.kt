@@ -10,6 +10,7 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.data.HistoryAccountWithAccount
 import com.example.myapplication.database.CategoryDatabase
+import com.example.myapplication.entity.Account
 import com.example.myapplication.entity.HistoryAccount
 import com.example.myapplication.repository.HistoryAccountRepository
 import kotlinx.coroutines.Dispatchers
@@ -42,6 +43,19 @@ class HistoryAccountViewModel(application: Application) : AndroidViewModel(appli
         viewModelScope.launch(Dispatchers.IO) {
             repository.delete(historyAccount)
         }
+    }
+
+    fun updateHistoryAccount(historyAccount: HistoryAccount): LiveData<Boolean> {
+        val result = MutableLiveData<Boolean>()
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                repository.updateHistoryAccount(historyAccount)
+                result.postValue(true)
+            } catch (e: Exception) {
+                result.postValue(false)
+            }
+        }
+        return result
     }
 
 }

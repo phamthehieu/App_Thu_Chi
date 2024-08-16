@@ -35,6 +35,7 @@ import com.example.myapplication.interfaces.OnMonthSelectedListener
 import com.example.myapplication.utilities.convertToIncomeExpenseListData
 import com.example.myapplication.view.calendar.CalendarHomeActivity
 import com.example.myapplication.view.revenue_and_expenditure.RevenueAndExpenditureActivity
+import com.example.myapplication.view.search.SearchActivity
 import com.example.myapplication.viewModel.AccountViewModel
 import com.example.myapplication.viewModel.AccountViewModelFactory
 import com.example.myapplication.viewModel.HistoryAccountViewModel
@@ -109,6 +110,11 @@ class HomeFragment : Fragment(), OnMonthSelectedListener,
             showCustomDialogBox()
         }
 
+        binding.searchBtn.setOnClickListener {
+            val intent = Intent(requireContext(), SearchActivity::class.java)
+            startActivity(intent)
+        }
+
         binding.calendarBtn.setOnClickListener {
             val intent = Intent(requireContext(), CalendarHomeActivity::class.java)
             startActivity(intent)
@@ -161,7 +167,6 @@ class HomeFragment : Fragment(), OnMonthSelectedListener,
         combinedData.observe(viewLifecycleOwner) { combinedList ->
             val incomeExpenseList = combinedList.filterIsInstance<IncomeExpenseListData>()
             val historyAccountList = combinedList.filterIsInstance<HistoryAccountWithAccount>()
-            Log.d("Hieu163", "incomeExpenseList: $historyAccountList")
             val totalIncome = incomeExpenseList.filter { it.type == "Income" }
                 .sumOf { it.amount.replace(",", ".").toDouble() }
             val totalExpense = incomeExpenseList.filter { it.type == "Expense" }
@@ -401,14 +406,23 @@ class HomeFragment : Fragment(), OnMonthSelectedListener,
         return when (item.itemId) {
             R.id.action_edit -> {
                 val selectedItem = adapter.getSelectedItem()
-                selectedItem?.let { itemToEdit ->
-                    val gson = Gson()
-                    val json = gson.toJson(itemToEdit)
-                    val intent = Intent(requireContext(), RevenueAndExpenditureActivity::class.java)
-                    intent.putExtra("itemToEdit", json)
-                    startActivity(intent)
+                if (selectedItem is IncomeExpenseListData) {
+                    selectedItem.let { itemToEdit ->
+                        val gson = Gson()
+                        val json = gson.toJson(itemToEdit)
+                        val intent = Intent(requireContext(), RevenueAndExpenditureActivity::class.java)
+                        intent.putExtra("itemToEdit", json)
+                        startActivity(intent)
+                    }
+                } else if (selectedItem is HistoryAccountWithAccount) {
+                    selectedItem.let { itemToEdit ->
+                        val gson = Gson()
+                        val json = gson.toJson(itemToEdit)
+                        val intent = Intent(requireContext(), RevenueAndExpenditureActivity::class.java)
+                        intent.putExtra("itemToEditAccount", json)
+                        startActivity(intent)
+                    }
                 }
-
                 true
             }
 
@@ -430,7 +444,7 @@ class HomeFragment : Fragment(), OnMonthSelectedListener,
                 } else if (selectedItem is HistoryAccountWithAccount) {
                     selectedItem.let { itemToEdit ->
                         val gson = Gson()
-                        val json = gson.toJson(itemToEdit.historyAccount)
+                        val json = gson.toJson(itemToEdit)
                         val intent = Intent(requireContext(), DetailActivity::class.java)
                         intent.putExtra("accountDetail", json)
                         startActivity(intent)
@@ -534,11 +548,23 @@ class HomeFragment : Fragment(), OnMonthSelectedListener,
     }
 
     override fun onItemClick(incomeExpense: Any) {
-        val gson = Gson()
-        val json = gson.toJson(incomeExpense)
-        val intent = Intent(requireContext(), DetailActivity::class.java)
-        intent.putExtra("itemDetail", json)
-        startActivity(intent)
+        if (incomeExpense is IncomeExpenseListData) {
+            incomeExpense.let { itemToEdit ->
+                val gson = Gson()
+                val json = gson.toJson(itemToEdit)
+                val intent = Intent(requireContext(), DetailActivity::class.java)
+                intent.putExtra("itemDetail", json)
+                startActivity(intent)
+            }
+        } else if (incomeExpense is HistoryAccountWithAccount) {
+            incomeExpense.let { itemToEdit ->
+                val gson = Gson()
+                val json = gson.toJson(itemToEdit)
+                val intent = Intent(requireContext(), DetailActivity::class.java)
+                intent.putExtra("accountDetail", json)
+                startActivity(intent)
+            }
+        }
     }
 
     private fun setupNightMode() {

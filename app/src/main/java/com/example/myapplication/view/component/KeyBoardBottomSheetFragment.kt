@@ -90,7 +90,6 @@ class KeyBoardBottomSheetFragment : BottomSheetDialogFragment() {
                 bottomSheet.getWindowVisibleDisplayFrame(rect)
                 val screenHeight = bottomSheet.rootView.height
                 val keypadHeight = screenHeight - rect.bottom
-
                 if (keypadHeight > screenHeight * 0.15) {
                     hideCustomKeyboard()
                 } else {
@@ -151,11 +150,26 @@ class KeyBoardBottomSheetFragment : BottomSheetDialogFragment() {
                     button.setBackgroundResource(R.drawable.background_white)
                     button.setColorFilter(ContextCompat.getColor(requireContext(), R.color.black))
                 }
-                binding.buttonCalendar.setTextColor(ContextCompat.getColor(requireContext(), R.color.yellow))
+                binding.buttonCalendar.setTextColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.yellow
+                    )
+                )
                 binding.buttonCalendar.setBackgroundResource(R.drawable.background_white)
-                binding.selectedAccount.setColorFilter(ContextCompat.getColor(requireContext(), R.color.black))
+                binding.selectedAccount.setColorFilter(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.black
+                    )
+                )
                 binding.note.setBackgroundResource(R.drawable.background_white)
-                binding.imageArtists.setColorFilter(ContextCompat.getColor(requireContext(), R.color.black))
+                binding.imageArtists.setColorFilter(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.black
+                    )
+                )
             }
 
             Configuration.UI_MODE_NIGHT_YES -> {
@@ -203,7 +217,12 @@ class KeyBoardBottomSheetFragment : BottomSheetDialogFragment() {
 
         sharedViewModel.selectedAccount.observe(viewLifecycleOwner) { account ->
             selectedAccount = account
-            binding.selectedAccount.setColorFilter(ContextCompat.getColor(requireContext(), R.color.yellow))
+            binding.selectedAccount.setColorFilter(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.yellow
+                )
+            )
         }
 
         binding.selectedAccount.setOnClickListener {
@@ -438,51 +457,10 @@ class KeyBoardBottomSheetFragment : BottomSheetDialogFragment() {
             else -> ""
         }
 
-        if (numberToAdd == "," && numberSequence.contains(',')) {
-            displayText = formatNumberWithDots(numberSequence.toString())
-
-            if (numberSequence2.isNotEmpty()) {
-                displayText =
-                    formatNumberWithDots(numberSequence2.toString()) + calculationMark + displayText
-            }
-
-            binding.textViewNumberDisplay.text = displayText
+        if (numberSequence.isEmpty() && numberToAdd === ",") {
+            binding.textViewNumberDisplay.text = "0"
         } else {
-            if (calculation) {
-                doCalculations(mark)
-            } else {
-                if (numberToAdd != "") {
-                    if (numberSequence.isNotEmpty()) {
-                        if (canAddMoreDigits(numberSequence.toString())) {
-                            if (numberSequence.length < 10) {
-                                numberSequence.append(numberToAdd)
-                            } else {
-                                numberSequence.setCharAt(numberSequence.length - 1, numberToAdd[0])
-                            }
-                        } else {
-                            numberSequence.setCharAt(numberSequence.length - 1, numberToAdd[0])
-                        }
-                    } else {
-                        if (numberSequence.length < 10) {
-                            numberSequence.append(numberToAdd)
-                        } else {
-                            numberSequence.setCharAt(numberSequence.length - 1, numberToAdd[0])
-                        }
-                    }
-                }
-            }
-
-            if (numberSequence.toString() != "0" && numberSequence.isNotEmpty() || numberSequence2.isNotEmpty()) {
-                binding.successKeyBoardBtn.setBackgroundResource(R.drawable.background_yellow)
-                binding.successKeyBoardBtn.setColorFilter(Color.BLACK)
-            } else {
-                binding.successKeyBoardBtn.setBackgroundResource(R.drawable.background_gray)
-                binding.successKeyBoardBtn.setColorFilter(Color.WHITE)
-            }
-
-            if (numberToAdd == "" && numberSequence.isEmpty() && numberSequence2.isEmpty()) {
-                binding.textViewNumberDisplay.text = "0"
-            } else {
+            if (numberToAdd == "," && numberSequence.contains(',')) {
                 displayText = formatNumberWithDots(numberSequence.toString())
 
                 if (numberSequence2.isNotEmpty()) {
@@ -491,6 +469,54 @@ class KeyBoardBottomSheetFragment : BottomSheetDialogFragment() {
                 }
 
                 binding.textViewNumberDisplay.text = displayText
+            } else {
+                if (calculation) {
+                    doCalculations(mark)
+                } else {
+                    if (numberToAdd != "") {
+                        if (numberSequence.isNotEmpty()) {
+                            if (canAddMoreDigits(numberSequence.toString())) {
+                                if (numberSequence.length < 10) {
+                                    numberSequence.append(numberToAdd)
+                                } else {
+                                    numberSequence.setCharAt(
+                                        numberSequence.length - 1,
+                                        numberToAdd[0]
+                                    )
+                                }
+                            } else {
+                                numberSequence.setCharAt(numberSequence.length - 1, numberToAdd[0])
+                            }
+                        } else {
+                            if (numberSequence.length < 10) {
+                                numberSequence.append(numberToAdd)
+                            } else {
+                                numberSequence.setCharAt(numberSequence.length - 1, numberToAdd[0])
+                            }
+                        }
+                    }
+                }
+
+                if (numberSequence.toString() != "0" && numberSequence.isNotEmpty() || numberSequence2.isNotEmpty()) {
+                    binding.successKeyBoardBtn.setBackgroundResource(R.drawable.background_yellow)
+                    binding.successKeyBoardBtn.setColorFilter(Color.BLACK)
+                } else {
+                    binding.successKeyBoardBtn.setBackgroundResource(R.drawable.background_gray)
+                    binding.successKeyBoardBtn.setColorFilter(Color.WHITE)
+                }
+
+                if (numberToAdd == "" && numberSequence.isEmpty() && numberSequence2.isEmpty()) {
+                    binding.textViewNumberDisplay.text = "0"
+                } else {
+                    displayText = formatNumberWithDots(numberSequence.toString())
+
+                    if (numberSequence2.isNotEmpty()) {
+                        displayText =
+                            formatNumberWithDots(numberSequence2.toString()) + calculationMark + displayText
+                    }
+
+                    binding.textViewNumberDisplay.text = displayText
+                }
             }
         }
     }

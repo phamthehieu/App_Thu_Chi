@@ -11,6 +11,7 @@ import androidx.core.content.ContextCompat
 import androidx.viewpager2.widget.ViewPager2
 import com.example.myapplication.R
 import com.example.myapplication.adapter.ViewPagerAdapter
+import com.example.myapplication.data.HistoryAccountWithAccount
 import com.example.myapplication.data.IncomeExpenseListData
 import com.example.myapplication.databinding.ActivityRevenueAndExpenditureBinding
 import com.google.gson.Gson
@@ -21,8 +22,10 @@ class RevenueAndExpenditureActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRevenueAndExpenditureBinding
     private lateinit var viewPager: ViewPager2
     private lateinit var adapter: ViewPagerAdapter
+
     private var itemEdit: IncomeExpenseListData? = null
     private var dateSelected: LocalDate? = null
+    private var itemAccount: HistoryAccountWithAccount? = null
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,6 +36,11 @@ class RevenueAndExpenditureActivity : AppCompatActivity() {
         val json = intent.getStringExtra("itemToEdit")
         itemEdit = json?.let {
             Gson().fromJson(it, IncomeExpenseListData::class.java)
+        }
+
+        val jsonAccount = intent.getStringExtra("itemToEditAccount")
+        itemAccount = jsonAccount?.let {
+            Gson().fromJson(it, HistoryAccountWithAccount::class.java)
         }
 
         viewPager = findViewById(R.id.viewPagerTv)
@@ -59,7 +67,7 @@ class RevenueAndExpenditureActivity : AppCompatActivity() {
             dateSelected = LocalDate.parse(dateSelectedString)
         }
 
-        adapter = ViewPagerAdapter(this, itemEdit, dateSelected)
+        adapter = ViewPagerAdapter(this, itemEdit, itemAccount, dateSelected)
         viewPager.adapter = adapter
 
         viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
@@ -69,25 +77,24 @@ class RevenueAndExpenditureActivity : AppCompatActivity() {
             }
         })
 
-        itemEdit?.let {
-            Log.d("itemEdit73", it.toString())
-            when (it.type) {
-                "Expense" -> {
-                    viewPager.currentItem = 0
-                    updateTabBackground(1)
-                }
+       if (itemEdit != null) {
+           itemEdit?.let {
+               when (it.type) {
+                   "Expense" -> {
+                       viewPager.currentItem = 0
+                       updateTabBackground(1)
+                   }
 
-                "Income" -> {
-                    viewPager.currentItem = 1
-                    updateTabBackground(2)
-                }
-
-                "historyAccount" -> {
-                    viewPager.currentItem = 2
-                    updateTabBackground(3)
-                }
-            }
-        } ?: updateTabBackground(1)
+                   "Income" -> {
+                       viewPager.currentItem = 1
+                       updateTabBackground(2)
+                   }
+               }
+           } ?: updateTabBackground(1)
+       } else if (itemAccount != null) {
+           viewPager.currentItem = 2
+           updateTabBackground(3)
+       }
     }
 
     private fun updateTabBackground(selectedTabNumber: Int) {

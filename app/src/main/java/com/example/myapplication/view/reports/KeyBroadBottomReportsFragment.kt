@@ -178,31 +178,35 @@ class KeyBroadBottomReportsFragment : BottomSheetDialogFragment() {
             else -> ""
         }
 
-        if (numberToAdd == "," && numberSequence.contains(',')) {
-            displayText = formatNumberWithDots(numberSequence.toString())
-            binding.textViewNumberDisplay.text = displayText
+        if (numberSequence.isEmpty() && numberToAdd === ",") {
+            binding.textViewNumberDisplay.text = "0"
         } else {
-            if (numberToAdd != "") {
-                if (numberSequence.isNotEmpty()) {
-                    if (canAddMoreDigits(numberSequence.toString())) {
+            if (numberToAdd == "," && numberSequence.contains(',')) {
+                displayText = formatNumberWithDots(numberSequence.toString())
+                binding.textViewNumberDisplay.text = displayText
+            } else {
+                if (numberToAdd != "") {
+                    if (numberSequence.isNotEmpty()) {
+                        if (canAddMoreDigits(numberSequence.toString())) {
+                            if (numberSequence.length < 10) {
+                                numberSequence.append(numberToAdd)
+                            } else {
+                                numberSequence.setCharAt(numberSequence.length - 1, numberToAdd[0])
+                            }
+                        } else {
+                            numberSequence.setCharAt(numberSequence.length - 1, numberToAdd[0])
+                        }
+                    } else {
                         if (numberSequence.length < 10) {
                             numberSequence.append(numberToAdd)
                         } else {
                             numberSequence.setCharAt(numberSequence.length - 1, numberToAdd[0])
                         }
-                    } else {
-                        numberSequence.setCharAt(numberSequence.length - 1, numberToAdd[0])
-                    }
-                } else {
-                    if (numberSequence.length < 10) {
-                        numberSequence.append(numberToAdd)
-                    } else {
-                        numberSequence.setCharAt(numberSequence.length - 1, numberToAdd[0])
                     }
                 }
             }
+            binding.textViewNumberDisplay.text = formatNumberWithDots(numberSequence.toString())
         }
-        binding.textViewNumberDisplay.text = formatNumberWithDots(numberSequence.toString())
     }
 
     private fun updateBudgetCategory(type: String = "") {

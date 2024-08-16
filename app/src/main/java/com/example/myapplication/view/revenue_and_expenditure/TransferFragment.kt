@@ -1,6 +1,7 @@
 package com.example.myapplication.view.revenue_and_expenditure
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Color
@@ -9,21 +10,29 @@ import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.DisplayMetrics
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import android.view.animation.Animation
 import android.view.animation.TranslateAnimation
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.Observer
+import androidx.lifecycle.viewModelScope
 import com.example.myapplication.MainActivity
 import com.example.myapplication.R
 import com.example.myapplication.data.AccountIconFormat
+import com.example.myapplication.data.HistoryAccountWithAccount
+import com.example.myapplication.data.IncomeExpenseListData
 import com.example.myapplication.databinding.FragmentTransferBinding
 import com.example.myapplication.entity.Account
 import com.example.myapplication.entity.HistoryAccount
@@ -37,9 +46,13 @@ import com.example.myapplication.viewModel.HistoryAccountViewModel
 import com.example.myapplication.viewModel.HistoryAccountViewModelFactory
 import com.example.myapplication.viewModel.ImageViewModel
 import com.example.myapplication.viewModel.SharedAccountSelectedModel
+import com.google.gson.Gson
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.math.BigDecimal
 import java.text.DecimalFormat
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.Calendar
 
 class TransferFragment : Fragment() {
@@ -68,6 +81,10 @@ class TransferFragment : Fragment() {
 
     private val sharedViewModel: SharedAccountSelectedModel by activityViewModels()
 
+    private var itemAccount: HistoryAccountWithAccount? = null
+
+    private var dateSelected: String? = null
+
     private val historyAccountViewModel: HistoryAccountViewModel by viewModels {
         HistoryAccountViewModelFactory(requireActivity().application)
     }
@@ -78,6 +95,13 @@ class TransferFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        arguments?.let {
+            val json = it.getString("itemEdit")
+            itemAccount = json?.let { jsonStr ->
+                Gson().fromJson(jsonStr, HistoryAccountWithAccount::class.java)
+            }
+            dateSelected = it.getString("dateSelected")
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -99,7 +123,111 @@ class TransferFragment : Fragment() {
             selectedDate.dayOfMonth.toString()
         )
 
+        getDataEdit()
+
         return binding.root
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun setupDataEdit() {
+        checkEdit = true
+        val amountFormatter = DecimalFormat("#,###.##")
+
+        val data1 = account1?.amountAccount?.replace(",", ".")?.toDoubleOrNull()
+        if (data1 != null) {
+            val amountData1 = amountFormatter.format(data1)
+            binding.nameAccount1TV.text = account1?.nameAccount
+            binding.amountAccount1TV.visibility = View.VISIBLE
+            binding.amountAccount1TV.text = amountData1
+        } else {
+            Log.e("Hieu127", "account1 amountAccount is not a valid number")
+        }
+
+        val data2 = account2?.amountAccount?.replace(",", ".")?.toDoubleOrNull()
+        if (data2 != null) {
+            val amountData2 = amountFormatter.format(data2)
+            binding.nameAccount2TV.text = account2?.nameAccount
+            binding.amountAccount2TV.visibility = View.VISIBLE
+            binding.amountAccount2TV.text = amountData2
+        } else {
+            Log.e("Hieu127", "account2 amountAccount is not a valid number")
+        }
+        val amountFormat = itemAccount?.historyAccount?.transferAmount?.replace(",", ".")?.toDoubleOrNull()
+
+        val dataImage = itemAccount?.historyAccount?.image?.replace("[", "")?.replace("]", "")?.split(", ")
+        dataImage?.distinct()?.forEach { imageString ->
+            if (imageString.isNotEmpty()) {
+                val uri = Uri.parse(imageString)
+                if (!listImage.contains(uri)) {
+                    listImage.add(uri)
+                    imageViewModel.addImageUri(uri)
+                }
+            }
+        }
+
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        val dateString = itemAccount!!.historyAccount.date
+        selectedDate = LocalDate.parse(dateString, formatter)
+        onReceiveDate(
+            selectedDate.year.toString(),
+            selectedDate.monthValue.toString(),
+            selectedDate.dayOfMonth.toString()
+        )
+        numberSequence.append(amountFormatter.format(amountFormat))
+        note = itemAccount?.historyAccount?.note.toString()
+        binding.nameCategoryEt.setText(itemAccount?.historyAccount?.note)
+        binding.textViewNumberDisplay.text = amountFormatter.format(amountFormat)
+        binding.amountReceiveTv.text = amountFormatter.format(amountFormat)
+        binding.amountSendTv.text = amountFormatter.format(amountFormat)
+        binding.amountLayout1.visibility = View.VISIBLE
+        binding.amountLayout2.visibility = View.VISIBLE
+        showKeyboardLayout()
+        setupBackground()
+    }
+
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun getDataEdit() {
+        if (itemAccount != null) {
+            val accountTransferLiveData = accountTypeViewModel.getAccountsByAccountId(itemAccount!!.historyAccount.idAccountTransfer)
+            val accountReceiveLiveData = accountTypeViewModel.getAccountsByAccountId(itemAccount!!.historyAccount.idAccountReceive)
+
+            val mediatorLiveData = MediatorLiveData<Pair<AccountIconFormat?, AccountIconFormat?>>()
+
+            mediatorLiveData.addSource(accountTransferLiveData) { account ->
+                account1 = AccountIconFormat(
+                    id = account.account.id,
+                    nameAccount = account.account.nameAccount,
+                    typeAccount = account.account.typeAccount,
+                    amountAccount = account.account.amountAccount,
+                    icon = account.account.icon,
+                    note = account.account.note,
+                    iconResource = account.icon.iconResource,
+                    typeIcon = account.icon.type
+                )
+                mediatorLiveData.value = Pair(account1, account2)
+            }
+
+            mediatorLiveData.addSource(accountReceiveLiveData) { account ->
+                account2 = AccountIconFormat(
+                    id = account.account.id,
+                    nameAccount = account.account.nameAccount,
+                    typeAccount = account.account.typeAccount,
+                    amountAccount = account.account.amountAccount,
+                    icon = account.account.icon,
+                    note = account.account.note,
+                    iconResource = account.icon.iconResource,
+                    typeIcon = account.icon.type
+                )
+                mediatorLiveData.value = Pair(account1, account2)
+            }
+
+            mediatorLiveData.observe(viewLifecycleOwner) { pair ->
+                if (pair.first != null && pair.second != null) {
+                    setupDataEdit()
+                }
+            }
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -121,12 +249,25 @@ class TransferFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     private fun setupBackground() {
 
-        binding.nameCategoryEt.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+        binding.nameCategoryEt.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                showDefaultKeyboard()
             }
+        }
+        binding.nameCategoryEt.setOnFocusChangeListener { v, hasFocus ->
+            if (hasFocus) {
+                hideCustomKeyboard()
+            }
+        }
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            }
+        binding.nameCategoryEt.setOnClickListener {
+            hideCustomKeyboard()
+        }
+
+        binding.nameCategoryEt.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 
             override fun afterTextChanged(s: Editable?) {
                 note = s.toString()
@@ -404,77 +545,206 @@ class TransferFragment : Fragment() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun saveDataToServer(type: Int) {
-        if (type == 1) {
-            if (numberSequence.isEmpty()) {
-                Toast.makeText(requireContext(), "Vui lòng nhập số tiền!", Toast.LENGTH_SHORT)
-                    .show()
-            } else {
-                val historyAccount = HistoryAccount(
-                    idAccountTransfer = account1!!.id,
-                    nameAccountTransfer = account1!!.nameAccount,
-                    idAccountReceive = account2!!.id,
-                    nameAccountReceive = account2!!.nameAccount,
-                    transferAmount = numberSequence.toString(),
-                    date = selectedDate.toString(),
-                    image = listImage.toString(),
-                    note = note,
-                    icon = R.drawable.ic_data_transfer_24,
-                    type = "historyAccount"
-                )
-                historyAccountViewModel.insert(historyAccount)
-                    .observe(viewLifecycleOwner) { success ->
-                        if (success) {
-                            val listAccount = setupListAccount(numberSequence)
-                            accountTypeViewModel.updateListAccounts(listAccount)
-                                .observe(viewLifecycleOwner) { success ->
-                                    if (success) {
-                                        Toast.makeText(requireContext(), "Chuyển khoản thành công!", Toast.LENGTH_SHORT).show()
-                                        val intent = Intent(requireContext(), MainActivity::class.java)
-                                        startActivity(intent)
-                                    } else {
-                                        Toast.makeText(requireContext(), "Thêm không thành công!", Toast.LENGTH_SHORT).show()
+        if (checkEdit) {
+            if (type == 1) {
+                if (numberSequence.isEmpty()) {
+                    Toast.makeText(requireContext(), "Vui lòng nhập số tiền!", Toast.LENGTH_SHORT).show()
+                } else {
+                    val historyAccount = HistoryAccount(
+                        id = itemAccount!!.historyAccount.id,
+                        idAccountTransfer = account1!!.id,
+                        nameAccountTransfer = account1!!.nameAccount,
+                        idAccountReceive = account2!!.id,
+                        nameAccountReceive = account2!!.nameAccount,
+                        transferAmount = numberSequence.toString(),
+                        date = selectedDate.toString(),
+                        image = listImage.toString(),
+                        note = note,
+                        icon = itemAccount!!.historyAccount.icon,
+                        type = itemAccount!!.historyAccount.note
+                    )
+                    historyAccountViewModel.updateHistoryAccount(historyAccount)
+                        .observe(viewLifecycleOwner) { success ->
+                            if (success) {
+                                val listAccount = setupListAccount(numberSequence)
+                                accountTypeViewModel.updateListAccounts(listAccount)
+                                    .observe(viewLifecycleOwner) { success ->
+                                        if (success) {
+                                            Toast.makeText(
+                                                requireContext(),
+                                                "Sửa chuyển khoản thành công!",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                            val intent = Intent(requireContext(), MainActivity::class.java)
+                                            startActivity(intent)
+                                        } else {
+                                            Toast.makeText(
+                                                requireContext(),
+                                                "Sửa chuyển khoản không thành công!",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                        }
                                     }
-                                }
-                        } else {
-                            Toast.makeText(requireContext(), "Thêm không thành công!", Toast.LENGTH_SHORT).show()
+                            } else {
+                                Toast.makeText(
+                                    requireContext(),
+                                    "Sửa chuyển khoản không thành công!",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
                         }
-                    }
+                }
+            } else {
+                if (numberSequence2.isEmpty()) {
+                    Toast.makeText(requireContext(), "Vui lòng nhập số tiền!", Toast.LENGTH_SHORT)
+                        .show()
+                } else {
+                    val historyAccount = HistoryAccount(
+                        id = itemAccount!!.historyAccount.id,
+                        idAccountTransfer = account1!!.id,
+                        nameAccountTransfer = account1!!.nameAccount,
+                        idAccountReceive = account2!!.id,
+                        nameAccountReceive = account2!!.nameAccount,
+                        transferAmount = numberSequence2.toString(),
+                        date = selectedDate.toString(),
+                        image = listImage.toString(),
+                        note = note,
+                        icon = itemAccount!!.historyAccount.icon,
+                        type = itemAccount!!.historyAccount.note
+                    )
+                    historyAccountViewModel.updateHistoryAccount(historyAccount)
+                        .observe(viewLifecycleOwner) { success ->
+                            if (success) {
+                                val listAccount = setupListAccount(numberSequence2)
+                                accountTypeViewModel.updateListAccounts(listAccount)
+                                    .observe(viewLifecycleOwner) { success ->
+                                        if (success) {
+                                            Toast.makeText(
+                                                requireContext(),
+                                                "Sửa chuyển khoản thành công!",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                            val intent =
+                                                Intent(requireContext(), MainActivity::class.java)
+                                            startActivity(intent)
+                                        } else {
+                                            Toast.makeText(
+                                                requireContext(),
+                                                "Sửa chuyển khoản không thành công!",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                        }
+                                    }
+                            } else {
+                                Toast.makeText(
+                                    requireContext(),
+                                    "Sửa chuyển khoản không thành công!",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
+                }
             }
         } else {
-            if (numberSequence2.isEmpty()) {
-                Toast.makeText(requireContext(), "Vui lòng nhập số tiền!", Toast.LENGTH_SHORT)
-                    .show()
-            } else {
-                val historyAccount = HistoryAccount(
-                    idAccountTransfer = account1!!.id,
-                    nameAccountTransfer = account1!!.nameAccount,
-                    idAccountReceive = account2!!.id,
-                    nameAccountReceive = account2!!.nameAccount,
-                    transferAmount = numberSequence2.toString(),
-                    date = selectedDate.toString(),
-                    image = listImage.toString(),
-                    note = note,
-                    icon = R.drawable.ic_data_transfer_24,
-                    type = "historyAccount"
-                )
-                historyAccountViewModel.insert(historyAccount)
-                    .observe(viewLifecycleOwner) { success ->
-                        if (success) {
-                            val listAccount = setupListAccount(numberSequence2)
-                            accountTypeViewModel.updateListAccounts(listAccount)
-                                .observe(viewLifecycleOwner) { success ->
-                                    if (success) {
-                                        Toast.makeText(requireContext(), "Chuyển khoản thành công!", Toast.LENGTH_SHORT).show()
-                                        val intent = Intent(requireContext(), MainActivity::class.java)
-                                        startActivity(intent)
-                                    } else {
-                                        Toast.makeText(requireContext(), "Thêm không thành công!", Toast.LENGTH_SHORT).show()
+            if (type == 1) {
+                if (numberSequence.isEmpty()) {
+                    Toast.makeText(requireContext(), "Vui lòng nhập số tiền!", Toast.LENGTH_SHORT)
+                        .show()
+                } else {
+                    val historyAccount = HistoryAccount(
+                        idAccountTransfer = account1!!.id,
+                        nameAccountTransfer = account1!!.nameAccount,
+                        idAccountReceive = account2!!.id,
+                        nameAccountReceive = account2!!.nameAccount,
+                        transferAmount = numberSequence.toString(),
+                        date = selectedDate.toString(),
+                        image = listImage.toString(),
+                        note = note,
+                        icon = R.drawable.ic_data_transfer_24,
+                        type = "historyAccount"
+                    )
+                    historyAccountViewModel.insert(historyAccount)
+                        .observe(viewLifecycleOwner) { success ->
+                            if (success) {
+                                val listAccount = setupListAccount(numberSequence)
+                                accountTypeViewModel.updateListAccounts(listAccount)
+                                    .observe(viewLifecycleOwner) { success ->
+                                        if (success) {
+                                            Toast.makeText(
+                                                requireContext(),
+                                                "Chuyển khoản thành công!",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                            val intent =
+                                                Intent(requireContext(), MainActivity::class.java)
+                                            startActivity(intent)
+                                        } else {
+                                            Toast.makeText(
+                                                requireContext(),
+                                                "Thêm không thành công!",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                        }
                                     }
-                                }
-                        } else {
-                            Toast.makeText(requireContext(), "Thêm không thành công!", Toast.LENGTH_SHORT).show()
+                            } else {
+                                Toast.makeText(
+                                    requireContext(),
+                                    "Thêm không thành công!",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
                         }
-                    }
+                }
+            } else {
+                if (numberSequence2.isEmpty()) {
+                    Toast.makeText(requireContext(), "Vui lòng nhập số tiền!", Toast.LENGTH_SHORT)
+                        .show()
+                }
+                else {
+                    val historyAccount = HistoryAccount(
+                        idAccountTransfer = account1!!.id,
+                        nameAccountTransfer = account1!!.nameAccount,
+                        idAccountReceive = account2!!.id,
+                        nameAccountReceive = account2!!.nameAccount,
+                        transferAmount = numberSequence2.toString(),
+                        date = selectedDate.toString(),
+                        image = listImage.toString(),
+                        note = note,
+                        icon = R.drawable.ic_data_transfer_24,
+                        type = "historyAccount"
+                    )
+                    historyAccountViewModel.insert(historyAccount)
+                        .observe(viewLifecycleOwner) { success ->
+                            if (success) {
+                                val listAccount = setupListAccount(numberSequence2)
+                                accountTypeViewModel.updateListAccounts(listAccount)
+                                    .observe(viewLifecycleOwner) { success ->
+                                        if (success) {
+                                            Toast.makeText(
+                                                requireContext(),
+                                                "Chuyển khoản thành công!",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                            val intent =
+                                                Intent(requireContext(), MainActivity::class.java)
+                                            startActivity(intent)
+                                        } else {
+                                            Toast.makeText(
+                                                requireContext(),
+                                                "Thêm không thành công!",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                        }
+                                    }
+                            } else {
+                                Toast.makeText(
+                                    requireContext(),
+                                    "Thêm không thành công!",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
+                }
             }
         }
     }
@@ -585,7 +855,6 @@ class TransferFragment : Fragment() {
             }
         }
     }
-
 
     private fun setupNightMode() {
         val currentNightMode =
@@ -738,6 +1007,48 @@ class TransferFragment : Fragment() {
                 "bottomSelectAccountTransferFragment"
             )
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.nameCategoryEt.setOnEditorActionListener { _, _, _ ->
+            hideKeyboard()
+            showCustomKeyboard()
+            true
+        }
+
+    }
+
+    private fun showCustomKeyboard() {
+        binding.keyboard.visibility = View.VISIBLE
+        binding.keyboard.animate()
+            .alpha(1f)
+            .translationY(0f)
+            .setDuration(200)
+            .start()
+    }
+
+    private fun hideCustomKeyboard() {
+        binding.keyboard.animate()
+            .alpha(0f)
+            .translationY(binding.keyboard.height.toFloat())
+            .setDuration(200)
+            .withEndAction {
+                binding.keyboard.visibility = View.GONE
+            }
+            .start()
+    }
+
+    private fun showDefaultKeyboard() {
+        val imm =
+            requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.showSoftInput(binding.nameCategoryEt, InputMethodManager.SHOW_IMPLICIT)
+    }
+
+    private fun hideKeyboard() {
+        val imm =
+            requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(binding.nameCategoryEt.windowToken, 0)
     }
 
 }

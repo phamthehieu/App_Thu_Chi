@@ -263,52 +263,11 @@ class KeyBroadBottomSheetAccountFragment : BottomSheetTypeAccountFragment() {
 
             else -> ""
         }
-        Log.d("Hieu48", "Number to add: $numberToAdd - $numberSequence")
-        if (numberToAdd == "," && numberSequence.contains(',')) {
-            displayText = formatNumberWithDots(numberSequence.toString())
 
-            if (numberSequence2.isNotEmpty()) {
-                displayText =
-                    formatNumberWithDots(numberSequence2.toString()) + calculationMark + displayText
-            }
-
-            binding.textViewNumberDisplay.text = displayText
+        if (numberSequence.isEmpty() && numberToAdd === ",") {
+            binding.textViewNumberDisplay.text = "0"
         } else {
-            if (calculation) {
-                doCalculations(mark)
-            } else {
-                if (numberToAdd != "") {
-                    if (numberSequence.isNotEmpty()) {
-                        if (canAddMoreDigits(numberSequence.toString())) {
-                            if (numberSequence.length < 10) {
-                                numberSequence.append(numberToAdd)
-                            } else {
-                                numberSequence.setCharAt(numberSequence.length - 1, numberToAdd[0])
-                            }
-                        } else {
-                            numberSequence.setCharAt(numberSequence.length - 1, numberToAdd[0])
-                        }
-                    } else {
-                        if (numberSequence.length < 10) {
-                            numberSequence.append(numberToAdd)
-                        } else {
-                            numberSequence.setCharAt(numberSequence.length - 1, numberToAdd[0])
-                        }
-                    }
-                }
-            }
-
-            if (numberSequence.toString() != "0" && numberSequence.isNotEmpty() || numberSequence2.isNotEmpty()) {
-                binding.successKeyBoardBtn.setBackgroundResource(R.drawable.background_yellow)
-                binding.successKeyBoardBtn.setColorFilter(Color.BLACK)
-            } else {
-                binding.successKeyBoardBtn.setBackgroundResource(R.drawable.background_gray)
-                binding.successKeyBoardBtn.setColorFilter(Color.WHITE)
-            }
-
-            if (numberToAdd == "" && numberSequence.isEmpty() && numberSequence2.isEmpty()) {
-                binding.textViewNumberDisplay.text = "0"
-            } else {
+            if (numberToAdd == "," && numberSequence.contains(',')) {
                 displayText = formatNumberWithDots(numberSequence.toString())
 
                 if (numberSequence2.isNotEmpty()) {
@@ -317,6 +276,54 @@ class KeyBroadBottomSheetAccountFragment : BottomSheetTypeAccountFragment() {
                 }
 
                 binding.textViewNumberDisplay.text = displayText
+            } else {
+                if (calculation) {
+                    doCalculations(mark)
+                } else {
+                    if (numberToAdd != "") {
+                        if (numberSequence.isNotEmpty()) {
+                            if (canAddMoreDigits(numberSequence.toString())) {
+                                if (numberSequence.length < 10) {
+                                    numberSequence.append(numberToAdd)
+                                } else {
+                                    numberSequence.setCharAt(
+                                        numberSequence.length - 1,
+                                        numberToAdd[0]
+                                    )
+                                }
+                            } else {
+                                numberSequence.setCharAt(numberSequence.length - 1, numberToAdd[0])
+                            }
+                        } else {
+                            if (numberSequence.length < 10) {
+                                numberSequence.append(numberToAdd)
+                            } else {
+                                numberSequence.setCharAt(numberSequence.length - 1, numberToAdd[0])
+                            }
+                        }
+                    }
+                }
+
+                if (numberSequence.toString() != "0" && numberSequence.isNotEmpty() || numberSequence2.isNotEmpty()) {
+                    binding.successKeyBoardBtn.setBackgroundResource(R.drawable.background_yellow)
+                    binding.successKeyBoardBtn.setColorFilter(Color.BLACK)
+                } else {
+                    binding.successKeyBoardBtn.setBackgroundResource(R.drawable.background_gray)
+                    binding.successKeyBoardBtn.setColorFilter(Color.WHITE)
+                }
+
+                if (numberToAdd == "" && numberSequence.isEmpty() && numberSequence2.isEmpty()) {
+                    binding.textViewNumberDisplay.text = "0"
+                } else {
+                    displayText = formatNumberWithDots(numberSequence.toString())
+
+                    if (numberSequence2.isNotEmpty()) {
+                        displayText =
+                            formatNumberWithDots(numberSequence2.toString()) + calculationMark + displayText
+                    }
+
+                    binding.textViewNumberDisplay.text = displayText
+                }
             }
         }
     }

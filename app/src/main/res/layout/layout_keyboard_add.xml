@@ -137,46 +137,46 @@
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/buttonSeven"
                 android:layout_width="0dp"
-                android:layout_height="60dp"
+                android:layout_height="50dp"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:background="@drawable/background_gray"
                 android:padding="10dp"
                 android:text="7"
                 android:textColor="@color/white"
-                android:textSize="30sp"
+                android:textSize="24sp"
                 android:textStyle="bold" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/buttonEight"
                 android:layout_width="0dp"
-                android:layout_height="60dp"
+                android:layout_height="50dp"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:background="@drawable/background_gray"
                 android:padding="10dp"
                 android:text="8"
                 android:textColor="@color/white"
-                android:textSize="30sp"
+                android:textSize="24sp"
                 android:textStyle="bold" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/buttonNine"
                 android:layout_width="0dp"
-                android:layout_height="60dp"
+                android:layout_height="50dp"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:background="@drawable/background_gray"
                 android:padding="10dp"
                 android:text="9"
                 android:textColor="@color/white"
-                android:textSize="30sp"
+                android:textSize="24sp"
                 android:textStyle="bold" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/buttonCalendar"
                 android:layout_width="0dp"
-                android:layout_height="60dp"
+                android:layout_height="50dp"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:background="@drawable/background_gray"
@@ -201,46 +201,46 @@
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/buttonFour"
                 android:layout_width="0dp"
-                android:layout_height="60dp"
+                android:layout_height="50dp"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:background="@drawable/background_gray"
                 android:padding="10dp"
                 android:text="4"
                 android:textColor="@color/white"
-                android:textSize="30sp"
+                android:textSize="24sp"
                 android:textStyle="bold" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/buttonFive"
                 android:layout_width="0dp"
-                android:layout_height="60dp"
+                android:layout_height="50dp"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:background="@drawable/background_gray"
                 android:padding="10dp"
                 android:text="5"
                 android:textColor="@color/white"
-                android:textSize="30sp"
+                android:textSize="24sp"
                 android:textStyle="bold" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/buttonSix"
                 android:layout_width="0dp"
-                android:layout_height="60dp"
+                android:layout_height="50dp"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:background="@drawable/background_gray"
                 android:padding="10dp"
                 android:text="6"
                 android:textColor="@color/white"
-                android:textSize="30sp"
+                android:textSize="24sp"
                 android:textStyle="bold" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/buttonPlus"
                 android:layout_width="0dp"
-                android:layout_height="60dp"
+                android:layout_height="50dp"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:background="@drawable/background_gray"
@@ -264,46 +264,46 @@
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/buttonOne"
                 android:layout_width="0dp"
-                android:layout_height="60dp"
+                android:layout_height="50dp"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:background="@drawable/background_gray"
                 android:padding="10dp"
                 android:text="1"
                 android:textColor="@color/white"
-                android:textSize="30sp"
+                android:textSize="24sp"
                 android:textStyle="bold" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/buttonTwo"
                 android:layout_width="0dp"
-                android:layout_height="60dp"
+                android:layout_height="50dp"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:background="@drawable/background_gray"
                 android:padding="10dp"
                 android:text="2"
                 android:textColor="@color/white"
-                android:textSize="30sp"
+                android:textSize="24sp"
                 android:textStyle="bold" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/buttonThree"
                 android:layout_width="0dp"
-                android:layout_height="60dp"
+                android:layout_height="50dp"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:background="@drawable/background_gray"
                 android:padding="10dp"
                 android:text="3"
                 android:textColor="@color/white"
-                android:textSize="30sp"
+                android:textSize="24sp"
                 android:textStyle="bold" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/buttonMinus"
                 android:layout_width="0dp"
-                android:layout_height="60dp"
+                android:layout_height="50dp"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:background="@drawable/background_gray"
@@ -327,7 +327,7 @@
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/buttonComma"
                 android:layout_width="0dp"
-                android:layout_height="60dp"
+                android:layout_height="50dp"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:background="@drawable/background_gray"
@@ -340,20 +340,20 @@
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/buttonZero"
                 android:layout_width="0dp"
-                android:layout_height="60dp"
+                android:layout_height="50dp"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:background="@drawable/background_gray"
                 android:padding="10dp"
                 android:text="0"
                 android:textColor="@color/white"
-                android:textSize="30sp"
+                android:textSize="24sp"
                 android:textStyle="bold" />
 
             <ImageButton
                 android:id="@+id/buttonKeyBoardDelete"
                 android:layout_width="0dp"
-                android:layout_height="60dp"
+                android:layout_height="50dp"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:background="@drawable/background_gray"
@@ -363,7 +363,7 @@
             <ImageButton
                 android:id="@+id/successKeyBoardBtn"
                 android:layout_width="0dp"
-                android:layout_height="60dp"
+                android:layout_height="50dp"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:background="@drawable/background_gray"

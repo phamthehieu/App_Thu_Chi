@@ -84,13 +84,12 @@
                 android:id="@+id/nameCategoryTV"
                 style="@style/TextViewStyle"
                 android:layout_width="0dp"
-                android:gravity="center"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginStart="10dp"
                 android:layout_weight="1"
-                android:text="@string/name_category"
-                android:textSize="20sp" />
+                android:gravity="center"
+                android:textSize="18sp" />
 
         </LinearLayout>
 
@@ -103,25 +102,67 @@
 
             <TextView
                 style="@style/TextViewStyle"
-                android:layout_width="wrap_content"
+                android:layout_width="80dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
                 android:layout_marginStart="10dp"
                 android:text="@string/type"
                 android:textColor="@color/gray1"
-                android:textSize="18sp" />
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/nameTypeTV"
                 style="@style/TextViewStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
                 android:layout_marginStart="10dp"
                 android:layout_weight="1"
-                android:gravity="center"
-                android:text="@string/name_category"
-                android:textSize="18sp" />
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layoutAccount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:orientation="horizontal"
+            tools:ignore="UselessParent"
+            android:visibility="gone">
+
+            <TextView
+                style="@style/TextViewStyle"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="@string/account_detail"
+                android:textColor="@color/gray1"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/nameAccount1TV"
+                style="@style/TextViewStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="10dp"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:id="@+id/iconArrow"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_marginStart="10dp"
+                android:src="@drawable/ic_arrow_20" />
+
+            <TextView
+                android:id="@+id/nameAccount2TV"
+                style="@style/TextViewStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="10dp"
+                android:textSize="14sp" />
 
         </LinearLayout>
 
@@ -134,25 +175,20 @@
 
             <TextView
                 style="@style/TextViewStyle"
-                android:layout_width="wrap_content"
+                android:layout_width="80dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
                 android:layout_marginStart="10dp"
                 android:text="@string/amount_title"
                 android:textColor="@color/gray1"
-                android:textSize="18sp" />
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/amountTitleTV"
                 style="@style/TextViewStyle"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
                 android:layout_marginStart="10dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="@string/amount_title"
-                android:textSize="18sp" />
+                android:textSize="14sp" />
 
         </LinearLayout>
 
@@ -165,25 +201,21 @@
 
             <TextView
                 style="@style/TextViewStyle"
-                android:layout_width="wrap_content"
+                android:layout_width="80dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
                 android:layout_marginStart="10dp"
                 android:text="@string/date"
                 android:textColor="@color/gray1"
-                android:textSize="18sp" />
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/dateTitleTV"
                 style="@style/TextViewStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
                 android:layout_marginStart="10dp"
                 android:layout_weight="1"
-                android:gravity="center"
-                android:text="@string/date"
-                android:textSize="18sp" />
+                android:textSize="14sp" />
 
         </LinearLayout>
 
@@ -196,25 +228,21 @@
 
             <TextView
                 style="@style/TextViewStyle"
-                android:layout_width="wrap_content"
+                android:layout_width="80dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
                 android:layout_marginStart="10dp"
                 android:text="@string/note"
                 android:textColor="@color/gray1"
-                android:textSize="18sp" />
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/noteTitleTV"
                 style="@style/TextViewStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
                 android:layout_marginStart="10dp"
                 android:layout_weight="1"
-                android:gravity="center"
-                android:text="@string/note"
-                android:textSize="18sp" />
+                android:textSize="14sp" />
 
         </LinearLayout>
 
@@ -227,20 +255,19 @@
 
             <TextView
                 style="@style/TextViewStyle"
-                android:layout_width="wrap_content"
+                android:layout_width="80dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginStart="10dp"
                 android:text="@string/image"
                 android:textColor="@color/gray1"
-                android:textSize="18sp" />
+                android:textSize="14sp" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerImageView"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:layout_gravity="center"
-                android:layout_marginStart="40dp"
                 android:orientation="vertical" />
 
         </LinearLayout>
@@ -265,27 +292,27 @@
 
         <Button
             android:id="@+id/editDetailBtn"
+            style="@style/textStyle"
             android:layout_width="0dp"
             android:layout_height="60dp"
             android:layout_weight="1"
             android:background="@android:color/transparent"
             android:text="@string/edit"
-            style="@style/textStyle"
             android:textSize="18sp" />
 
         <View
-           android:background="@color/grayHeader"
             android:layout_width="1dp"
-            android:layout_height="30dp" />
+            android:layout_height="30dp"
+            android:background="@color/grayHeader" />
 
         <Button
             android:id="@+id/deleteDetailBtn"
+            style="@style/textStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@android:color/transparent"
             android:text="@string/delete2"
-            style="@style/textStyle"
             android:textSize="18sp" />
 
     </LinearLayout>
