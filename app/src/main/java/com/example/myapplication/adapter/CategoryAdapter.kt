@@ -12,7 +12,8 @@ import com.example.myapplication.data.CombinedCategoryIcon
 
 class CategoryAdapter(
     private val categories: List<CombinedCategoryIcon>,
-    private val itemClickListener: OnItemClickListener
+    private val itemClickListener: OnItemClickListener,
+    private val isMultiSelectEnabled: Boolean
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     interface OnItemClickListener {
@@ -23,7 +24,8 @@ class CategoryAdapter(
     private val ITEM_VIEW_TYPE_CATEGORY = 0
     private val ITEM_VIEW_TYPE_SETTINGS = 1
 
-    private var selectedPosition = RecyclerView.NO_POSITION
+    // Use a set to store multiple selected positions
+    private val selectedPositions = mutableSetOf<Int>()
 
     override fun getItemViewType(position: Int): Int {
         return if (categories[position].categoryType == "setting") ITEM_VIEW_TYPE_SETTINGS else ITEM_VIEW_TYPE_CATEGORY
@@ -45,13 +47,22 @@ class CategoryAdapter(
         if (getItemViewType(position) == ITEM_VIEW_TYPE_SETTINGS) {
             (holder as SettingsViewHolder).bind()
         } else {
-            (holder as CategoryViewHolder).bind(categories[position], position == selectedPosition)
+            val isSelected = selectedPositions.contains(position)
+            (holder as CategoryViewHolder).bind(categories[position], isSelected)
         }
 
         holder.itemView.setOnClickListener {
-            notifyItemChanged(selectedPosition)
-            selectedPosition = holder.adapterPosition
-            notifyItemChanged(selectedPosition)
+            if (isMultiSelectEnabled) {
+                if (selectedPositions.contains(holder.adapterPosition)) {
+                    selectedPositions.remove(holder.adapterPosition)
+                } else {
+                    selectedPositions.add(holder.adapterPosition)
+                }
+            } else {
+                selectedPositions.clear()
+                selectedPositions.add(holder.adapterPosition)
+            }
+            notifyDataSetChanged()
             val item = categories[position]
             if (item.idCategory != -1) {
                 itemClickListener.onItemClick(item)
@@ -62,16 +73,6 @@ class CategoryAdapter(
     }
 
     override fun getItemCount() = categories.size
-
-    @SuppressLint("NotifyDataSetChanged")
-    fun setSelectedPosition(position: Int) {
-        if (position != selectedPosition) {
-            notifyItemChanged(selectedPosition)
-            selectedPosition = position
-            notifyItemChanged(selectedPosition)
-            itemClickListener.onItemClick(categories[selectedPosition])
-        }
-    }
 
     class CategoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val categoryName: TextView = itemView.findViewById(R.id.nameArtistsEt)
@@ -97,3 +98,4 @@ class CategoryAdapter(
         }
     }
 }
+

@@ -214,14 +214,24 @@ class IncomeExpenseListAdapter(
 
                 is HistoryAccountWithAccount -> {
                     iconArrowMount.visibility = View.VISIBLE
-                    iconArrow.visibility = View.VISIBLE
-                    amountAccount2TV.visibility = View.VISIBLE
+
                     val currentNightMode = itemView.context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
 
                     iconCategoryIV.setImageResource(item.historyAccount.icon)
                     iconCategoryIV.setColorFilter(Color.BLACK)
-                    nameCategoryTV.text = item.historyAccount.nameAccountTransfer
-                    amountAccount2TV.text = item.historyAccount.nameAccountReceive
+
+
+
+                    if (item.historyAccount.note.isEmpty()) {
+                        iconArrow.visibility = View.VISIBLE
+                        amountAccount2TV.visibility = View.VISIBLE
+                        amountAccount2TV.text = item.historyAccount.nameAccountReceive
+                        nameCategoryTV.text = item.historyAccount.nameAccountTransfer
+                    } else {
+                        amountAccount2TV.visibility = View.GONE
+                        iconArrow.visibility = View.GONE
+                        nameCategoryTV.text = item.historyAccount.note
+                    }
 
                     val amount = item.historyAccount.transferAmount.replace(",", ".").toDouble()
                     val expenseFormatter = DecimalFormat("#,###.##")

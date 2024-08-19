@@ -21,16 +21,26 @@ interface IncomeExpenseListDao {
     fun getAllIncomeExpenseList(): Flow<List<IncomeExpenseList>>
 
     @Query("SELECT * FROM income_expense_list_table WHERE strftime('%Y', date) = :year AND strftime('%m', date) = :month")
-    fun getIncomeExpenseListByMonthYear(year: String, month: String): Flow<List<CategoryWithIncomeExpenseList>>
+    fun getIncomeExpenseListByMonthYear(
+        year: String,
+        month: String
+    ): Flow<List<CategoryWithIncomeExpenseList>>
 
     @Query("SELECT * FROM income_expense_list_table WHERE strftime('%Y', date) = :year AND strftime('%m', date) = :month AND categoryId = :categoryId")
-    fun getIncomeExpenseListByMonthYearIdCategory(year: String, month: String, categoryId: Int): Flow<List<CategoryWithIncomeExpenseList>>
+    fun getIncomeExpenseListByMonthYearIdCategory(
+        year: String,
+        month: String,
+        categoryId: Int
+    ): Flow<List<CategoryWithIncomeExpenseList>>
 
     @Query("SELECT * FROM income_expense_list_table WHERE strftime('%Y', date) = :year")
     fun getIncomeExpenseListByYear(year: String): Flow<List<CategoryWithIncomeExpenseList>>
 
     @Query("SELECT * FROM income_expense_list_table WHERE strftime('%Y', date) = :year AND categoryId = :categoryId")
-    fun getIncomeExpenseListByYearAndIdCategory(year: String, categoryId: Int): Flow<List<CategoryWithIncomeExpenseList>>
+    fun getIncomeExpenseListByYearAndIdCategory(
+        year: String,
+        categoryId: Int
+    ): Flow<List<CategoryWithIncomeExpenseList>>
 
     @Delete
     fun delete(incomeExpenseList: IncomeExpenseList): Void
@@ -39,5 +49,25 @@ interface IncomeExpenseListDao {
     fun update(incomeExpenseList: IncomeExpenseList): Void
 
     @Query("SELECT * FROM income_expense_list_table WHERE accountId = :accountId AND strftime('%Y', date) = :year AND strftime('%m', date) = :month")
-    fun getListIncomeExpenseWithAccount(accountId: String, year: String, month: String): Flow<List<CategoryWithIncomeExpenseList>>
+    fun getListIncomeExpenseWithAccount(
+        accountId: String,
+        year: String,
+        month: String
+    ): Flow<List<CategoryWithIncomeExpenseList>>
+
+    @Query("""
+    SELECT * FROM income_expense_list_table 
+    WHERE (:type = '' OR type = :type) 
+    AND (:note = '' OR note LIKE '%' || :note || '%') 
+    AND (:categoryIdListSize = 0 OR categoryId IN (:categoryIdList))
+""")
+    fun getListIncomeExpenseWithSearch(
+        type: String,
+        note: String,
+        categoryIdList: List<Int>,
+        categoryIdListSize: Int
+    ): Flow<List<CategoryWithIncomeExpenseList>>
+
+
+
 }

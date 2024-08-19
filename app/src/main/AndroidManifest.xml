@@ -29,6 +29,9 @@
         android:theme="@style/Theme.AssetManagementProject"
         tools:targetApi="31">
         <activity
+            android:name=".view.search.RevenueAndExpenditureSearchActivity"
+            android:exported="false" />
+        <activity
             android:name=".view.search.SearchActivity"
             android:exported="false" />
         <activity

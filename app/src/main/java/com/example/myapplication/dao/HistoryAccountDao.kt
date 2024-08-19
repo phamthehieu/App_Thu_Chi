@@ -26,5 +26,7 @@ interface HistoryAccountDao {
     @Update
     fun updateHistoryAccount(historyAccount: HistoryAccount): Void
 
+    @Query("SELECT * FROM history_account_tablet WHERE (:note = '' OR note LIKE '%' || :note || '%')")
+    fun getHistoryAccountWithSearch(note: String): Flow<List<HistoryAccountWithAccount>>
 
 }

@@ -13,6 +13,7 @@ import com.example.myapplication.database.CategoryDatabase
 import com.example.myapplication.entity.IncomeExpenseList
 import com.example.myapplication.repository.IncomeExpenseListRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
@@ -85,6 +86,14 @@ class IncomeExpenseListModel(application: Application) : AndroidViewModel(applic
 
     fun getListIncomeExpenseListByAccountYear(account: String, year: String, month: String): LiveData<List<CategoryWithIncomeExpenseList>> {
         return repository.getListWithAccountByYear(account, year, month).asLiveData()
+    }
+
+    fun getListIncomeExpenseWithSearch(
+        type: String,
+        note: String,
+        categoryIds: List<Int>
+    ): LiveData<List<CategoryWithIncomeExpenseList>> {
+        return repository.getListWithSearch(type, note, categoryIds).asLiveData()
     }
 }
 

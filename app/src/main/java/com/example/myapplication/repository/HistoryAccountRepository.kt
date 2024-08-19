@@ -25,4 +25,8 @@ class HistoryAccountRepository(private val historyAccountDao: HistoryAccountDao)
 
     }
 
+    fun getHistoryAccountWithSearch(note: String): Flow<List<HistoryAccountWithAccount>> {
+        return historyAccountDao.getHistoryAccountWithSearch(note)
+    }
+
 }

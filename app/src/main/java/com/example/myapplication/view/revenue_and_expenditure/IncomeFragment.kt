@@ -1,5 +1,6 @@
 package com.example.myapplication.view.revenue_and_expenditure
 
+import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -18,6 +19,7 @@ import com.example.myapplication.adapter.CategoryAdapter
 import com.example.myapplication.data.CombinedCategoryIcon
 import com.example.myapplication.data.IncomeExpenseListData
 import com.example.myapplication.databinding.FragmentIncomeBinding
+import com.example.myapplication.utilities.OnCategorySelectedListener
 import com.example.myapplication.view.category.SettingCategoryActivity
 import com.example.myapplication.view.component.KeyBoardBottomSheetFragment
 import com.example.myapplication.viewModel.CategoryViewModel
@@ -33,6 +35,10 @@ class IncomeFragment : Fragment(), CategoryAdapter.OnItemClickListener {
 
     private var dateSelected: String? = null
 
+    private var checkSearch: String? = null
+
+    private var listener: OnCategorySelectedListener? = null
+
     private val categoryViewModel: CategoryViewModel by viewModels {
         CategoryViewModelFactory(requireActivity().application)
     }
@@ -44,8 +50,11 @@ class IncomeFragment : Fragment(), CategoryAdapter.OnItemClickListener {
             itemEdit = json?.let { jsonStr ->
                 Gson().fromJson(jsonStr, IncomeExpenseListData::class.java)
             }
+
+            val jsonSearch = it.getString("dataSearch")
+            checkSearch = jsonSearch
+
             dateSelected = it.getString("dateSelected")
-            Log.d("Hieu96", "itemEdit: $itemEdit $dateSelected")
         }
     }
 
@@ -93,25 +102,34 @@ class IncomeFragment : Fragment(), CategoryAdapter.OnItemClickListener {
         val reversedList = combinedList.asReversed().toMutableList()
         reversedList.add(settingsItem)
 
-        val selectedPosition = if (itemEdit != null) {
-            reversedList.indexOfFirst { it.idCategory == itemEdit?.categoryId }
-        } else {
-            RecyclerView.NO_POSITION
-        }
+        val isMultiSelectEnabled = checkSearch == "dataSearch"
 
-        categoryAdapter = CategoryAdapter(reversedList, this)
+        categoryAdapter = CategoryAdapter(reversedList, this, isMultiSelectEnabled)
         binding.recyclerViewIncome.adapter = categoryAdapter
 
-        if (selectedPosition != RecyclerView.NO_POSITION) {
-            categoryAdapter.setSelectedPosition(selectedPosition)
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is OnCategorySelectedListener) {
+            listener = context
         }
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        listener = null
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onItemClick(category: CombinedCategoryIcon) {
-        val keyboard = KeyBoardBottomSheetFragment()
-        keyboard.categoryData(category, itemEdit, dateSelected)
-        keyboard.show(childFragmentManager, "keyboard")
+        if (checkSearch == "dataSearch") {
+            listener?.onCategorySelected(category)
+        } else if (checkSearch == null) {
+            val keyboard = KeyBoardBottomSheetFragment()
+            keyboard.categoryData(category, itemEdit, dateSelected)
+            keyboard.show(childFragmentManager, "keyboard")
+        }
     }
 
     override fun onSettingsClick() {

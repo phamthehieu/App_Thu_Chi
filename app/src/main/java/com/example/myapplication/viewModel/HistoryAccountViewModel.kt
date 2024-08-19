@@ -58,6 +58,10 @@ class HistoryAccountViewModel(application: Application) : AndroidViewModel(appli
         return result
     }
 
+    fun getHistoryAccountWithSearch(note: String): LiveData<List<HistoryAccountWithAccount>> {
+        return repository.getHistoryAccountWithSearch(note).asLiveData()
+    }
+
 }
 
 class HistoryAccountViewModelFactory(private val application: Application) :

@@ -46,4 +46,17 @@
             return incomeExpenseListDao.getListIncomeExpenseWithAccount(account, year, month)
         }
 
+        fun getListWithSearch(
+            type: String,
+            note: String,
+            categoryIds: List<Int>
+        ): Flow<List<CategoryWithIncomeExpenseList>> {
+            val categoryIdListSize = categoryIds.size
+
+            return incomeExpenseListDao.getListIncomeExpenseWithSearch(type, note, categoryIds, categoryIdListSize)
+        }
+
+
+
+
     }
