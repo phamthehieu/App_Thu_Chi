@@ -24,4 +24,9 @@ class CategoryRepository(private val categoryDao: CategoryDao) {
         categoryDao.updateCategory(category)
     }
 
+    @WorkerThread
+    fun deleteAllCategory() {
+        categoryDao.deleteAllCategoryType()
+    }
+
 }

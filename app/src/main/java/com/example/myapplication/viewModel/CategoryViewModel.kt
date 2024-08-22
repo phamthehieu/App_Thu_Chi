@@ -42,6 +42,12 @@ class CategoryViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
+    fun deleteAllCategoryWithType() {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.deleteAllCategory()
+        }
+    }
+
 }
 
 class CategoryViewModelFactory(private val application: Application) : ViewModelProvider.Factory {

@@ -8,192 +8,223 @@
     android:layout_height="match_parent"
     tools:context=".view.home.HomeFragment">
 
-<RelativeLayout
-    android:id="@+id/titleBackground"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-
     <RelativeLayout
-        android:id="@+id/title"
+        android:id="@+id/titleBackground"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        >
+        android:layout_height="wrap_content">
 
-        <ImageButton
-            android:id="@+id/searchBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="10dp"
-            android:background="@android:color/transparent"
-            android:contentDescription="@string/search"
-            android:padding="10dp"
-            android:src="@drawable/ic_search_24" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="@string/sothuchi"
-            android:textStyle="bold"
-            android:textSize="20sp"
-            tools:ignore="RelativeOverlap" />
-
-        <ImageButton
-            android:id="@+id/calendarBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="10dp"
-            android:background="@android:color/transparent"
-            android:contentDescription="@string/calendar"
-            android:padding="10dp"
-            android:src="@drawable/ic_rescheduling_24" />
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_below="@+id/title"
-        android:id="@+id/titleSub"
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:layout_marginTop="-10dp">
-
-        <LinearLayout
+        <RelativeLayout
+            android:id="@+id/title"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:gravity="bottom"
-            tools:ignore="UselessParent">
+            android:layout_height="50dp">
+
+            <ImageButton
+                android:id="@+id/searchBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="10dp"
+                android:background="@android:color/transparent"
+                android:contentDescription="@string/search"
+                android:padding="10dp"
+                android:src="@drawable/ic_search_24" />
 
             <TextView
-                android:textAlignment="center"
-                android:id="@+id/yearTv"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/year"
-                android:textColor="@color/gray1"
-                android:textSize="14sp"
-                tools:ignore="RtlSymmetry" />
+                android:layout_centerInParent="true"
+                android:text="@string/sothuchi"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                tools:ignore="RelativeOverlap" />
 
-            <TextView
-                android:layout_width="0dp"
+            <ImageButton
+                android:id="@+id/calendarBtn"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="@string/cost"
-                android:textColor="@color/gray1"
-                android:textSize="14sp" />
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="10dp"
+                android:background="@android:color/transparent"
+                android:contentDescription="@string/calendar"
+                android:padding="10dp"
+                android:src="@drawable/ic_rescheduling_24" />
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="@string/Income"
-                android:textColor="@color/gray1"
-                android:textSize="14sp" />
+        </RelativeLayout>
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="@string/totalBalance"
-                android:textColor="@color/gray1"
-                android:textSize="14sp" />
-
-        </LinearLayout>
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_below="@+id/titleSub"
-        android:id="@+id/parameter"
-        android:layout_width="match_parent"
-        android:layout_height="50dp">
-
-        <LinearLayout
+        <RelativeLayout
+            android:id="@+id/titleSub"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            tools:ignore="UselessParent">
+            android:layout_height="30dp"
+            android:layout_below="@+id/title"
+            android:layout_marginTop="-10dp">
 
             <LinearLayout
-                android:id="@+id/popupCalenderBtn"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:paddingStart="20dp"
-                android:gravity="center_vertical"
-                tools:ignore="RtlSymmetry">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="bottom"
+                android:orientation="horizontal"
+                tools:ignore="UselessParent">
 
                 <TextView
-                    android:id="@+id/monthTv"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/yearTv"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/year"
+                    android:textAlignment="center"
+                    android:textColor="@color/gray1"
+                    android:textSize="14sp"
+                    tools:ignore="RtlSymmetry" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:gravity="center"
-                    android:text="Thg 6"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:text="@string/cost"
+                    android:textColor="@color/gray1"
+                    android:textSize="14sp" />
 
-                <ImageButton
-                    android:id="@+id/iconCalendar"
-                    android:layout_width="wrap_content"
+                <TextView
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
-                    android:contentDescription="@string/calendar"
-                    android:src="@drawable/ic_sort_down_24" />
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/Income"
+                    android:textColor="@color/gray1"
+                    android:textSize="14sp" />
 
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="30dp"
-                    android:layout_marginStart="6dp"
-                    android:background="@android:color/darker_gray" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/totalBalance"
+                    android:textColor="@color/gray1"
+                    android:textSize="14sp" />
+
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/costTv"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="@string/_0"
-                android:textSize="14sp" />
+        </RelativeLayout>
 
-            <TextView
-                android:id="@+id/IncomeTv"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="@string/_0"
-                android:textSize="14sp" />
+        <RelativeLayout
+            android:id="@+id/parameter"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_below="@+id/titleSub">
 
-            <TextView
-                android:id="@+id/totalBalanceTv"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="@string/_0"
-                android:textSize="14sp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                tools:ignore="UselessParent">
 
-        </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/popupCalenderBtn"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:paddingStart="20dp"
+                    tools:ignore="RtlSymmetry">
+
+                    <TextView
+                        android:id="@+id/monthTv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="Thg 6"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <ImageButton
+                        android:id="@+id/iconCalendar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/transparent"
+                        android:contentDescription="@string/calendar"
+                        android:src="@drawable/ic_sort_down_24" />
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="30dp"
+                        android:layout_marginStart="6dp"
+                        android:background="@android:color/darker_gray" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/costTv"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/_0"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/IncomeTv"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/_0"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/totalBalanceTv"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/_0"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
 
     </RelativeLayout>
 
-</RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/warningLogin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/titleBackground"
+        android:background="@color/background_warning"
+        android:gravity="center"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/warning"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_warning_24" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginEnd="20dp"
+            android:layout_toEndOf="@+id/warning"
+            android:paddingTop="10dp"
+            android:text="Sau khi đăng nhập, bạn có thể sao lưu dữ liệu của mình theo thời gian thực!"
+            android:textColor="@color/red_text"
+            android:textSize="12sp" />
+
+    </RelativeLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewHome"
-        android:layout_below="@+id/titleBackground"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/warningLogin"
+
         android:layout_marginBottom="80dp"
         tools:ignore="RedundantNamespace" />
 

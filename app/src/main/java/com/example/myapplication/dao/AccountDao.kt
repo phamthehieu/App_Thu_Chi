@@ -18,8 +18,15 @@ interface AccountDao {
     fun getAllAccounts(): Flow<List<AccountWithIcon>>
 
     @Transaction
+    @Query("SELECT * FROM account_table")
+    fun getAllAccountsUpdate(): Flow<List<Account>>
+
+    @Transaction
     @Query("SELECT * FROM account_table WHERE id IN (:id1, :id2)")
     fun getAccountsByTwoIds(id1: Int, id2: Int): Flow<List<Account>>
+
+    @Insert
+    fun insertListAccounts(accounts: List<Account>)
 
     @Insert
     fun insert(account: Account)
@@ -35,4 +42,7 @@ interface AccountDao {
 
     @Update
     fun updateAccounts(accounts: List<Account>): Void
+
+    @Query("DELETE FROM account_table")
+    fun deleteAll(): Void
 }

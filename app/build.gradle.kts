@@ -28,6 +28,25 @@ android {
             )
         }
     }
+
+    configurations.all {
+        exclude(module = "httpclient")
+    }
+
+    packaging {
+        resources {
+            excludes += mutableSetOf(
+                "META-INF/DEPENDENCIES",
+                "META-INF/LICENSE",
+                "META-INF/LICENSE.txt",
+                "META-INF/license.txt",
+                "META-INF/NOTICE",
+                "META-INF/NOTICE.txt",
+                "META-INF/notice.txt"
+            )
+        }
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -69,5 +88,17 @@ dependencies {
     implementation("androidx.viewpager2:viewpager2:1.1.0")
     implementation("me.relex:circleindicator:2.1.6")
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
+    implementation("com.google.android.gms:play-services-auth:20.5.0")
+    implementation("com.google.api-client:google-api-client-android:1.26.0") {
+        exclude(group = "com.google.http.client", module = "google-http-client")
+    }
+    implementation("com.google.apis:google-api-services-drive:v3-rev136-1.25.0"){
+        exclude(group = "com.google.http.client", module = "google-http-client")
+    }
+    implementation("com.google.guava:guava:27.0.1-android")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.0")
+    implementation("org.bouncycastle:bcprov-jdk15on:1.68")
+    implementation("com.github.ybq:Android-SpinKit:1.4.0")
 
 }

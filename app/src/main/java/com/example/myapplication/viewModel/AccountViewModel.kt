@@ -82,6 +82,12 @@ class AccountViewModel(application: Application) : AndroidViewModel(application)
     fun getAccountsByTwoIds(id1: Int, id2: Int): LiveData<List<Account>> {
         return repository.getAccountsByTwoIds(id1, id2).asLiveData()
     }
+
+    fun deleteAllAccount() {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.getDeleteAll()
+        }
+    }
 }
 
     class AccountViewModelFactory(private val application: Application) :

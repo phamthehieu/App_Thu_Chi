@@ -62,6 +62,12 @@ class HistoryAccountViewModel(application: Application) : AndroidViewModel(appli
         return repository.getHistoryAccountWithSearch(note).asLiveData()
     }
 
+    fun deleteAllHistoryAccount() {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.deleteAllHistoryAccount()
+        }
+    }
+
 }
 
 class HistoryAccountViewModelFactory(private val application: Application) :

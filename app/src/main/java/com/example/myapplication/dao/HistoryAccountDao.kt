@@ -17,6 +17,12 @@ interface HistoryAccountDao {
     @Query("SELECT * FROM history_account_tablet")
     fun getAllHistoryAccount(): Flow<List<HistoryAccountWithAccount>>
 
+    @Query("SELECT * FROM history_account_tablet ")
+    fun allHistoryAccount(): Flow<List<HistoryAccount>>
+
+    @Insert
+    fun insertList(historyAccounts: List<HistoryAccount>): Void
+
     @Insert
     fun insert(historyAccount: HistoryAccount): Void
 
@@ -29,4 +35,6 @@ interface HistoryAccountDao {
     @Query("SELECT * FROM history_account_tablet WHERE (:note = '' OR note LIKE '%' || :note || '%')")
     fun getHistoryAccountWithSearch(note: String): Flow<List<HistoryAccountWithAccount>>
 
+    @Query("DELETE FROM history_account_tablet")
+    fun deleteAllHistoryAccount(): Void
 }

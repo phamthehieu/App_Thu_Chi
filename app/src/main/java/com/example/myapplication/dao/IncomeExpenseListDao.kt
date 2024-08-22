@@ -14,6 +14,9 @@ import kotlinx.coroutines.flow.Flow
 interface IncomeExpenseListDao {
 
     @Insert
+    fun insertList(incomeExpenseList: List<IncomeExpenseList>)
+
+    @Insert
     fun insert(incomeExpenseList: IncomeExpenseList)
 
     @Transaction
@@ -69,5 +72,7 @@ interface IncomeExpenseListDao {
     ): Flow<List<CategoryWithIncomeExpenseList>>
 
 
+    @Query("DELETE FROM income_expense_list_table")
+    fun deleteAllTable(): Void
 
 }

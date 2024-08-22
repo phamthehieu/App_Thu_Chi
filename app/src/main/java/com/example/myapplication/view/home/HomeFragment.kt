@@ -34,14 +34,17 @@ import com.example.myapplication.entity.IncomeExpenseList
 import com.example.myapplication.interfaces.OnMonthSelectedListener
 import com.example.myapplication.utilities.convertToIncomeExpenseListData
 import com.example.myapplication.view.calendar.CalendarHomeActivity
+import com.example.myapplication.view.component.KeyBoardBottomSheetFragment
 import com.example.myapplication.view.revenue_and_expenditure.RevenueAndExpenditureActivity
 import com.example.myapplication.view.search.SearchActivity
+import com.example.myapplication.view.user.LoginAccountGoogleFragment
 import com.example.myapplication.viewModel.AccountViewModel
 import com.example.myapplication.viewModel.AccountViewModelFactory
 import com.example.myapplication.viewModel.HistoryAccountViewModel
 import com.example.myapplication.viewModel.HistoryAccountViewModelFactory
 import com.example.myapplication.viewModel.IncomeExpenseListFactory
 import com.example.myapplication.viewModel.IncomeExpenseListModel
+import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.gson.Gson
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
@@ -120,6 +123,11 @@ class HomeFragment : Fragment(), OnMonthSelectedListener,
             startActivity(intent)
         }
 
+        binding.warningLogin.setOnClickListener {
+            val login = LoginAccountGoogleFragment()
+            login.show(childFragmentManager, "loginGoogle")
+        }
+
         binding.monthTv.text = "Thg $monthSearch"
 
         binding.yearTv.text = yearSearch.toString()
@@ -133,6 +141,15 @@ class HomeFragment : Fragment(), OnMonthSelectedListener,
         return binding.root;
     }
 
+    override fun onResume() {
+        super.onResume()
+        val account = GoogleSignIn.getLastSignedInAccount(requireContext())
+        if (account != null) {
+            binding.warningLogin.visibility = View.GONE
+        } else {
+            binding.warningLogin.visibility = View.VISIBLE
+        }
+    }
     @SuppressLint("DefaultLocale")
     private fun combineLiveDataSources() {
         val formattedMonth = String.format("%02d", monthSearch)
@@ -165,6 +182,14 @@ class HomeFragment : Fragment(), OnMonthSelectedListener,
     @SuppressLint("DefaultLocale")
     private fun setupBackground() {
         combinedData.observe(viewLifecycleOwner) { combinedList ->
+            if (combinedList.isNotEmpty()) {
+                val account = GoogleSignIn.getLastSignedInAccount(requireContext())
+                if (account != null) {
+                    binding.warningLogin.visibility = View.GONE
+                } else {
+                    binding.warningLogin.visibility = View.VISIBLE
+                }
+            }
             val incomeExpenseList = combinedList.filterIsInstance<IncomeExpenseListData>()
             val historyAccountList = combinedList.filterIsInstance<HistoryAccountWithAccount>()
             val totalIncome = incomeExpenseList.filter { it.type == "Income" }
@@ -177,9 +202,7 @@ class HomeFragment : Fragment(), OnMonthSelectedListener,
             binding.IncomeTv.text = expenseFormatter.format(totalExpense)
             binding.totalBalanceTv.text = expenseFormatter.format(totalIncome - totalExpense)
 
-            val combinedForAdapter = (incomeExpenseList + historyAccountList).let { list ->
-                groupIconsByType(list)
-            }
+            val combinedForAdapter = groupIconsByType((incomeExpenseList + historyAccountList))
 
             adapter = IncomeExpenseListAdapter(combinedForAdapter, this)
             binding.recyclerViewHome.adapter = adapter
@@ -410,7 +433,8 @@ class HomeFragment : Fragment(), OnMonthSelectedListener,
                     selectedItem.let { itemToEdit ->
                         val gson = Gson()
                         val json = gson.toJson(itemToEdit)
-                        val intent = Intent(requireContext(), RevenueAndExpenditureActivity::class.java)
+                        val intent =
+                            Intent(requireContext(), RevenueAndExpenditureActivity::class.java)
                         intent.putExtra("itemToEdit", json)
                         startActivity(intent)
                     }
@@ -418,7 +442,8 @@ class HomeFragment : Fragment(), OnMonthSelectedListener,
                     selectedItem.let { itemToEdit ->
                         val gson = Gson()
                         val json = gson.toJson(itemToEdit)
-                        val intent = Intent(requireContext(), RevenueAndExpenditureActivity::class.java)
+                        val intent =
+                            Intent(requireContext(), RevenueAndExpenditureActivity::class.java)
                         intent.putExtra("itemToEditAccount", json)
                         startActivity(intent)
                     }

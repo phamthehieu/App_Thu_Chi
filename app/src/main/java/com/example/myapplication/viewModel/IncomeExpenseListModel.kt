@@ -95,6 +95,13 @@ class IncomeExpenseListModel(application: Application) : AndroidViewModel(applic
     ): LiveData<List<CategoryWithIncomeExpenseList>> {
         return repository.getListWithSearch(type, note, categoryIds).asLiveData()
     }
+
+    fun deleteAllTable() {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.deleteAll()
+        }
+    }
+
 }
 
 class IncomeExpenseListFactory(private val application: Application) : ViewModelProvider.Factory {

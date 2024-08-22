@@ -29,4 +29,9 @@ class HistoryAccountRepository(private val historyAccountDao: HistoryAccountDao)
         return historyAccountDao.getHistoryAccountWithSearch(note)
     }
 
+    @WorkerThread
+    fun deleteAllHistoryAccount() {
+        historyAccountDao.deleteAllHistoryAccount()
+    }
+
 }

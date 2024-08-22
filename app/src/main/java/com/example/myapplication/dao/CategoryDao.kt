@@ -16,6 +16,9 @@ interface CategoryDao {
     @Transaction
     @Query("SELECT * FROM category_table")
     fun getAllCategory(): Flow<List<CategoryWithIcon>>
+    @Transaction
+    @Query("""SELECT * FROM category_table WHERE type = "user" """)
+    fun getAllCategoryUpdate(): Flow<List<Category>>
 
     @Insert
     fun insertAllCategory(category: List<Category>)
@@ -25,4 +28,7 @@ interface CategoryDao {
 
     @Update
     fun updateCategory(category: Category): Void
+
+    @Query("""DELETE FROM category_table WHERE type = "user" """)
+    fun deleteAllCategoryType():Void
 }

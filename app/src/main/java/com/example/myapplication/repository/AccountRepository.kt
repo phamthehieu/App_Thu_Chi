@@ -40,4 +40,9 @@ class AccountRepository(private val accountDao: AccountDao) {
         return accountDao.getAccountsByTwoIds(id1, id2)
     }
 
+    @WorkerThread
+    fun getDeleteAll () {
+        accountDao.deleteAll()
+    }
+
 }

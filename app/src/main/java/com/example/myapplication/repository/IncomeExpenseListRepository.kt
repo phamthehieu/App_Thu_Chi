@@ -56,7 +56,8 @@
             return incomeExpenseListDao.getListIncomeExpenseWithSearch(type, note, categoryIds, categoryIdListSize)
         }
 
-
-
-
+        @WorkerThread
+        fun deleteAll() {
+            incomeExpenseListDao.deleteAllTable()
+        }
     }

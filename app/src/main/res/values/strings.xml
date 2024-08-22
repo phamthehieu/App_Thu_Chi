@@ -69,4 +69,6 @@
     <string name="account_detail">Tài khoản</string>
     <string name="search_title">Tìm kiếm</string>
     <string name="select">Lựa chọn</string>
+    <string name="canhan">Cá nhân</string>
+    <string name="back">thoát</string>
 </resources>
