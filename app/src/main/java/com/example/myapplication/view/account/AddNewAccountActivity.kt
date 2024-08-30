@@ -2,16 +2,11 @@ package com.example.myapplication.view.account
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.app.Dialog
 import android.content.Intent
 import android.content.res.Configuration
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
-import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -24,6 +19,7 @@ import com.example.myapplication.data.AccountIconFormat
 import com.example.myapplication.data.AccountType
 import com.example.myapplication.databinding.ActivityAddNewAccountBinding
 import com.example.myapplication.entity.Account
+import com.example.myapplication.entity.DailyReminder
 import com.example.myapplication.entity.Icon
 import com.example.myapplication.utilities.AccountTypeProvider.accountTypes
 import com.example.myapplication.utilities.DeleteDialogUtils
@@ -31,11 +27,6 @@ import com.example.myapplication.viewModel.AccountViewModel
 import com.example.myapplication.viewModel.AccountViewModelFactory
 import com.example.myapplication.viewModel.IconViewModel
 import com.example.myapplication.viewModel.IconViewModelFactory
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.text.DecimalFormat
 
 class AddNewAccountActivity : AppCompatActivity(),
@@ -104,12 +95,12 @@ class AddNewAccountActivity : AppCompatActivity(),
                 binding.main.setBackgroundResource(R.color.black)
                 binding.title.setBackgroundResource(R.color.grayHeader)
                 binding.addNewAccountBtn.setColorFilter(ContextCompat.getColor(this, R.color.white))
-                binding.nameAccountEt.setBackgroundResource(R.drawable.background_gray)
-                binding.selectAccountType.setBackgroundResource(R.drawable.background_gray)
+                binding.nameAccountEt.setBackgroundResource(R.drawable.background_input)
+                binding.selectAccountType.setBackgroundResource(R.drawable.background_input)
                 binding.iconType.setColorFilter(ContextCompat.getColor(this, R.color.white))
-                binding.amountAccountLL.setBackgroundResource(R.drawable.background_gray)
-                binding.recyclerIconNewAccountView.setBackgroundResource(R.drawable.background_gray)
-                binding.noteAccountEt.setBackgroundResource(R.drawable.background_gray)
+                binding.amountAccountLL.setBackgroundResource(R.drawable.background_input)
+                binding.recyclerIconNewAccountView.setBackgroundResource(R.drawable.background_input)
+                binding.noteAccountEt.setBackgroundResource(R.drawable.background_input)
                 binding.deleteAccountBtn.setColorFilter(ContextCompat.getColor(this, R.color.white))
             }
         }

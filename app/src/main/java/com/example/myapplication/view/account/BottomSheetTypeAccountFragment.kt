@@ -12,8 +12,11 @@ import com.example.myapplication.adapter.AccountTypeAdapter
 import com.example.myapplication.data.AccountType
 import com.example.myapplication.databinding.FragmentBottomSheetTypeAccpuntBinding
 import com.example.myapplication.utilities.AccountTypeProvider.accountTypes
+import com.example.myapplication.utilities.AccountTypeProvider.reminderTypes
+import com.example.myapplication.view.reminder.CustomizeRemindersActivity
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import java.time.LocalDate
 
 open class BottomSheetTypeAccountFragment : BottomSheetDialogFragment() {
 
@@ -24,6 +27,8 @@ open class BottomSheetTypeAccountFragment : BottomSheetDialogFragment() {
     }
 
     private var listener: OnAccountTypeSelectedListener? = null
+
+    private var checkType = ""
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
@@ -45,17 +50,33 @@ open class BottomSheetTypeAccountFragment : BottomSheetDialogFragment() {
     ): View {
         binding = FragmentBottomSheetTypeAccpuntBinding.inflate(inflater, container, false)
 
+        arguments?.let {
+            checkType = it.getString("type").toString()
+        }
+
         val recyclerView: RecyclerView = binding.accountTypeRecyclerView
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        recyclerView.adapter = AccountTypeAdapter(accountTypes) { selectedAccountType, position ->
-            listener?.onAccountTypeSelected(selectedAccountType, position)
-            dismiss()
+        if (checkType === "reminder") {
+            recyclerView.adapter = AccountTypeAdapter(reminderTypes) { selectedAccountType, position ->
+                listener?.onAccountTypeSelected(selectedAccountType, position)
+                dismiss()
+            }
+        } else {
+            recyclerView.adapter = AccountTypeAdapter(accountTypes) { selectedAccountType, position ->
+                listener?.onAccountTypeSelected(selectedAccountType, position)
+                dismiss()
+            }
         }
+
 
         return binding.root
     }
 
     fun setOnAccountTypeSelectedListener(listener: AddNewAccountActivity) {
+        this.listener = listener
+    }
+
+    fun setOnReminderTypeSelectedListener(listener: CustomizeRemindersActivity) {
         this.listener = listener
     }
 }

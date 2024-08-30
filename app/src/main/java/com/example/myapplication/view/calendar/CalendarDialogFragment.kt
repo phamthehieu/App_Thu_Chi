@@ -37,6 +37,7 @@ import com.example.myapplication.R
 import com.example.myapplication.databinding.Example3CalendarDayBinding
 import com.example.myapplication.databinding.Example3CalendarHeaderBinding
 import com.example.myapplication.view.component.KeyBoardBottomSheetFragment
+import com.example.myapplication.view.reminder.CustomizeRemindersActivity
 import com.example.myapplication.view.revenue_and_expenditure.TransferFragment
 
 @SuppressLint("RestrictedApi")
@@ -62,6 +63,15 @@ class CalendarDialogFragment : DialogFragment() {
     private var checkMode = true
 
     private var checktype = ""
+
+    interface OnDateSelectedListener {
+        fun onReceiveDate(year: String, month: String, day: String)
+    }
+    private var listener: OnDateSelectedListener? = null
+
+    fun setOnDateSelectedListener(listener: OnDateSelectedListener) {
+        this.listener = listener
+    }
 
     private lateinit var binding: ActivityCalendarBinding
 
@@ -138,6 +148,10 @@ class CalendarDialogFragment : DialogFragment() {
             if(checktype === "transfer") {
                 val targetFragment = targetFragment as? TransferFragment
                 targetFragment?.onReceiveDate(yearSelected, monthSelected, dayOfMonthSelected)
+                dismiss()
+            } else if (checktype == "reminder") {
+                listener?.onReceiveDate(yearSelected, monthSelected, dayOfMonthSelected)
+                dismiss()
                 dismiss()
             } else {
                 val targetFragment = targetFragment as? KeyBoardBottomSheetFragment

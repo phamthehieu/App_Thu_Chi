@@ -8,11 +8,13 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.myapplication.R
 import com.example.myapplication.dao.AccountDao
 import com.example.myapplication.dao.CategoryDao
+import com.example.myapplication.dao.DailyReminderDao
 import com.example.myapplication.dao.HistoryAccountDao
 import com.example.myapplication.dao.IconsDao
 import com.example.myapplication.dao.IncomeExpenseListDao
 import com.example.myapplication.entity.Account
 import com.example.myapplication.entity.Category
+import com.example.myapplication.entity.DailyReminder
 import com.example.myapplication.entity.HistoryAccount
 import com.example.myapplication.entity.Icon
 import com.example.myapplication.entity.IncomeExpenseList
@@ -22,7 +24,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 @Database(
-    entities = [Category::class, Icon::class, IncomeExpenseList::class, Account::class, HistoryAccount::class],
+    entities = [Category::class, Icon::class, IncomeExpenseList::class, Account::class, HistoryAccount::class, DailyReminder::class],
     version = 3,
     exportSchema = false
 )
@@ -32,6 +34,7 @@ abstract class CategoryDatabase : RoomDatabase() {
     abstract fun incomeExpenseListDao(): IncomeExpenseListDao
     abstract fun accountDao(): AccountDao
     abstract fun historyAccountDao(): HistoryAccountDao
+    abstract fun dailyReminderDao(): DailyReminderDao
 
     companion object {
         @Volatile

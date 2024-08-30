@@ -1,13 +1,12 @@
 package com.example.myapplication.view.user
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -16,6 +15,7 @@ import com.bumptech.glide.Glide
 import com.example.myapplication.R
 import com.example.myapplication.databinding.FragmentUserBinding
 import com.example.myapplication.utilities.DatabaseSyncHelper
+import com.example.myapplication.view.reminder.ReminderListActivity
 import com.example.myapplication.viewModel.AccountViewModel
 import com.example.myapplication.viewModel.AccountViewModelFactory
 import com.example.myapplication.viewModel.CategoryViewModel
@@ -131,6 +131,10 @@ class UserFragment : Fragment() {
                         Log.e("UserFragment", "Sign-out failed")
                     }
                 }
+        }
+
+        binding.reminder.setOnClickListener {
+            startActivity(Intent(requireContext(), ReminderListActivity::class.java))
         }
 
         binding.profile.setOnClickListener {

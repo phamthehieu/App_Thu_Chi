@@ -13,4 +13,11 @@ object AccountTypeProvider {
         AccountType("Nợ tôi / Tài khoản phải thu", ""), //6
         AccountType("Tôi nợ / Tài khoản phải trả", "(Nợ phải trả)") //7
     )
+
+    val reminderTypes = listOf(
+        AccountType("Một lần", ""), //0
+        AccountType("Hàng ngày", ""), //1
+        AccountType("Hàng tuần", ""), //2
+        AccountType("Hàng tháng", ""), //3
+    )
 }

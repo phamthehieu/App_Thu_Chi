@@ -19,13 +19,13 @@
 
             <TextView
                 android:id="@+id/backBtn"
+                style="@style/textStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="1dp"
-                style="@style/textStyle"
                 android:padding="10dp"
                 android:text="@string/delete"
                 android:textSize="18sp"
@@ -33,12 +33,12 @@
 
             <TextView
                 android:id="@+id/titleName"
+                style="@style/textStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:text="@string/add_account"
                 android:textSize="18sp"
-                style="@style/textStyle"
                 android:textStyle="bold"
                 tools:ignore="RelativeOverlap" />
 
@@ -46,14 +46,14 @@
                 android:id="@+id/deleteAccountBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toStartOf="@+id/addNewAccountBtn"
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="10dp"
+                android:layout_toStartOf="@+id/addNewAccountBtn"
                 android:background="@android:color/transparent"
                 android:contentDescription="@string/calendar"
                 android:padding="10dp"
                 android:src="@drawable/ic_trash_24"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
             <ImageButton
                 android:id="@+id/addNewAccountBtn"
@@ -100,22 +100,22 @@
         </LinearLayout>
 
         <EditText
-            android:background="@drawable/background_input"
-            android:id="@+id/nameAccountEt"
+            android:id="@+id/nameReminderEt"
+            style="@style/textStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:autofillHints=""
+            android:background="@drawable/background_input"
             android:drawablePadding="10dp"
+            android:ellipsize="end"
             android:hint="@string/hint_name_account"
+            android:imeOptions="actionDone"
             android:inputType="text"
             android:maxLines="1"
+            android:padding="13dp"
             android:singleLine="true"
-            android:ellipsize="end"
-            android:padding="10dp"
-            style="@style/textStyle"
-            android:textSize="16sp"
-            android:imeOptions="actionDone" />
+            android:textSize="13sp" />
 
 
         <LinearLayout
@@ -135,13 +135,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
-                android:text="@string/type_account"
+                android:text="Tần suất nhắc nhở"
                 android:textSize="14sp" />
 
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/selectAccountType"
+            android:id="@+id/selectFrequency"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="15dp"
@@ -149,22 +149,17 @@
             android:padding="10dp">
 
             <TextView
-                android:id="@+id/textTypeAccountTv"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:id="@+id/textFrequency"
                 style="@style/textStyle"
-                android:text="Mặc định" />
-
-            <TextView
-                android:id="@+id/textTypeTitleAccountTv"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginStart="5dp"
                 android:layout_weight="1"
-                android:textColor="@color/gray1" />
+                android:gravity="center_vertical"
+                android:text="Mặc định"
+                android:textSize="14sp" />
 
             <ImageButton
-                android:id="@+id/iconType"
+                android:id="@+id/iconFrequencyType"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
@@ -190,25 +185,36 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
-                android:text="Số tiền"
+                android:text="Ngày bắt đầu nhắc nhở"
                 android:textSize="14sp" />
 
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/amountAccountLL"
+            android:id="@+id/selectDateType"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/background_input"
             android:layout_marginTop="15dp"
+            android:background="@drawable/background_input"
             android:padding="10dp">
 
             <TextView
-                android:id="@+id/valueAmountAccountTv"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:id="@+id/textDateTv"
                 style="@style/textStyle"
-                android:text="0" />
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:text="Mặc định"
+                android:textSize="14sp" />
+
+            <ImageButton
+                android:id="@+id/iconDateType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:contentDescription="@string/calendar"
+                android:src="@drawable/ic_sort_down_24" />
 
         </LinearLayout>
 
@@ -229,17 +235,38 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
-                android:text="Biểu tượng"
+                android:text="Thời gian"
                 android:textSize="14sp" />
 
         </LinearLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerIconNewAccountView"
+        <LinearLayout
+            android:id="@+id/selectTimeType"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginTop="15dp"
-            android:background="@drawable/background_input" />
+            android:background="@drawable/background_input"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/textTimeTv"
+                style="@style/textStyle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:text="Mặc định"
+                android:textSize="14sp" />
+
+            <ImageButton
+                android:id="@+id/iconTimeType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:contentDescription="@string/calendar"
+                android:src="@drawable/ic_sort_down_24" />
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -264,21 +291,21 @@
         </LinearLayout>
 
         <EditText
-            android:id="@+id/noteAccountEt"
+            android:id="@+id/noteReminderEt"
+            style="@style/textStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:autofillHints=""
-            android:drawablePadding="10dp"
-            android:inputType="text"
             android:background="@drawable/background_input"
-            android:maxLines="1"
-            android:singleLine="true"
+            android:drawablePadding="10dp"
             android:ellipsize="end"
-            android:padding="10dp"
-           style="@style/textStyle"
-            android:textSize="16sp"
-            android:imeOptions="actionDone"/>
+            android:imeOptions="actionDone"
+            android:inputType="text"
+            android:maxLines="1"
+            android:padding="13dp"
+            android:singleLine="true"
+            android:textSize="13sp" />
 
     </LinearLayout>
 
