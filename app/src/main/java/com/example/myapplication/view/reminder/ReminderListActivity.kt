@@ -133,41 +133,15 @@ class ReminderListActivity : AppCompatActivity() {
             set(Calendar.HOUR_OF_DAY, reminder.hour)
             set(Calendar.MINUTE, reminder.minute)
             set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
         }
 
         if (reminderTime.before(currentTime)) {
-            Log.d("Reminder", "Reminder time has passed for: ${reminder.name}")
             return
         }
 
         when (reminder.frequency) {
             "Hàng ngày" -> {
-                alarmManager.setRepeating(
-                    AlarmManager.RTC_WAKEUP,
-                    reminderTime.timeInMillis,
-                    AlarmManager.INTERVAL_DAY,
-                    pendingIntent
-                )
-            }
-            "Hàng tuần" -> {
-                if (reminderTime.get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY) {
-                    alarmManager.setExactAndAllowWhileIdle(
-                        AlarmManager.RTC_WAKEUP,
-                        reminderTime.timeInMillis,
-                        pendingIntent
-                    )
-                }
-            }
-            "Hàng tháng" -> {
-                if (reminderTime.get(Calendar.DAY_OF_MONTH) == 1) {
-                    alarmManager.setExactAndAllowWhileIdle(
-                        AlarmManager.RTC_WAKEUP,
-                        reminderTime.timeInMillis,
-                        pendingIntent
-                    )
-                }
-            }
-            else -> {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     alarmManager.setExactAndAllowWhileIdle(
                         AlarmManager.RTC_WAKEUP,
@@ -182,8 +156,41 @@ class ReminderListActivity : AppCompatActivity() {
                     )
                 }
             }
+            "Hàng tuần" -> {
+                if (reminderTime.get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        alarmManager.setExactAndAllowWhileIdle(
+                            AlarmManager.RTC_WAKEUP,
+                            reminderTime.timeInMillis,
+                            pendingIntent
+                        )
+                    } else {
+                        alarmManager.setExact(
+                            AlarmManager.RTC_WAKEUP,
+                            reminderTime.timeInMillis,
+                            pendingIntent
+                        )
+                    }
+                }
+            }
+            "Hàng tháng" -> {
+                if (reminderTime.get(Calendar.DAY_OF_MONTH) == 1) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        alarmManager.setExactAndAllowWhileIdle(
+                            AlarmManager.RTC_WAKEUP,
+                            reminderTime.timeInMillis,
+                            pendingIntent
+                        )
+                    } else {
+                        alarmManager.setExact(
+                            AlarmManager.RTC_WAKEUP,
+                            reminderTime.timeInMillis,
+                            pendingIntent
+                        )
+                    }
+                }
+            }
         }
     }
-
 
 }
