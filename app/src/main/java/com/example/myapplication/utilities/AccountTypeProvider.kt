@@ -15,7 +15,6 @@ object AccountTypeProvider {
     )
 
     val reminderTypes = listOf(
-        AccountType("Một lần", ""), //0
         AccountType("Hàng ngày", ""), //1
         AccountType("Hàng tuần", ""), //2
         AccountType("Hàng tháng", ""), //3

@@ -5,9 +5,13 @@ import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
+import android.view.View
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.viewModelScope
 import com.example.myapplication.data.AccountType
 import com.example.myapplication.databinding.ActivityCustomizeReminders2Binding
 import com.example.myapplication.entity.DailyReminder
@@ -16,6 +20,9 @@ import com.example.myapplication.view.calendar.CalendarDialogFragment
 import com.example.myapplication.view.component.TimePickerDialogFragment
 import com.example.myapplication.viewModel.DailyReminderViewModel
 import com.example.myapplication.viewModel.DailyReminderViewModelFactory
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.time.LocalDate
 import java.util.Calendar
 
@@ -37,17 +44,55 @@ class CustomizeRemindersActivity : AppCompatActivity(),
     private var currentHour = calendar.get(Calendar.HOUR_OF_DAY)
     private var currentMinute = calendar.get(Calendar.MINUTE)
 
+    private var itemEdit: DailyReminder? = null
+
     private var note = "Đừng quên chi chép lại các khoản chi tiêu của bạn!"
 
     private val dailyReminderViewModel: DailyReminderViewModel by viewModels {
         DailyReminderViewModelFactory(application)
     }
 
+    @SuppressLint("SetTextI18n")
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCustomizeReminders2Binding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val reminder = intent.getParcelableExtra<DailyReminder>("REMINDER")
+        reminder?.let {
+            Log.d("Hieu62", "onCreate: $it")
+            itemEdit = it
+
+            calendar.set(Calendar.YEAR, it.date.substring(0, 4).toInt())
+            calendar.set(Calendar.MONTH, it.date.substring(5, 7).toInt() - 1)
+            calendar.set(Calendar.DAY_OF_MONTH, it.date.substring(8, 10).toInt())
+            calendar.set(Calendar.HOUR_OF_DAY, it.hour)
+            calendar.set(Calendar.MINUTE, it.minute)
+
+            currentHour = it.hour
+            currentMinute = it.minute
+            selectedDate = LocalDate.of(
+                it.date.substring(0, 4).toInt(),
+                it.date.substring(5, 7).toInt(),
+                it.date.substring(8, 10).toInt()
+            )
+
+            updateDisplayedTime(currentHour, currentMinute)
+            binding.nameReminderEt.setText(it.name)
+            binding.textDateTv.text = "${selectedDate.dayOfMonth} thg ${selectedDate.monthValue}, ${selectedDate.year}"
+            binding.textFrequency.text = it.frequency
+            binding.noteReminderEt.setText(it.note)
+            binding.deleteReminderBtn.visibility = View.VISIBLE
+        } ?: run {
+            updateDisplayedTime(currentHour, currentMinute)
+            binding.nameReminderEt.setText(nameReminderEt)
+            binding.textDateTv.text = "${selectedDate.dayOfMonth} thg ${selectedDate.monthValue}, ${selectedDate.year}"
+            binding.textFrequency.text = frequency
+            binding.noteReminderEt.setText(note)
+            binding.deleteReminderBtn.visibility = View.GONE
+        }
+
 
         setupUI()
     }
@@ -55,14 +100,6 @@ class CustomizeRemindersActivity : AppCompatActivity(),
     @SuppressLint("SetTextI18n", "DefaultLocale")
     @RequiresApi(Build.VERSION_CODES.O)
     private fun setupUI() {
-        updateDisplayedTime(currentHour, currentMinute)
-
-        binding.nameReminderEt.setText(nameReminderEt)
-        binding.textDateTv.text =
-            "${selectedDate.dayOfMonth} thg ${selectedDate.monthValue}, ${selectedDate.year}"
-        binding.textFrequency.text = frequency
-        binding.noteReminderEt.setText(note)
-
         binding.selectTimeType.setOnClickListener {
             val timePickerDialogFragment = TimePickerDialogFragment()
             timePickerDialogFragment.setTime(currentHour, currentMinute)
@@ -87,7 +124,7 @@ class CustomizeRemindersActivity : AppCompatActivity(),
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable?) {
-                note = s.toString()
+                nameReminderEt = s.toString()
             }
 
         })
@@ -96,7 +133,7 @@ class CustomizeRemindersActivity : AppCompatActivity(),
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable?) {
-                nameReminderEt = s.toString()
+                note = s.toString()
             }
 
         })
@@ -104,19 +141,66 @@ class CustomizeRemindersActivity : AppCompatActivity(),
         binding.backBtn.setOnClickListener {
             finish()
         }
+
+        binding.addNewAccountBtn.setOnClickListener {
+            saveDataToServer()
+        }
+
+        binding.deleteReminderBtn.setOnClickListener {
+            itemEdit?.let {
+                dailyReminderViewModel.viewModelScope.launch(Dispatchers.IO) {
+                    dailyReminderViewModel.deleteDailyReminder(it)
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(this@CustomizeRemindersActivity, "Xóa lời nhắc thành công", Toast.LENGTH_SHORT).show()
+                        finish()
+                    }
+                }
+            }
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun saveDataToServer() {
-        val dataFormat = DailyReminder(
-            name = nameReminderEt,
-            frequency = frequency,
-            date = selectedDate.toString(),
-            hour = currentHour,
-            minute = currentMinute,
-            note = note
-        )
+       if (itemEdit === null) {
+           val dataFormat = DailyReminder(
+               name = nameReminderEt,
+               frequency = frequency,
+               date = selectedDate.toString(),
+               hour = currentHour,
+               minute = currentMinute,
+               note = note
+           )
+
+           dailyReminderViewModel.viewModelScope.launch(Dispatchers.IO) {
+               val insertedId = dailyReminderViewModel.insertDailyReminder(dataFormat)
+
+               withContext(Dispatchers.Main) {
+                   if (insertedId.toString() == "kotlin.Unit") {
+                       Toast.makeText(this@CustomizeRemindersActivity, "Thêm lời nhắc thành công", Toast.LENGTH_SHORT).show()
+                       finish()
+                   }
+               }
+           }
+       } else {
+           val dataFormat = DailyReminder(
+               id = itemEdit!!.id,
+               name = nameReminderEt,
+               frequency = frequency,
+               date = selectedDate.toString(),
+               hour = currentHour,
+               minute = currentMinute,
+               note = note
+           )
+           dailyReminderViewModel.viewModelScope.launch(Dispatchers.IO) {
+               dailyReminderViewModel.updateDailyReminder(dataFormat)
+               withContext(Dispatchers.Main) {
+                   Toast.makeText(this@CustomizeRemindersActivity, "Cập nhật lời nhắc thành công", Toast.LENGTH_SHORT).show()
+                   finish()
+               }
+           }
+       }
     }
+
 
     @SuppressLint("DefaultLocale", "SetTextI18n")
     private fun updateDisplayedTime(hour: Int, minute: Int) {

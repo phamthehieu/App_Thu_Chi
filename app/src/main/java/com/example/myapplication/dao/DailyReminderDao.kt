@@ -1,9 +1,11 @@
 package com.example.myapplication.dao
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
+import androidx.room.Update
 import com.example.myapplication.entity.DailyReminder
 import kotlinx.coroutines.flow.Flow
 
@@ -16,4 +18,10 @@ interface DailyReminderDao {
 
     @Insert
     fun insertDailyReminder(dailyReminder: DailyReminder)
+
+    @Update
+    fun updateDailyReminder(dailyReminder: DailyReminder)
+
+    @Delete
+    fun deleteDailyReminder(dailyReminder: DailyReminder)
 }

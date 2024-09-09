@@ -37,13 +37,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="@string/add_account"
+                android:text="Lời nhắc"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 tools:ignore="RelativeOverlap" />
 
             <ImageButton
-                android:id="@+id/deleteAccountBtn"
+                android:id="@+id/deleteReminderBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"

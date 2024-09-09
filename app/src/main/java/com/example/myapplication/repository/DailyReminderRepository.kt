@@ -13,4 +13,14 @@ class DailyReminderRepository(private val dailyReminderDao: DailyReminderDao) {
         dailyReminderDao.insertDailyReminder(dailyReminder)
     }
 
+    @WorkerThread
+    fun deleteDailyReminder(dailyReminder: DailyReminder) {
+        dailyReminderDao.deleteDailyReminder(dailyReminder)
+    }
+
+    @WorkerThread
+    fun updateDailyReminder(dailyReminder: DailyReminder) {
+        dailyReminderDao.updateDailyReminder(dailyReminder)
+    }
+
 }

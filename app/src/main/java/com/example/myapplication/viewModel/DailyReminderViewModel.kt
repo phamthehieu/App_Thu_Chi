@@ -28,6 +28,18 @@ class DailyReminderViewModel(application: Application) : AndroidViewModel(applic
             repository.insertDailyReminder(dailyReminder)
         }
     }
+
+    fun updateDailyReminder(dailyReminder: DailyReminder) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.updateDailyReminder(dailyReminder)
+        }
+    }
+
+    fun deleteDailyReminder(dailyReminder: DailyReminder) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.deleteDailyReminder(dailyReminder)
+        }
+    }
 }
 
 class DailyReminderViewModelFactory(private val application: Application) : ViewModelProvider.Factory {
