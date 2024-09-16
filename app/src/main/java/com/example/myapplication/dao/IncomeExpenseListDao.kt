@@ -75,4 +75,10 @@ interface IncomeExpenseListDao {
     @Query("DELETE FROM income_expense_list_table")
     fun deleteAllTable(): Void
 
+    @Query("SELECT * FROM income_expense_list_table WHERE date BETWEEN :startDate AND :endDate")
+    fun getIncomeExpenseListByDateRange(
+        startDate: String,
+        endDate: String
+    ): Flow<List<CategoryWithIncomeExpenseList>>
+
 }

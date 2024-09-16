@@ -34,4 +34,8 @@ class HistoryAccountRepository(private val historyAccountDao: HistoryAccountDao)
         historyAccountDao.deleteAllHistoryAccount()
     }
 
+    fun getHistoryAccountListByDateRange(dateStart: String, dateEnd: String): Flow<List<HistoryAccountWithAccount>> {
+        return historyAccountDao.getHistoryAccountListByDateRange(dateStart, dateEnd)
+    }
+
 }

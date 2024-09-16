@@ -18,14 +18,14 @@ class YearAdapter(
     private var yearSelected: String
 ) : ArrayAdapter<String>(context, R.layout.year_item, years) {
 
-    @RequiresApi(Build.VERSION_CODES.O)
+    
     private val currentYear = LocalDate.now().year.toString()
 
     private class ViewHolder(view: View) {
         val yearTextView: TextView = view.findViewById(R.id.yearTextView)
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
+    
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val view: View
         val viewHolder: ViewHolder

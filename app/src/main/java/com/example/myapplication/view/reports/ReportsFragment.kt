@@ -39,7 +39,7 @@ class ReportsFragment : Fragment() {
         super.onCreate(savedInstanceState)
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
+    
     @SuppressLint("DefaultLocale")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -72,7 +72,7 @@ class ReportsFragment : Fragment() {
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    @RequiresApi(Build.VERSION_CODES.O)
+    
     private fun updateTabBackground(selectedTabNumber: Int) {
         val currentNightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
         when (currentNightMode) {

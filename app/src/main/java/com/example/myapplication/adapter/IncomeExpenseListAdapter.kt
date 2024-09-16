@@ -118,7 +118,7 @@ class IncomeExpenseListAdapter(
         private val expenseTV: TextView = itemView.findViewById(R.id.expenseTV)
         private val incomeTV: TextView = itemView.findViewById(R.id.incomeTV)
 
-        @RequiresApi(Build.VERSION_CODES.O)
+        
         fun bind(title: String, totals: Totals) {
             try {
                 val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
@@ -306,7 +306,7 @@ class IncomeExpenseListAdapter(
         return dataList.size
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
+    
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val item = dataList[position]
         when (holder) {

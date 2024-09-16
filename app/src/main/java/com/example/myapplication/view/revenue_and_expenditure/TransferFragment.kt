@@ -67,8 +67,7 @@ class TransferFragment : Fragment() {
     private var numberSequence2 = StringBuilder()
     private var total: BigDecimal = BigDecimal.ZERO
     private var checkEdit: Boolean = false
-
-    @RequiresApi(Build.VERSION_CODES.O)
+    
     private var selectedDate = LocalDate.now()
 
     private var note: String = ""
@@ -104,7 +103,7 @@ class TransferFragment : Fragment() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
+    
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -128,7 +127,7 @@ class TransferFragment : Fragment() {
         return binding.root
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
+    
     private fun setupDataEdit() {
         checkEdit = true
         val amountFormatter = DecimalFormat("#,###.##")
@@ -186,7 +185,7 @@ class TransferFragment : Fragment() {
     }
 
 
-    @RequiresApi(Build.VERSION_CODES.O)
+    
     private fun getDataEdit() {
         if (itemAccount != null) {
             val accountTransferLiveData = accountTypeViewModel.getAccountsByAccountId(itemAccount!!.historyAccount.idAccountTransfer)
@@ -230,7 +229,7 @@ class TransferFragment : Fragment() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
+    
     @SuppressLint("SetTextI18n")
     fun onReceiveDate(year: String, month: String, dayOfMonth: String) {
         val todayCalendar = Calendar.getInstance()
@@ -246,7 +245,7 @@ class TransferFragment : Fragment() {
         selectedDate = LocalDate.of(year.toInt(), month.toInt(), dayOfMonth.toInt())
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
+    
     private fun setupBackground() {
 
         binding.nameCategoryEt.setOnFocusChangeListener { _, hasFocus ->
@@ -306,7 +305,7 @@ class TransferFragment : Fragment() {
 
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
+    
     private fun setupNumberButtons() {
         val buttonIds = listOf(
             binding.buttonZero, binding.buttonOne, binding.buttonTwo,
@@ -326,7 +325,7 @@ class TransferFragment : Fragment() {
     private var calculation = false
 
     @SuppressLint("SetTextI18n")
-    @RequiresApi(Build.VERSION_CODES.O)
+    
     private fun onNumberButtonClick(view: View) {
         var mark = ""
         var displayText = ""
@@ -543,7 +542,7 @@ class TransferFragment : Fragment() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
+    
     private fun saveDataToServer(type: Int) {
         if (checkEdit) {
             if (type == 1) {
@@ -780,7 +779,7 @@ class TransferFragment : Fragment() {
         return listAccount
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
+    
     private fun showCustomDialogAddCategory() {
         val calendarDialogFragment = CalendarDialogFragment()
         val bundle = Bundle()

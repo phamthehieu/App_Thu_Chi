@@ -102,6 +102,10 @@ class IncomeExpenseListModel(application: Application) : AndroidViewModel(applic
         }
     }
 
+    fun getIncomeExpenseListByDateRange(dateStart: String, dateEnd: String): LiveData<List<CategoryWithIncomeExpenseList>> {
+        return repository.getIncomeExpenseListByDateRange(dateStart, dateEnd).asLiveData()
+    }
+
 }
 
 class IncomeExpenseListFactory(private val application: Application) : ViewModelProvider.Factory {

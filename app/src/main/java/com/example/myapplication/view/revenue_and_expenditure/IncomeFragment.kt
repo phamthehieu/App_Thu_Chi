@@ -104,9 +104,29 @@ class IncomeFragment : Fragment(), CategoryAdapter.OnItemClickListener {
 
         val isMultiSelectEnabled = checkSearch == "dataSearch"
 
-        categoryAdapter = CategoryAdapter(reversedList, this, isMultiSelectEnabled)
+        categoryAdapter = CategoryAdapter(reversedList, object : CategoryAdapter.OnItemClickListener {
+            override fun onItemClick(category: CombinedCategoryIcon) {
+                this@IncomeFragment.onItemClick(category)
+            }
+
+            override fun onSettingsClick() {
+                this@IncomeFragment.onSettingsClick()
+            }
+        }, isMultiSelectEnabled)
+
         binding.recyclerViewIncome.adapter = categoryAdapter
 
+        itemEdit?.let { editItem ->
+            val selectedIndex = reversedList.indexOfFirst { it.idCategory == editItem.categoryId }
+            if (selectedIndex != -1) {
+                binding.recyclerViewIncome.post {
+                    binding.recyclerViewIncome.scrollToPosition(selectedIndex)
+                    categoryAdapter.setEditItemPosition(selectedIndex)
+                    categoryAdapter.notifyItemChanged(selectedIndex)
+                    categoryAdapter.itemClickListener.onItemClick(reversedList[selectedIndex])
+                }
+            }
+        }
     }
 
     override fun onAttach(context: Context) {
@@ -121,7 +141,6 @@ class IncomeFragment : Fragment(), CategoryAdapter.OnItemClickListener {
         listener = null
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onItemClick(category: CombinedCategoryIcon) {
         if (checkSearch == "dataSearch") {
             listener?.onCategorySelected(category)

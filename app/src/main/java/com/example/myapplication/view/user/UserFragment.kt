@@ -1,5 +1,7 @@
 package com.example.myapplication.view.user
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -7,14 +9,20 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearSnapHelper
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.myapplication.R
+import com.example.myapplication.adapter.DateAdapter
 import com.example.myapplication.databinding.FragmentUserBinding
 import com.example.myapplication.utilities.DatabaseSyncHelper
+import com.example.myapplication.view.export_data.ExportDataActivity
 import com.example.myapplication.view.reminder.ReminderListActivity
 import com.example.myapplication.viewModel.AccountViewModel
 import com.example.myapplication.viewModel.AccountViewModelFactory
@@ -41,6 +49,7 @@ class UserFragment : Fragment() {
     private lateinit var binding: FragmentUserBinding
     private lateinit var googleSignInClient: GoogleSignInClient
     private val RC_SIGN_IN = 9001
+    private var dateSelector = 1
 
     private val accountViewModel: AccountViewModel by viewModels {
         AccountViewModelFactory(requireActivity().application)
@@ -86,6 +95,7 @@ class UserFragment : Fragment() {
         googleSignInClient = GoogleSignIn.getClient(requireActivity(), gso)
     }
 
+    @SuppressLint("CommitPrefEdits")
     private fun setupBackground() {
         val account = GoogleSignIn.getLastSignedInAccount(requireContext())
         if (account != null) {
@@ -166,7 +176,10 @@ class UserFragment : Fragment() {
                         snackbar.show()
 
                         val success = try {
-                            DatabaseSyncHelper.syncDatabaseWithDriveAll(driveService, requireContext())
+                            DatabaseSyncHelper.syncDatabaseWithDriveAll(
+                                driveService,
+                                requireContext()
+                            )
                             true
                         } catch (e: Exception) {
                             Log.e("UserFragment", "Sync failed", e)
@@ -184,7 +197,8 @@ class UserFragment : Fragment() {
                             Snackbar.LENGTH_SHORT
                         ).apply {
                             val resultSnackbarView = view
-                            val resultParams = resultSnackbarView.layoutParams as CoordinatorLayout.LayoutParams
+                            val resultParams =
+                                resultSnackbarView.layoutParams as CoordinatorLayout.LayoutParams
                             resultParams.gravity = Gravity.TOP
                             resultSnackbarView.layoutParams = resultParams
                             show()
@@ -196,6 +210,54 @@ class UserFragment : Fragment() {
             }
         }
 
+        binding.exportData.setOnClickListener {
+            startActivity(Intent(requireContext(), ExportDataActivity::class.java))
+        }
+
+        val sharedPreferences = requireContext().getSharedPreferences("AppPreferences", Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+
+        val recyclerViewDate = binding.recyclerViewDate
+        val data = (1..28).map { it.toString() }
+        val adapter = DateAdapter(data)
+        recyclerViewDate.adapter = adapter
+        val layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        recyclerViewDate.layoutManager = layoutManager
+        recyclerViewDate.onFlingListener = null
+        val snapHelper = LinearSnapHelper()
+        snapHelper.attachToRecyclerView(recyclerViewDate)
+
+        val savedDate = sharedPreferences.getInt("selectedDate", -1)
+
+        if (savedDate != -1) {
+            recyclerViewDate.post {
+                recyclerViewDate.scrollToPosition(savedDate - 1)
+            }
+        }
+
+        fun getCurrentItem(): String? {
+            val snapView = snapHelper.findSnapView(layoutManager)
+            val position = snapView?.let { layoutManager.getPosition(it) }
+            return position?.let { data[it] }
+        }
+
+        recyclerViewDate.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    val currentItem = getCurrentItem()
+                    currentItem?.let {
+                        Toast.makeText(requireContext(), "Ngày bắt đầu: $it", Toast.LENGTH_SHORT)
+                            .show()
+                        dateSelector = it.toInt()
+                        editor.putInt("selectedDate", dateSelector)
+                        editor.putBoolean("checkDate", false)
+                        editor.apply()
+                    }
+                }
+            }
+        })
 
     }
 

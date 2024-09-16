@@ -55,7 +55,6 @@ class KeyBoardBottomSheetFragment : BottomSheetDialogFragment() {
     private var total: BigDecimal = BigDecimal.ZERO
     private var checkEdit: Boolean = false
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private var selectedDate = LocalDate.now()
 
     private var categoryData: CombinedCategoryIcon? = null
@@ -100,7 +99,7 @@ class KeyBoardBottomSheetFragment : BottomSheetDialogFragment() {
         return dialog
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
+    
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -178,7 +177,6 @@ class KeyBoardBottomSheetFragment : BottomSheetDialogFragment() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun setupBackground() {
         binding.nameCategoryEt.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
@@ -319,7 +317,6 @@ class KeyBoardBottomSheetFragment : BottomSheetDialogFragment() {
 
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun setupNumberButtons() {
         val buttonIds = listOf(
             binding.buttonZero, binding.buttonOne, binding.buttonTwo,
@@ -338,7 +335,6 @@ class KeyBoardBottomSheetFragment : BottomSheetDialogFragment() {
     private var calculationMark = ""
     private var calculation = false
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun onNumberButtonClick(view: View) {
         var mark = ""
         var displayText = ""
@@ -530,7 +526,6 @@ class KeyBoardBottomSheetFragment : BottomSheetDialogFragment() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun saveDataToServer(type: Int) {
         val accountId = if (selectedAccount == null) "-1" else selectedAccount!!.id.toString()
 
@@ -723,7 +718,6 @@ class KeyBoardBottomSheetFragment : BottomSheetDialogFragment() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     fun categoryData(
         category: CombinedCategoryIcon,
         dataEdit: IncomeExpenseListData? = null,
@@ -740,7 +734,6 @@ class KeyBoardBottomSheetFragment : BottomSheetDialogFragment() {
         categoryData = category
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("SetTextI18n")
     fun onReceiveDate(year: String, month: String, dayOfMonth: String) {
         val todayCalendar = Calendar.getInstance()
@@ -756,7 +749,6 @@ class KeyBoardBottomSheetFragment : BottomSheetDialogFragment() {
         selectedDate = LocalDate.of(year.toInt(), month.toInt(), dayOfMonth.toInt())
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun showCustomDialogAddCategory() {
         val calendarDialogFragment = CalendarDialogFragment()
         val bundle = Bundle()
@@ -778,8 +770,7 @@ class KeyBoardBottomSheetFragment : BottomSheetDialogFragment() {
     }
 
     private fun showDefaultKeyboard() {
-        val imm =
-            requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.showSoftInput(binding.nameCategoryEt, InputMethodManager.SHOW_IMPLICIT)
     }
 

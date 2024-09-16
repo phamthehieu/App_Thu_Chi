@@ -36,7 +36,6 @@ class CustomizeRemindersActivity : AppCompatActivity(),
     private var nameReminderEt = "Lời nhắc nhở"
     private var frequency = "Hàng ngày"
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private var selectedDate = LocalDate.now()
 
     private val calendar: Calendar = Calendar.getInstance()
@@ -53,7 +52,6 @@ class CustomizeRemindersActivity : AppCompatActivity(),
     }
 
     @SuppressLint("SetTextI18n")
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCustomizeReminders2Binding.inflate(layoutInflater)
@@ -61,7 +59,6 @@ class CustomizeRemindersActivity : AppCompatActivity(),
 
         val reminder = intent.getParcelableExtra<DailyReminder>("REMINDER")
         reminder?.let {
-            Log.d("Hieu62", "onCreate: $it")
             itemEdit = it
 
             calendar.set(Calendar.YEAR, it.date.substring(0, 4).toInt())
@@ -98,7 +95,6 @@ class CustomizeRemindersActivity : AppCompatActivity(),
     }
 
     @SuppressLint("SetTextI18n", "DefaultLocale")
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun setupUI() {
         binding.selectTimeType.setOnClickListener {
             val timePickerDialogFragment = TimePickerDialogFragment()
@@ -159,7 +155,6 @@ class CustomizeRemindersActivity : AppCompatActivity(),
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun saveDataToServer() {
        if (itemEdit === null) {
            val dataFormat = DailyReminder(
@@ -217,7 +212,6 @@ class CustomizeRemindersActivity : AppCompatActivity(),
         updateDisplayedTime(currentHour, currentMinute)
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun showCustomDialogAddCategory() {
         val calendarDialogFragment = CalendarDialogFragment()
         val bundle = Bundle()
@@ -229,7 +223,6 @@ class CustomizeRemindersActivity : AppCompatActivity(),
     }
 
     @SuppressLint("SetTextI18n")
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onReceiveDate(year: String, month: String, day: String) {
         binding.textDateTv.text = "$day thg $month, $year"
         selectedDate = LocalDate.of(year.toInt(), month.toInt(), day.toInt())

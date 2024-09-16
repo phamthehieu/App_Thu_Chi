@@ -8,6 +8,7 @@ import androidx.room.Transaction
 import androidx.room.Update
 import com.example.myapplication.data.HistoryAccountWithAccount
 import com.example.myapplication.entity.HistoryAccount
+import com.example.myapplication.entity.IncomeExpenseList
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -37,4 +38,7 @@ interface HistoryAccountDao {
 
     @Query("DELETE FROM history_account_tablet")
     fun deleteAllHistoryAccount(): Void
+
+    @Query("SELECT * FROM history_account_tablet WHERE date BETWEEN :startDate AND :endDate")
+    fun getHistoryAccountListByDateRange(startDate: String, endDate: String): Flow<List<HistoryAccountWithAccount>>
 }

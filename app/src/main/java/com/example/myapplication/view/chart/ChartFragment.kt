@@ -54,7 +54,6 @@ class ChartFragment : Fragment(), DateChartAdapter.OnDateClickListener,
     }
 
     @SuppressLint("DefaultLocale")
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

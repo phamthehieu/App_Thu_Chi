@@ -52,7 +52,6 @@ class CalendarHomeActivity : AppCompatActivity() {
     private val incomeExpensesByDate = mutableMapOf<LocalDate, List<IncomeExpenseList>>()
 
     @SuppressLint("NotifyDataSetChanged", "SetTextI18n")
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = FragmentCalendarHomeBinding.inflate(layoutInflater)

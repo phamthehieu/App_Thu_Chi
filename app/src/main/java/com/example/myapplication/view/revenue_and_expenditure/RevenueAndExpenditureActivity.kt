@@ -27,7 +27,6 @@ class RevenueAndExpenditureActivity : AppCompatActivity() {
     private var dateSelected: LocalDate? = null
     private var itemAccount: HistoryAccountWithAccount? = null
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityRevenueAndExpenditureBinding.inflate(layoutInflater)
@@ -77,24 +76,24 @@ class RevenueAndExpenditureActivity : AppCompatActivity() {
             }
         })
 
-       if (itemEdit != null) {
-           itemEdit?.let {
-               when (it.type) {
-                   "Expense" -> {
-                       viewPager.currentItem = 0
-                       updateTabBackground(1)
-                   }
+        if (itemEdit != null) {
+            itemEdit?.let {
+                when (it.type) {
+                    "Expense" -> {
+                        viewPager.currentItem = 0
+                        updateTabBackground(1)
+                    }
 
-                   "Income" -> {
-                       viewPager.currentItem = 1
-                       updateTabBackground(2)
-                   }
-               }
-           } ?: updateTabBackground(1)
-       } else if (itemAccount != null) {
-           viewPager.currentItem = 2
-           updateTabBackground(3)
-       }
+                    "Income" -> {
+                        viewPager.currentItem = 1
+                        updateTabBackground(2)
+                    }
+                }
+            } ?: updateTabBackground(1)
+        } else if (itemAccount != null) {
+            viewPager.currentItem = 2
+            updateTabBackground(3)
+        }
     }
 
     private fun updateTabBackground(selectedTabNumber: Int) {

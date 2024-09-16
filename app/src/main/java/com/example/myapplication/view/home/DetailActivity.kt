@@ -63,8 +63,7 @@ class DetailActivity : AppCompatActivity() {
     private val historyAccountViewModel: HistoryAccountViewModel by viewModels {
         HistoryAccountViewModelFactory(this.application)
     }
-
-    @RequiresApi(Build.VERSION_CODES.O)
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDetailBinding.inflate(layoutInflater)
@@ -203,7 +202,7 @@ class DetailActivity : AppCompatActivity() {
     }
 
     @SuppressLint("SetTextI18n")
-    @RequiresApi(Build.VERSION_CODES.O)
+    
     private fun setupData() {
         if (itemDetail != null) {
             binding.iconIV.setImageResource(itemDetail?.iconResource ?: 0)

@@ -52,7 +52,7 @@ class KeyBroadBottomSheetAccountFragment : BottomSheetTypeAccountFragment() {
         return dialog
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
+    
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -124,7 +124,7 @@ class KeyBroadBottomSheetAccountFragment : BottomSheetTypeAccountFragment() {
     }
 
 
-    @RequiresApi(Build.VERSION_CODES.O)
+    
     private fun setupNumberButtons() {
         val buttonIds = listOf(
             binding.buttonZero, binding.buttonOne, binding.buttonTwo,
@@ -143,7 +143,7 @@ class KeyBroadBottomSheetAccountFragment : BottomSheetTypeAccountFragment() {
     private var calculationMark = ""
     private var calculation = false
 
-    @RequiresApi(Build.VERSION_CODES.O)
+    
     private fun onNumberButtonClick(view: View) {
         var mark = ""
         var displayText = ""

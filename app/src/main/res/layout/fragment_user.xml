@@ -98,7 +98,7 @@
         <RelativeLayout
             android:id="@+id/reminder"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
             android:layout_below="@+id/profile"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
@@ -142,7 +142,7 @@
         <RelativeLayout
             android:id="@+id/export_data"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
             android:layout_below="@+id/reminder"
             android:layout_marginStart="20dp"
             android:layout_marginTop="20dp"
@@ -188,7 +188,7 @@
         <RelativeLayout
             android:id="@+id/regular_payment"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
             android:layout_below="@+id/export_data"
             android:layout_marginStart="20dp"
             android:layout_marginTop="20dp"
@@ -234,13 +234,12 @@
         <RelativeLayout
             android:id="@+id/start_date"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
             android:layout_below="@+id/regular_payment"
             android:layout_marginStart="20dp"
             android:layout_marginTop="20dp"
             android:layout_marginEnd="20dp"
-            android:background="@drawable/shape_settingprofile"
-            android:orientation="vertical">
+            android:background="@drawable/shape_settingprofile">
 
             <ImageView
                 android:id="@+id/icon_start_date"
@@ -252,35 +251,41 @@
                 android:padding="5dp"
                 android:src="@drawable/ic_delivery_time_24" />
 
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="5dp"
+            <LinearLayout
+                android:id="@+id/linearLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_toEndOf="@+id/icon_start_date"
-                android:text="Ngày bắt đầu hàng tháng"
-                android:textColor="@color/white"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_margin="10dp"
-                android:background="@android:color/transparent"
-                android:contentDescription="@string/back"
-                android:padding="5dp"
-                android:src="@drawable/ic_baseline_keyboard_white" />
+                <TextView
+                    android:id="@+id/text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:text="Ngày bắt đầu hàng tháng"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerViewDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="10dp"
+                    android:scrollbars="none" />
+
+            </LinearLayout>
 
         </RelativeLayout>
+
 
         <RelativeLayout
             android:id="@+id/data_synchronization"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
             android:layout_below="@+id/start_date"
             android:layout_marginStart="20dp"
             android:layout_marginTop="22dp"

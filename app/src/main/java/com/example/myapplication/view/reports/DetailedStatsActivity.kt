@@ -47,7 +47,7 @@ class DetailedStatsActivity : AppCompatActivity() {
         IncomeExpenseListFactory(this.application)
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDetailedStatsBinding.inflate(layoutInflater)
@@ -90,7 +90,7 @@ class DetailedStatsActivity : AppCompatActivity() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
+    
     private fun getData() {
         if (checkByYear) {
             incomeExpenseListModel.getFilteredIncomeExpenseListYear(
@@ -153,7 +153,7 @@ class DetailedStatsActivity : AppCompatActivity() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
+    
     private fun transformDataWithoutHeaders(groupedData: Map<String, List<Map<String, Any>>>): List<MonthlyReport> {
         val monthlyReports = mutableListOf<MonthlyReport>()
 
@@ -181,7 +181,7 @@ class DetailedStatsActivity : AppCompatActivity() {
 
 
     @SuppressLint("DefaultLocale")
-    @RequiresApi(Build.VERSION_CODES.O)
+    
     private fun groupAndSumByYearMonthAndType(data: List<IncomeExpenseList>): Map<String, List<Map<String, Any>>> {
         return data.groupBy {
             val date = LocalDate.parse(it.date)
@@ -202,7 +202,7 @@ class DetailedStatsActivity : AppCompatActivity() {
         }.groupBy({ it.first }, { it.second })
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
+    
     private fun transformData(groupedData: Map<String, List<Map<String, Any>>>): List<Any> {
         val monthlyReports = mutableListOf<Any>()
 
@@ -230,7 +230,7 @@ class DetailedStatsActivity : AppCompatActivity() {
         return monthlyReports
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
+    
     @SuppressLint("SetTextI18n")
     private fun showCustomDialogYear() {
         val currentYear = Calendar.getInstance().get(Calendar.YEAR)

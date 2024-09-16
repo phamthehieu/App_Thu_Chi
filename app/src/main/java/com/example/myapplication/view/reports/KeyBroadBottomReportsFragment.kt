@@ -138,7 +138,6 @@ class KeyBroadBottomReportsFragment : BottomSheetDialogFragment() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun onNumberButtonClick(view: View) {
         var displayText = ""
         val numberToAdd = when (view.id) {

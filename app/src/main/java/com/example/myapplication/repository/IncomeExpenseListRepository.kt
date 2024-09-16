@@ -60,4 +60,8 @@
         fun deleteAll() {
             incomeExpenseListDao.deleteAllTable()
         }
+
+        fun getIncomeExpenseListByDateRange(  startDate: String, endDate: String): Flow<List<CategoryWithIncomeExpenseList>> {
+            return incomeExpenseListDao.getIncomeExpenseListByDateRange(startDate, endDate)
+        }
     }

@@ -68,6 +68,10 @@ class HistoryAccountViewModel(application: Application) : AndroidViewModel(appli
         }
     }
 
+    fun getHistoryAccountListByDateRange(startDate: String, endDate: String): LiveData<List<HistoryAccountWithAccount>> {
+        return repository.getHistoryAccountListByDateRange(startDate, endDate).asLiveData()
+    }
+
 }
 
 class HistoryAccountViewModelFactory(private val application: Application) :
